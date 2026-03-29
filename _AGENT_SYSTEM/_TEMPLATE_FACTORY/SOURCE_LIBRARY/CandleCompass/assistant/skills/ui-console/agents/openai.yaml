@@ -1,0 +1,4 @@
+interface:
+  display_name: "UI Console"
+  short_description: "Build and polish Candle Compass UI modules"
+  default_prompt: "Use $ui-console to update Candle Compass UI modules and navigation."

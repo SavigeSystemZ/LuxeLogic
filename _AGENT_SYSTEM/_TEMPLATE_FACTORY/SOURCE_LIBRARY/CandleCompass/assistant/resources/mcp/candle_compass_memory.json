@@ -1,0 +1,6 @@
+{
+  "name": "candle_compass-memory",
+  "transport": "streamable_http",
+  "url": "http://127.0.0.1:8766/mcp",
+  "description": "Local Candle Compass memory server (research-only)"
+}

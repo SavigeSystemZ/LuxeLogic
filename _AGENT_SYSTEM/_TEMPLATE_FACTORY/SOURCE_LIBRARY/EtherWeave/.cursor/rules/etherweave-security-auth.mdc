@@ -1,0 +1,22 @@
+---
+description: "Etherweave security and auth: ValidationLayer, SudoCache, LootManager, no secrets in code or logs"
+alwaysApply: true
+---
+
+# Security & Authorization
+
+## Non-negotiables
+
+- **SudoCache** — Use for sudo session management. Never store sudo passwords.
+- **ValidationLayer** — Validate all user-facing and external input before processing.
+- **LootManager** — Store handshakes, passwords, credentials encrypted; never plain text.
+- **Parameterized queries** — All SQL must use parameters; no string concatenation for user input.
+- **Authorization** — Privileged ops gated by AuthPort/sudo cache; no silent privilege escalation.
+
+## Do not
+
+- Commit secrets, API keys, or credentials.
+- Log sensitive data (passwords, tokens, full handshakes).
+- Weaken security controls or skip validation to “simplify” code.
+
+Run a lightweight secrets scan before push. Reference: PROJECT_RULES.md, AGENTS.md.

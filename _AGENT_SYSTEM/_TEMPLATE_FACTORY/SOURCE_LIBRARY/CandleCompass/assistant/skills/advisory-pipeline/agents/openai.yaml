@@ -1,0 +1,4 @@
+interface:
+  display_name: "Advisory Pipeline"
+  short_description: "Extend advisory engines and JSON outputs"
+  default_prompt: "Use $advisory-pipeline to extend advisory engines and JSON outputs."

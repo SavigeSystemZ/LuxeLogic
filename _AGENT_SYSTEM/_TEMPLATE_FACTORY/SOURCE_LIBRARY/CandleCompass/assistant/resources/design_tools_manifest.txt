@@ -1,0 +1,4 @@
+# Files and directories that belong on the design/tools publication branch.
+AGENTS.md
+assistant/
+.githooks/

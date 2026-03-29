@@ -1,0 +1,10 @@
+{
+  "template_name": "MOS",
+  "template_version": "0.1.2",
+  "source_template": "MOS_TEMPLATE",
+  "install_mode": "template-placeholder",
+  "system_readme_path": "README.md",
+  "installed_at": "UNSET",
+  "updated_at": "UNSET",
+  "last_event": "template-source"
+}

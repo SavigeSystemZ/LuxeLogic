@@ -1,0 +1,10 @@
+{
+  "order": [
+    "repo-local runtime and product truth",
+    "repo-local MOS core contracts",
+    "repo-local MOS host adapters",
+    "repo-local prompt packs and emitted bundles",
+    "declared plugins within owned paths",
+    "host-level orchestration context"
+  ]
+}

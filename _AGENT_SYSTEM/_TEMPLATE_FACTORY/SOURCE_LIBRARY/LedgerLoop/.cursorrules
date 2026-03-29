@@ -1,0 +1,23 @@
+# Ledger Loop — Cursor project rules
+
+Load these rules when working on Ledger Loop. Full rules and design context live in `_system/` (logically separate from application code in `src/`).
+
+## First load
+- Read **AGENT_CONTEXT.md** (repo root) first — canonical docs, terminology, implemented vs planned, next steps.
+- Then **TODO.md**, **DEVELOPMENT_STANDARDS.md**, **AI_AGENT_COORDINATION.md**.
+- System prompt and full Cursor rules: **_system/MASTER_SYSTEM_PROMPT.md**, **_system/CURSOR_RULES.md**.
+
+## Terminology
+- **Loop** = Household. **Buckets** = budget categories. **ARCHITECT / CONTRIBUTOR / AUDITOR** = roles. Use PRD/DATA_MODEL names in docs; keep Loop/Bucket/Member in code/API/DB.
+
+## Stack
+- Node.js, TypeScript (strict), Express 5, PostgreSQL, Jest. API-only (no frontend yet).
+
+## Rules
+- Tenant isolation: every loop-scoped query by `loop_id` + membership. RBAC on sensitive routes; no secrets in repo.
+- Backup: one manual backup only at `/home/whyte/.BackupZ-MyAppZ/LedgerLoop.bak/`; run `scripts/backup-ledgerloop.sh` when requested (sync after first copy). See _system/BACKUP_STRATEGY.md.
+- TypeScript strict; parameterized queries; tests for new behavior; run `npm test` and `npm run lint` before finishing.
+- Update TODO.md and AGENT_CONTEXT.md Section 8.3 ("Last work") when you finish. If API/schema changes: update architecture/API_DESIGN.md and AGENT_CONTEXT.
+
+## System files (design/context, not executed by app)
+- **_system/** — prompts, rules, MCP ref, skills, URL context, WHERELEFTOFF, FIXME index, backup strategy. See _system/README.md.

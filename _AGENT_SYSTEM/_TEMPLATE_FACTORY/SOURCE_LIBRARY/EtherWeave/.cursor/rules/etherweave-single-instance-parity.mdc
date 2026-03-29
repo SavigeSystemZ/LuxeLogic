@@ -1,0 +1,21 @@
+---
+description: "Etherweave single-instance pattern and GUI/CLI feature parity"
+alwaysApply: true
+---
+
+# Single Instance
+
+Use **one** shared instance for:
+
+- **Database** — `self.db` (e.g. NetworkDatabase). Do not create new instances per operation.
+- **Radio/interfaces** — `self.radio_manager`. Do not create multiple RadioManager instances.
+
+Access via CoreController or the main window; do not instantiate in workers or dialogs for routine operations.
+
+# Feature Parity
+
+- **Every GUI feature** must have a **CLI equivalent** (and vice versa where applicable).
+- Shared logic lives in **CoreController** (or application/use-cases). GUI and CLI both call the same core paths.
+- When adding a feature, implement or stub both GUI and CLI paths.
+
+Reference: PROJECT_RULES.md, MASTER_AI_REFERENCE.md.

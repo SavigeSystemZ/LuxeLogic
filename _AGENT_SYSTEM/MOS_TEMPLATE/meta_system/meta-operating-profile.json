@@ -1,0 +1,43 @@
+{
+  "product": "MOS",
+  "version": "0.1.2",
+  "canonical_startup_files": [
+    "META_AGENTS.md",
+    "meta_system/META_INSTRUCTION_PRECEDENCE_CONTRACT.md",
+    "meta_system/META_REPO_OPERATING_PROFILE.md",
+    "meta_system/META_LOAD_ORDER.md"
+  ],
+  "optional_context_files": [
+    "meta_system/META_PROJECT_RULES.md",
+    "meta_system/META_EXECUTION_PROTOCOL.md",
+    "meta_system/META_PROMPT_EMISSION_CONTRACT.md",
+    "docs/ReviewWorkflow.md",
+    "meta_system/prompt-packs/M2_DEFINE_META_SYSTEM_SPEC.md",
+    "meta_system/prompt-packs/M9_AIAST_SYSTEM_REVIEW.md",
+    "meta_system/golden-examples/PATTERN_INDEX.md"
+  ],
+  "first_class_adapters": [
+    "Claude",
+    "Codex",
+    "Copilot",
+    "Cursor",
+    "Gemini",
+    "Windsurf"
+  ],
+  "spec_adapters": [
+    "Abacus",
+    "Agent Zero",
+    "DeepSeek",
+    "Llama",
+    "OpenAI LLM"
+  ],
+  "validation_commands": [
+    "bootstrap/validate-meta-system.sh",
+    "bootstrap/check-meta-install-boundary.sh",
+    "bootstrap/validate-meta-instruction-layer.sh",
+    "bootstrap/check-meta-host-adapter-alignment.sh",
+    "bootstrap/check-meta-hallucination.sh",
+    "bootstrap/lint-meta-system.sh",
+    "bootstrap/system-meta-doctor.sh"
+  ]
+}

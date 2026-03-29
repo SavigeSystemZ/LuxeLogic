@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "minimum_primary_donor_score": 60.0,
+  "minimum_primary_signal_count": 1,
+  "accepted_primary_signals": [
+    "strong-context",
+    "filled-profile",
+    "docs-heavy",
+    "packaging-ready",
+    "multi-surface",
+    "full-aiaast"
+  ],
+  "high_score_review_threshold": 90.0,
+  "required_factory_files": [
+    "README.md",
+    "REPO_SCORECARD.md",
+    "REVIEW_NOTES.md",
+    "SELECTION.md",
+    "PROMOTION_CRITERIA.md",
+    "promotion-rubric.json",
+    "repo-scorecard.json"
+  ]
+}

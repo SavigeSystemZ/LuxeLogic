@@ -1,0 +1,4 @@
+- Add tests for new behavior and negative cases.
+- Prefer typed interfaces and explicit error handling.
+- Keep functions small and name things clearly.
+- Avoid clever abstractions unless repeated duplication is proven.

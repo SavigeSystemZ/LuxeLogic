@@ -1,0 +1,5 @@
+- Maintain a workspace MCP server catalog with risk ratings.
+- Default to read-only tools and minimal baseline scopes.
+- Use progressive scope elevation (request elevated scopes only when first needed).
+- Log elevation events with correlation IDs and scope details.
+- Never use wildcard scopes or omnibus scopes.

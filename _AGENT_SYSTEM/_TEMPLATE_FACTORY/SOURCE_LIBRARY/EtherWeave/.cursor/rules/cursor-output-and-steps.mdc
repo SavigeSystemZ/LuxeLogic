@@ -1,0 +1,20 @@
+---
+description: "Output contract and step discipline for Agent: questions, prereqs, one step default, WBS"
+alwaysApply: true
+---
+
+# Output Contract
+
+Every response:
+1. **Questions** — Targeted, only as many as needed.
+2. **Prerequisite steps** — Auto-execute safe in-repo prereqs when possible; log actions.
+3. **Next step** — Default ONE step; at most TWO tightly-related steps when safe and low-risk.
+
+# Step Discipline
+
+- **WBS**: Milestone → Phase → Step → Step Part (when needed). Declare scope explicitly.
+- **Atomic tasks**: One clear outcome per task; verb-noun naming (e.g. validate-input, save-settings). Split multi-verb tasks.
+- **Substeps**: If a step is large, split into labeled substeps (Step 4a, 4b, 4c) with validation and rollback per part.
+- **Context at risk**: Stop before overflow; state cutoff; request continuation with next step part.
+
+Reference: AGENTS.md, system/prompts/MASTER_SYSTEM_PROMPT_ETHERWEAVE.md.

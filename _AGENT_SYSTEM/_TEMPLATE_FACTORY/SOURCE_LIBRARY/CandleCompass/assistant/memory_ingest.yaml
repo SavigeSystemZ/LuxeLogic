@@ -1,0 +1,71 @@
+# Memory ingest configuration
+
+roots:
+  - assistant/MASTER_SYSTEM_PROMPT.md
+  - assistant/AGENTS_AND_SYSTEM.md
+  - assistant/ASSISTANT_LOADOUT.md
+  - assistant/FULL_CONTEXT_INDEX.md
+  - assistant/MEMORY_GUIDE.md
+  - README.md
+  - assistant/ARCHITECTURE.md
+  - assistant/CONTRIBUTING.md
+  - assistant/SECURITY.md
+  - assistant/STYLEGUIDE.md
+  - assistant/AI_ASSISTED_DEV.md
+  - assistant/ROADMAP.md
+  - assistant/TODO.md
+  - config.yaml
+  - .codexrc
+  - .env.example
+  - .editorconfig
+  - .gitignore
+  - .ruff.toml
+  - assistant/.shell_aliases.sh
+  - requirements.txt
+  - assistant/memory_ingest.yaml
+  - asset_universe.yaml
+  - assistant/prompts
+  - assistant/rules
+  - assistant/context
+  - assistant/skills
+  - assistant/commands
+  - assistant/resources/docs
+  - assistant/resources/urls.json
+  - assistant/resources/install_manifest.txt
+  - assistant/dotfiles
+  - .github
+  - scripts
+  - src
+  - ui
+  - tests
+  - templates
+
+skip_dirs:
+  - .git
+  - .venv
+  - .pytest_cache
+  - __pycache__
+  - .cache
+  - data
+  - runs
+  - logs
+  - outputs
+
+allowed_exts:
+  - .md
+  - .txt
+  - .py
+  - .json
+  - .yaml
+  - .yml
+  - .toml
+  - .ini
+  - .cfg
+  - .sh
+  - .js
+  - .css
+  - .html
+
+max_bytes: 200000
+max_lines: 80
+max_chars: 2000

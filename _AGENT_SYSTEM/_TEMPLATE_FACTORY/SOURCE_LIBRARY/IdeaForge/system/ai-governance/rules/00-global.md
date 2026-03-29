@@ -1,0 +1,8 @@
+- Plan before edits; keep scope tight.
+- Touch the fewest files possible.
+- Preserve module boundaries from system/design-docs/ARCHITECTURE.md.
+- Never commit secrets; use .env.example for placeholders.
+- Always add/update tests and run validation from system/design-docs/RUNBOOK.if2.md.
+- Provide file-by-file change summary + verification steps.
+- Multi-tool turn-taking is mandatory: only one tool writes at a time.
+- Every tool handoff must update `WHERE_LEFT_OFF.md`, `TODO.md`, and `FIXME.md`.

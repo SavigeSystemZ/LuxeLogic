@@ -1,0 +1,85 @@
+{
+  "canonical_startup_files": [
+    "META_AGENTS.md",
+    "meta_system/META_INSTRUCTION_PRECEDENCE_CONTRACT.md",
+    "meta_system/META_REPO_OPERATING_PROFILE.md",
+    "meta_system/META_LOAD_ORDER.md"
+  ],
+  "optional_context_files": [
+    "meta_system/META_PROJECT_RULES.md",
+    "meta_system/META_EXECUTION_PROTOCOL.md",
+    "meta_system/META_PROMPT_EMISSION_CONTRACT.md",
+    "docs/ReviewWorkflow.md",
+    "meta_system/prompt-packs/M2_DEFINE_META_SYSTEM_SPEC.md",
+    "meta_system/prompt-packs/M9_AIAST_SYSTEM_REVIEW.md",
+    "meta_system/golden-examples/PATTERN_INDEX.md"
+  ],
+  "generated_adapters": {
+    "codex": {
+      "path": "meta_system/host-adapters/META_CODEX.md",
+      "title": "MOS Adapter for Codex",
+      "tool": "Codex",
+      "tier": "first-class"
+    },
+    "cursor": {
+      "path": "meta_system/host-adapters/META_CURSOR.rules",
+      "title": "MOS Adapter for Cursor",
+      "tool": "Cursor",
+      "tier": "first-class"
+    },
+    "claude": {
+      "path": "meta_system/host-adapters/META_CLAUDE.md",
+      "title": "MOS Adapter for Claude",
+      "tool": "Claude",
+      "tier": "first-class"
+    },
+    "gemini": {
+      "path": "meta_system/host-adapters/META_GEMINI.md",
+      "title": "MOS Adapter for Gemini",
+      "tool": "Gemini",
+      "tier": "first-class"
+    },
+    "windsurf": {
+      "path": "meta_system/host-adapters/META_WINDSURF.md",
+      "title": "MOS Adapter for Windsurf",
+      "tool": "Windsurf",
+      "tier": "first-class"
+    },
+    "copilot": {
+      "path": "meta_system/host-adapters/META_COPILOT.md",
+      "title": "MOS Adapter for Copilot",
+      "tool": "Copilot",
+      "tier": "first-class"
+    },
+    "deepseek": {
+      "path": "meta_system/host-adapters/META_DEEPSEEK.md",
+      "title": "MOS Adapter Spec for DeepSeek",
+      "tool": "DeepSeek",
+      "tier": "spec-only"
+    },
+    "abacus": {
+      "path": "meta_system/host-adapters/META_ABACUS.md",
+      "title": "MOS Adapter Spec for Abacus",
+      "tool": "Abacus",
+      "tier": "spec-only"
+    },
+    "openai_llm": {
+      "path": "meta_system/host-adapters/META_OPENAI_LLM.md",
+      "title": "MOS Adapter Spec for OpenAI LLM",
+      "tool": "OpenAI LLM",
+      "tier": "spec-only"
+    },
+    "llama": {
+      "path": "meta_system/host-adapters/META_LLAMA.md",
+      "title": "MOS Adapter Spec for Llama",
+      "tool": "Llama",
+      "tier": "spec-only"
+    },
+    "agent_zero": {
+      "path": "meta_system/host-adapters/META_AGENT_ZERO.md",
+      "title": "MOS Adapter Spec for Agent Zero",
+      "tool": "Agent Zero",
+      "tier": "spec-only"
+    }
+  }
+}

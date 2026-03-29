@@ -1,0 +1,12 @@
+# Cursor Rules (IdeaForge)
+# Priority order:
+# 1) system/design-docs/PRD.md / ARCHITECTURE.md / DATA_MODEL.md / NFR.md / RUNBOOK.if2.md
+# 2) system/design-docs/PRD_VNEXT.md / ARCHITECTURE_VNEXT.md / DATA_MODEL_VNEXT.md / MILESTONES_VNEXT.md (when doing vNext work)
+# 3) system/design-docs/AGENTS.md
+# 4) system/ai-governance/rules/*.md
+#
+# Defaults:
+# - Plan first, then implement
+# - Minimal diffs, no unrelated refactors
+# - No secrets; placeholders only
+# - Add tests and run validation from RUNBOOK.md and system/design-docs/RUNBOOK.if2.md when doing system-layer work

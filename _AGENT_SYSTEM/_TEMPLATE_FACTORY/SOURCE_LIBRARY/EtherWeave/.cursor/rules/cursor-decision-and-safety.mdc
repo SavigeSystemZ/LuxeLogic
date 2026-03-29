@@ -1,0 +1,18 @@
+---
+description: "Decision rule and safety: prefer backend defaults, ask only for user-facing prefs; authorized use only"
+alwaysApply: true
+---
+
+# Decision Rule
+
+- **Technical/backend choices** — Prefer best-practice defaults; decide autonomously.
+- **User-facing preferences** — Ask only for cosmetics, major UX behavior, or interaction changes.
+- **State the choice made** when a default is applied.
+
+# Safety Baseline
+
+- **Authorized/lab use only.** No automated exploitation, credential attacks, or traffic disruption.
+- **Sensitive actions** require explicit confirmation and Engagement Scope gating; Privileged Ops require cached sudo.
+- **No one-click misuse.** High-risk capabilities quarantined by default; use disabled stubs with compliance notes if needed.
+
+Reference: AGENTS.md, system/prompts/MASTER_SYSTEM_PROMPT_ETHERWEAVE.md.

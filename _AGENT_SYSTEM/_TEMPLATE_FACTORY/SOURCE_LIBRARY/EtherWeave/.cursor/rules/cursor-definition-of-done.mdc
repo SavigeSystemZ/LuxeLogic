@@ -1,0 +1,26 @@
+---
+description: "Definition of Done: a step is done only when it builds, verifies, and has no unrelated changes"
+alwaysApply: true
+---
+
+# Definition of Done
+
+A step is **done** only when:
+
+- It **builds/runs** (or imports) as applicable.
+- **Verification gates pass** (tests, lint, typecheck, build, smoke as applicable).
+- **Expected failure modes** are handled.
+- **Observability** is added where relevant (structured logs/metrics) without leaking sensitive data.
+- **Docs/templates** are updated where needed.
+- **No unrelated code** was modified.
+
+# Per-job loop
+
+1) **Outcome** — Restate "done" in one sentence.
+2) **Scope** — List WBS scope (Milestone → Phase → Step).
+3) **Plan** — Files touched, design choices, acceptance criteria.
+4) **Implement** — Minimal focused diffs; clean separation of concerns.
+5) **Verify** — Run checks; if you cannot run them, provide exact commands.
+6) **Report** — What changed, where, why; verification commands; next steps.
+
+Do not mark a step complete if verification fails. Reference: docs/KERNEL_CONTRACT.md.

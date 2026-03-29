@@ -1,0 +1,15 @@
+{
+  "project_name": "CandleCompass",
+  "version": "2.1.0-Singularity",
+  "status": "M24_M26_M28_RUNTIME_STABLE_PORTFOLIO_ATTRIBUTION_ACTIVE",
+  "critical_paths": {
+    "rules": "assistant/rules/PROJECT_RULES.md",
+    "todo": "assistant/TODO.md",
+    "architecture": "assistant/ARCHITECTURE.md",
+    "master_prompt": "assistant/MASTER_SYSTEM_PROMPT.md"
+  },
+  "state": {
+    "last_phase_completed": 60,
+    "active_focus": "M26 portfolio history deepening is active: close/reduction attribution now flows through the paper ledger, portfolio overview, Portfolio Book, and Trade Journal. Next focus is cost-basis storytelling and realized-vs-open drilldowns while continuing M28 workstation chrome/density cleanup and host verification of installer PostgreSQL interactive flows."
+  }
+}

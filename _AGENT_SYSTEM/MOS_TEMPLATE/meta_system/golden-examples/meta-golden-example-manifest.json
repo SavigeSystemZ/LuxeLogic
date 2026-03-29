@@ -1,0 +1,23 @@
+{
+  "cross_cutting_patterns": [
+    "patterns/CONTINUITY_AND_HANDOFF.md",
+    "patterns/GOVERNANCE_AND_PROMPTING.md",
+    "patterns/MULTI_AGENT_AND_MCP.md",
+    "patterns/VALIDATION_AND_RELEASE.md",
+    "patterns/PLATFORM_SURFACES.md"
+  ],
+  "categories": [
+    "categories/WEB.md",
+    "categories/MOBILE.md",
+    "categories/DESKTOP.md",
+    "categories/CLI.md",
+    "categories/API.md"
+  ],
+  "working_files": [
+    "working-files/META_PLAN_EXAMPLE.md",
+    "working-files/META_WHERE_LEFT_OFF_EXAMPLE.md",
+    "working-files/META_OPERATING_PROFILE_EXAMPLE.md"
+  ],
+  "policy": "../META_GOLDEN_EXAMPLES_POLICY.md",
+  "summary": "Neutralized meta-system guidance derived from strong donor patterns without copying donor runtime code."
+}

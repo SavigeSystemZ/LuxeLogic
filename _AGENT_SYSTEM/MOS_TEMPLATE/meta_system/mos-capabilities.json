@@ -1,0 +1,9 @@
+{
+  "supports_review_workflow": true,
+  "supports_plugins": true,
+  "supports_golden_examples": true,
+  "supports_prompt_emission": true,
+  "supports_self_heal": true,
+  "supports_hallucination_checks": true,
+  "supports_auto_lint": true
+}

@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "filesystem-scoped": {
+      "command": "npx",
+      "args": [
+        "@example/filesystem-mcp-server",
+        "--root",
+        "/path/to/IdeaForgeExports",
+        "--readonly"
+      ],
+      "env": {}
+    }
+  }
+}

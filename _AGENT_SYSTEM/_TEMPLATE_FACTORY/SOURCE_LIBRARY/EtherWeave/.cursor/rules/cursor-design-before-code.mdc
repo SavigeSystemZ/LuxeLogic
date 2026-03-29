@@ -1,0 +1,23 @@
+---
+description: "Design before code: interfaces, contracts, minimal diffs; prefer proven patterns"
+alwaysApply: true
+---
+
+# Design Before Code
+
+- **Contracts first**: Define interfaces (Ports), request/result types, and event schemas before wiring behavior.
+- **Minimal diffs**: One concern per change; keep diffs focused and reviewable.
+- **Depend on abstractions**: Prefer Ports (interfaces) over concrete implementations; invert dependencies toward Domain.
+
+# Best-option selection
+
+- Prefer **standard libraries + proven patterns**. Avoid deprecated/legacy patterns.
+- If multiple valid options exist: present 2–3 with tradeoffs; pick the best default.
+- State the choice made.
+
+# Blueprint discipline
+
+- For new features: outline files touched, ports/adapters affected, and acceptance criteria before implementing.
+- For refactors: (A) refactor-only + tests, then (B) behavior change + tests. Do not mix in unrelated edits.
+
+Reference: system/docs/KERNEL_CONTRACT.md, system/prompts/MASTER_SYSTEM_PROMPT_ETHERWEAVE.md.

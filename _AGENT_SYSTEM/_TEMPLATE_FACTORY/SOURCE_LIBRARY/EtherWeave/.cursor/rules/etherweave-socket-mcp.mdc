@@ -1,0 +1,20 @@
+---
+description: Use Socket MCP depscore for dependency security when adding or changing Python/npm dependencies. Config and docs at docs/SOCKET_MCP_CONFIG.md.
+globs:
+  - "**/requirements*.txt"
+  - "**/pyproject.toml"
+  - "**/setup.py"
+  - "**/package.json"
+  - "**/Pipfile*"
+alwaysApply: false
+---
+
+# Socket MCP — Dependency security (Etherweave)
+
+When adding or changing dependencies (e.g. in `requirements.txt`, `pyproject.toml`, `package.json`):
+
+1. **Use the Socket MCP** `depscore` tool to check supply chain, quality, maintenance, vulnerability, and license scores for the package(s) you are adding or upgrading.
+2. If the overall or vulnerability score is low, prefer a more secure alternative or implement a minimal solution; if unsure, ask for review before committing.
+3. Check both the dependency file and any new or changed `import` statements so all added packages are considered.
+
+Configuration and official links: **docs/SOCKET_MCP_CONFIG.md**.

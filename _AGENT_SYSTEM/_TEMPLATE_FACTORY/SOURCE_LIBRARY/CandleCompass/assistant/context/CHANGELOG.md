@@ -1,0 +1,1144 @@
+# Change Log (Research)
+
+## 2026-03-06 (M26 close attribution + trade-history slicing)
+- **Paper ledger now records close intent and lot context:** `app/src/portfolio/paper_book.py` now persists `initial_qty` on open paper lots plus close-side attribution fields on realized fills (`close_effect`, `parent_trade_id`, `parent_qty_before`, `parent_remaining_qty_after`, `holding_hours`). This makes partial reductions and flips observable instead of collapsing every realized fill into an undifferentiated close.
+- **Portfolio overview contract deepened again:** `app/src/api/routers/metrics.py` now reports reduce/full-close/flip counts, average realized holding time, realized exit notional, and richer recent-trade metadata for close attribution. The local Next compatibility builder in `app/ui-next/src/lib/backendCompatibility.ts` now emits the same fields when the live backend route is unavailable.
+- **Portfolio workstation history is more actionable:** `PortfolioBookWidget.tsx` now surfaces close mix and lot-level close attribution, while `TradeJournalWidget.tsx` now supports `All` / `Closed` / `Partial` / `Open` history slicing plus a close-attribution panel for the selected trade.
+- **Validation:** targeted backend pytest passed (`tests/test_manual_execute.py`, `tests/test_portfolio_overview.py`), targeted frontend Vitest passed (`PortfolioBookWidget`, `TradeJournalWidget`, `backendCompatibility`), touched-file ESLint passed, and `cd app/ui-next && npx next build` passed.
+
+## 2026-03-06 (workstation shell polish + route-aware menu actions)
+- **Top-level workstation shell is less overlap-prone:** Added `app/ui-next/src/components/layout/WorkstationHeader.tsx` and rewired `CommandCenter.tsx` so every routed workstation now gets a shared header with current-symbol, timeframe, mode, stream health, and route shortcuts instead of dropping users directly into a dense panel stack.
+- **Mini-map and AI co-pilot no longer fight the main canvas on wide screens:** `WarRoomMiniMap.tsx` now supports docked rendering, and `CommandCenter.tsx` mounts both the mini-map and co-pilot inside a dedicated utility rail on wide layouts rather than as fixed overlays covering active workstation content.
+- **Menu widget items now open visible destinations instead of silently mutating the hidden dashboard layout:** `NavMenuBar.tsx` now carries target workstation metadata for widget menu entries and dispatches through a route-aware widget opener. This makes Data / Trade / Risk submenu selections visibly land in Charts, Scanner, Research, Portfolio, or Risk instead of appearing to do nothing.
+- **Top bar symbol control now stays in sync with routed state:** `WarRoomTopBar.tsx` now mirrors external symbol changes back into its local input, shows active workstation context, and exposes an explicit submit action so symbol changes are clearer.
+- **Co-pilot prompt chips became real actions instead of clipboard dead ends:** `ChatWidget.tsx` now listens for `candle_compass:copilot-prompt`, and scanner/co-pilot prompt buttons route directly into Cortex input/execution. `CommandCenter.tsx` prompt chips now launch real assistant actions instead of just copying text.
+- **Validation:** targeted Vitest menu/dashboard tests passed (`10/10`), targeted ESLint passed, `cd app/ui-next && npm run build` passed, user UI service restarted cleanly, and live workstation smoke on `127.0.0.1:3967` returned `200` for `/`, `/charts`, `/scanner`, `/trade`, `/risk`, `/research`, `/portfolio`, `/alerts`, and `/emergency`.
+
+## 2026-03-06 (live service repoint + legacy-backend compatibility bridge)
+- **Active UI service now serves the workspace build again:** Reinstalled the user `candle_compass.service` to point at `/home/whyte/.MyAppZ/CandleCompass/app` instead of the stale `/opt/CandleCompass` tree, so `127.0.0.1:3967` now runs the validated workspace Next standalone build.
+- **Backend-version drift is now tolerated by the UI proxy layer:** Added `app/ui-next/src/lib/backendCompatibility.ts` and updated the affected Next API routes so the current frontend can work against the older backend still running on `127.0.0.1:8010`.
+- **Alignment widget no longer dies on older backends:** `metrics/multi_timeframe_signal` now falls back to `/api/metrics/signal_blend` and synthesizes a truthful single-frame compatibility payload when the newer backend route is missing. The alert route now evaluates threshold logic locally in the same compatibility mode instead of returning `404`.
+- **Portfolio and trade surfaces stay live without the newer backend contract:** `portfolio/overview` now falls back to local run artifacts (`trades.json`, `trade_journal.json`, `paper_positions.json`, `app_settings.json`, `risk_status.json`) when the backend overview route is unavailable, so Portfolio Book, Allocation Compass, and dependent workstation surfaces still populate with real local state.
+- **Manual execution compatibility restored:** `execute/manual` now retries through the still-live legacy backend path `/api/emergency/manual` when `/api/execute/manual` is absent, while normalizing the returned payload so the current UI still sees `execution_mode`.
+- **Validation:** targeted Vitest compatibility tests passed (`3/3`), targeted ESLint passed, `npm run build` passed, workspace standalone smoke on `4012` passed, and live smoke on `127.0.0.1:3967` passed after repointing the service.
+
+## 2026-03-06 (runtime bootstrap, live status, and GUI/API smoke stabilization)
+- **False degraded launch state fixed:** Added shared launcher env/bootstrap logic in `app/scripts/runtime_env.sh` and wired it into the desktop/UI/backend launch scripts so local loopback runtime keys are generated and persisted in `app/.env.local`. This removed the prior launch experience where the UI reported missing runtime-control/AI keys and dropped into degraded mode unnecessarily.
+- **Runtime bootstrap hardened after review:** `app/ui-next/src/app/api/candle_compass/runtime/bootstrap/route.ts` no longer returns the runtime control key to browser code, because App Router request metadata did not provide a trustworthy way to prove loopback origin and the previous Host / X-Forwarded-For check was spoofable. The route now returns only the effective runtime `operate` role resolved from env/file policy, while `settings/page.tsx` and `CommandCenter.tsx` auto-elevate stale stored roles to match hardened deployments.
+- **Runtime control UX repaired after the security change:** `/settings` now supports `?panel=runtime` deep links, the runtime panel explicitly states that browser key entry is manual, and dashboard recovery/help surfaces route straight into that panel when a privileged action is blocked by missing auth. `CommandCenter.tsx` also now uses the real `killSwitch` payload with destructive confirm for Ghost Protocol and reuses the shared live system-ops panel instead of stale inline action payloads.
+- **M28 loading-state sweep landed:** Added `app/ui-next/src/components/ui/LoadingSurface.tsx` and replaced the remaining raw `Loading ...` / `Building ...` strings with consistent skeleton/loading treatments across dashboard fallbacks, notification surfaces, portfolio widgets, the oracle scanner table, options chain, system/data health widgets, and the Theme Studio suspense fallback.
+- **Default dashboard composition rebalanced:** `CommandCenter.tsx` now seeds the first-run dashboard with chart + oracle scanner + confluence context instead of the older narrow-chart/right-rail stack, reducing empty center-canvas space and making the landing view feel more curated.
+- **Standalone Next runtime paths corrected:** Added `app/ui-next/src/lib/runtimePaths.ts` and updated the affected API routes so installed/standalone Next no longer reads `.next/standalone`-relative artifact paths. This fixed real live issues where dashboard routes could fall back to synthetic chart/orderflow states despite valid runtime artifacts existing under `app/runs/latest`.
+- **Next API freshness fixed across the Candle Compass route tree:** Marked the `app/ui-next/src/app/api/candle_compass/**` handlers as explicit `force-dynamic` / `revalidate = 0` endpoints and hardened `buildServiceStatus()` so it probes backend/memory in parallel without self-probing the UI. This removed stale runtime-status responses and stabilized repeated live `backend.healthy=true` checks after restart.
+- **Hydration/data tooling repaired:** `hydrate_all.sh` now uses `fetch_universe.py` instead of the stale `fetch_data.py --days` interface. `score_assets.py` now uses modern pandas-compatible `bfill()` and aligns unequal cached OHLCV series by timestamp before scoring. Full hydration now completes successfully on this host.
+- **Reusable live surface smoke added:** Added `app/scripts/gui_surface_smoke.py`, including UI/backend preflight waits so it can validate real restart scenarios instead of failing during launch windows. Current live pass covers workstation pages, major API proxies, manual paper execution, notification preferences, and alignment-alert flows.
+- **GUI audit references captured:** Saved current runtime screenshots under `app/runs/latest/gui_screens/` for the next GUI pass. The app is functionally live, but the screenshots confirm remaining design debt around sparse center-canvas usage, raw loading states, and workstation density/polish.
+
+## 2026-03-06 (M26 position action UX + portfolio analytics expansion)
+- **Portfolio overview contract expanded:** `app/src/api/routers/metrics.py` now returns operator-facing portfolio analytics including profitable/losing position counts, long/short balance, gross long/gross short marked value, concentration percentage, average position age, best symbol, weakest symbol, per-position `holding_hours`, and per-symbol `net_pnl` plus `avg_holding_hours`.
+- **Open positions are actionable now:** `app/ui-next/src/components/widgets/OpenPositionsWidget.tsx` now exposes `Trim 25%`, `Trim 50%`, and `Close` actions. These do not silently execute; they prefill the Trade desk with the correct offsetting side, quantity, leverage, and paper-mode state through new routing logic in `CommandCenter.tsx`.
+- **Portfolio GUI became more desk-like:** `AllocationCompassWidget.tsx` now shows concentration, book balance, profitable/losing positions, average hold time, and best/weakest symbol. `PortfolioBookWidget.tsx` now surfaces net P&L and average hold duration per symbol instead of only basic realized/unrealized rollups.
+- **Validation:** targeted backend portfolio overview regression pass; targeted portfolio widget test pass; full backend pytest `360 passed`; full frontend vitest `93 passed`; ESLint clean; Next build clean; detached backend/UI restarted and live `/portfolio` route revalidated.
+
+## 2026-03-06 (M26 durable paper ledger + trade desk contract fix)
+- **Portfolio now has a real durable paper book:** Added `app/src/portfolio/paper_book.py` to persist paper fills, rebuild open positions, resolve mark prices from cached quote/OHLCV sources, and write `runs/latest/paper_positions.json`. `app/src/api/routers/execution.py` now records paper fills into `runs/latest/trades.json` while keeping live-intent orders explicitly simulated.
+- **Portfolio workstation materially deepened:** `app/src/api/routers/metrics.py` now returns positions, allocation, unrealized/net P&L, market value, margin used, and richer recent-trade metadata through `GET /api/candle_compass/portfolio/overview`. New UI widgets `OpenPositionsWidget.tsx` and `AllocationCompassWidget.tsx` landed, while `PortfolioBookWidget.tsx`, `TradeJournalWidget.tsx`, `usePortfolioOverview.ts`, `widgetRegistry.ts`, and `CommandCenter.tsx` were expanded so the Portfolio desk is a real marked book instead of only a summary/journal shell.
+- **Trade desk contract was fixed live:** Found that the Trade desk proxy called `/api/execute/manual` while backend manual execution only existed under `/api/emergency/manual`. Fixed by exposing the manual execution handler on both routes, wiring `app/main.py` to include the `/api/execute` router, and validating live `POST /api/candle_compass/execute/manual -> 200` through the real UI proxy.
+- **Detached backend restart is now trustworthy:** `app/scripts/launch_backend_detached.sh --restart` now truly forces restart even when the backend is already healthy but the PID file is missing, reconstructs listener PID state, and rewrites the PID file during healthy attach cases.
+
+## 2026-03-06 (M26 portfolio book + trade journal workstation slice)
+- **Portfolio workstation got a real contract:** Added `GET /api/candle_compass/portfolio/overview` in `app/src/api/routers/metrics.py` to normalize book summary, journal coverage, realized P&L coverage, symbol rollups, watchlist context, and recent trades from `runs/latest`. The route keeps portfolio state honest by summing realized P&L only from explicit numeric `pnl` values and leaving `return_pct` separate instead of silently converting it into USD.
+- **Portfolio workstation is now actionable:** Added a Next proxy route (`app/ui-next/src/app/api/candle_compass/portfolio/overview/route.ts`), shared hook (`app/ui-next/src/lib/portfolio/usePortfolioOverview.ts`), `PortfolioBookWidget.tsx`, and `TradeJournalWidget.tsx`. `CommandCenter.tsx` now mounts both widgets on `/portfolio`, routes symbol actions into the Trade desk, and exposes them as dashboard-addable modules (`PORTFOLIO_BOOK`, `TRADE_JOURNAL`).
+- **Trade journaling is live in the workstation:** `TradeJournalWidget` saves notes through the existing `/api/candle_compass` mutation path into `runs/latest/trade_journal.json`, so the Portfolio desk can now capture operator notes instead of only showing passive summaries.
+- **Validation:** backend pytest `358 passed`, frontend vitest `91 passed`, ESLint clean, Next build clean, live backend portfolio overview route verified, live Next proxy portfolio overview route verified, live `/portfolio` route verified.
+
+## 2026-03-06 (M25 scanner alignment integration + backend restart hardening)
+- **Scanner ranking now consumes M25 alignment:** Updated `app/src/api/routers/scanners.py` so scanner results can be filtered and sorted by multi-timeframe alignment via `min_alignment_score`, `preferred_primary_action`, `sort_by=alignment`, and `sort_by=alignment_adjusted`. Scanner rows now expose `mtfPrimaryAction`, `mtfAlignmentScore`, `mtfConflictScore`, `mtfConfidence`, `mtfSummary`, `mtfSupportedTimeframes`, `alignmentAdjustedScore`, and `alertEligible`.
+- **Scanner workstation got real instead of decorative:** Updated `app/ui-next/src/components/widgets/OracleScannerWidget.tsx` to show `MTF Bias` and `Align`, highlight the selected row, and emit row selection upstream. Updated `TradeOpportunityCard.tsx` plus `CommandCenter.tsx` so the scanner desk’s opportunity panel is built from the selected scanner setup and its actions now route to the Trade desk or open Cortex with a contextual prompt.
+- **Live-route cost bounded:** Capped scanner alignment enrichment to a top-ranked slice so the live scanner endpoints remain responsive while still surfacing real M25 data. This keeps the current truthful `1d/1w/1mo` alignment model usable without fabricating intraday intelligence or attempting expensive full-universe MTF scoring on every request.
+- **Detached backend restart fixed:** Hardened `app/scripts/launch_backend_detached.sh --restart` so it waits for the old backend PID and port to clear before checking health again, eliminating the false-positive “already responding” restart path caused by transient old-process health responses.
+- **Validation:** frontend lint pass, frontend vitest `87 passed`, Next build pass, backend pytest `353 passed`, live backend oracle/custom scanner routes verified, live Next proxy scanner route verified.
+
+## 2026-03-06 (M24 completion + M25 slice 1 + launcher parity)
+- **Master plan saved in-repo:** Added `assistant/resources/docs/CANDLE_COMPASS_ULTIMATE_ADVANCEMENT_PLAN_2026_03_06.md` and indexed it in `assistant/FULL_CONTEXT_INDEX.md` so future agents can resume from the authoritative execution plan instead of reconstructing it from chat history.
+- **M24 completed:** Added the real Next notification API route tree under `app/ui-next/src/app/api/candle_compass/notifications/**`, built the end-user notification settings surface (`NotificationPreferencesPanel.tsx`) and wired it into `/settings` plus `SettingsModal`, added the dedicated `/alerts` workstation, upgraded `NotificationCenterWidget.tsx` and `NotificationDropdown.tsx` with search/filter/read/clear/action flows, and extended `app/src/notifications/dispatcher.py` plus `app/src/monitoring/notification_emitters.py` for per-event routing policy, quiet hours, severity thresholds, and deep-linkable `action_url` metadata.
+- **M25 started:** Added backend multi-timeframe alignment in `app/src/api/routers/metrics.py` via `/api/metrics/multi_timeframe_signal`, added the Next proxy route at `app/ui-next/src/app/api/candle_compass/metrics/multi_timeframe_signal/route.ts`, created `MultiTimeframeAlignmentWidget.tsx`, and surfaced it in the `Charts`, `Scanner`, and `Research` workstations. Current implementation intentionally supports `1d`, `1w`, and `1mo` only, while explicitly flagging intraday frames as unavailable until sub-daily OHLCV ingestion exists.
+- **Launcher/runtime parity:** `app/scripts/launch_ui_detached.sh` now survives caller-session exit reliably, `app/scripts/launch_backend_detached.sh` now supports `--restart` for detached code-refresh workflows, and `app/scripts/memory_status.sh` now clears stale PID files instead of reporting permanent false-active state.
+- **Validation:** frontend lint pass, frontend vitest `87 passed`, Next build pass, backend pytest `351 passed`, live `/alerts` route verified, live notification emit/list/preferences flow verified, live backend/UI multi-timeframe route verified.
+
+## 2026-03-06 (runtime orchestration + routed workstation shell slice)
+- **Launcher/runtime contract:** Updated `app/scripts/launch_ui.sh` and `app/scripts/launch_ui_detached.sh` so UI startup is backend-aware instead of UI-only. They now attempt backend startup, expose `CANDLE_COMPASS_BACKEND_POLICY=auto|required|degraded|skip`, and report full-mode vs degraded-mode startup explicitly.
+- **Detached backend hardening:** Updated `app/scripts/launch_backend_detached.sh` to use `setsid` plus stdin isolation for more reliable detached backend startup on this host. Verified healthy detached startup after the change.
+- **Structured degraded proxy behavior:** Added `app/ui-next/src/lib/api/backendProxy.ts` and refactored the backend-bound Next proxy routes to use it. When backend is down, routes now return structured degraded `503` JSON instead of repeated raw `ECONNREFUSED` spam. Verified on `metrics/signal_blend` and `alerts/dispatch`, then applied across the other `fetchBackend(...)` proxies.
+- **Routed workstation architecture started:** Added `app/ui-next/src/lib/workstations.ts` and real workstation pages for `/charts`, `/scanner`, `/trade`, `/risk`, `/research`, `/portfolio`, `/strategy-lab`, and `/emergency`. `CommandCenter` now supports route-backed workstation rendering instead of relying only on local view toggles.
+- **Workstation implementation slice:** Added dedicated content surfaces for Charts, Scanner, Trade, Risk, Research, Portfolio, Strategy Lab, and Emergency. Trade now includes a real quick-order rail wired to `/api/candle_compass/execute/manual` plus a bracket builder.
+- **Dashboard shell polish:** Added real layout undo/redo history in `DashboardManager.tsx`, updated `DashboardToolbar` to reflect actual undo/redo availability, and replaced the feedback placeholder with a real prompt-backed local capture flow.
+- **Help/runtime docs:** Updated `app/ui-next/src/app/help/page.tsx` so quick-start/troubleshooting reflects backend-aware launcher behavior and the new workstation route model.
+- **Data honesty improvement:** `app/ui-next/src/lib/api/client.ts` no longer reports fake-healthy module status on fetch failure; offline fallback now reports unhealthy backend/memory state.
+- **Validation:** frontend lint/test/build green (`85` vitest passing), backend `346 passed`, live launcher-path verification passed, degraded proxy verification passed, detached backend relaunch verified healthy after hardening.
+
+## 2026-03-06 (M24 notification delivery slice 1)
+- **Dispatcher channel expansion:** Extended `app/src/notifications/dispatcher.py` to support `push` and `webhook` channels alongside `email` and `sms`. Telegram delivery is now normalized as the user-facing `push` channel, and webhook delivery uses per-user webhook URL/secret preferences.
+- **Backend event fan-out:** Updated `app/src/monitoring/notification_emitters.py` so scanner discoveries, whale alerts, risk alerts, and accuracy alerts can fan out into remote delivery channels instead of stopping at the local Notification Center. Added cooldown throttling to reduce alert storms from repeated backend events.
+- **Risk threshold delivery:** Updated `app/src/execution/orchestrator.py` so Risk Guardian threshold breaches emit real risk notifications.
+- **Admin routing controls:** Expanded `app/ui-next/src/app/api/candle_compass/admin/control/route.ts` and `app/ui-next/src/components/admin/AdminControlPanel.tsx` to manage push destination, webhook URL, and webhook secret in notification preferences.
+- **Whale payload fix:** Corrected `app/main.py` whale notification fan-out to use the actual `notional` payload field instead of a non-existent `size_usd`.
+- **Validation:** Backend `346 passed`; frontend lint/test/build green (`85` vitest passing).
+
+## 2026-03-06 (runtime workspace hygiene cleanup)
+- **`app/runs` converted to generated workspace:** Replaced partial log/pid ignores with a full `app/runs/**` generated-state policy in `.gitignore`, while preserving tracked placeholder directories via `.gitkeep`.
+- **Runtime policy documentation:** Added `app/runs/README.md` so future sessions understand that runtime artifacts remain local on disk but are intentionally not versioned.
+- **Git hygiene fix:** Removed tracked runtime outputs from the git index without deleting local files, which should stop installs, hydrations, and smoke runs from flooding `git status` with machine-specific state.
+- **Verified behavior:** Regenerated `app/runs/latest/app_settings.json` after the cleanup and confirmed `git status` remained clean.
+
+## 2026-03-06 (installed UI render repair + standalone asset packaging fix)
+- **Root cause confirmed:** The user-reported white/plain UI was not a React layout bug. The installed standalone Next server was serving the app HTML, but its `/_next/static/*` CSS/JS bundle URLs were returning `404` because `.next/static` had not been synchronized into `.next/standalone/.next/static`.
+- **Installer/runtime hardening:** Updated `app/scripts/install_candle_compass.sh`, `app/scripts/launch_ui.sh`, and `app/scripts/launch_ui_detached.sh` so standalone runtime assets are synchronized and verified before launch. Detached launch now treats missing CSS/JS bundles as a startup failure instead of a healthy UI.
+- **Smoke coverage closed:** Expanded `app/scripts/e2e_smoke.py` to probe the UI root and all discovered `/_next/static/*` assets, preventing future false-green runs where the UI HTML is up but the styling/runtime bundles are missing.
+- **Host validation:** Re-ran full fresh install on the local Ubuntu host with `--non-interactive --action fresh --pg-policy keep --system-deps reuse --user-services install`; confirmed installed services on `3967/8010`, confirmed all discovered static assets return `200`, passed strict installed-copy smoke, and captured a fixed Chromium screenshot at `~/Pictures/CandleCompass_render_check_20260306_fixed.png`.
+- **Validation:** Backend `343 passed`; frontend lint/test/build green (`83` vitest passing); installer smoke passed.
+
+## 2026-03-06 (stabilization pass: realtime cleanup + fresh install + installed-copy validation)
+- **Realtime/test noise cleanup:** Added `app/ui-next/src/lib/runtimeDebug.ts` and refactored `useStream.ts` plus `LiveMarketContext.tsx` so websocket logging/reconnect churn is suppressed in test mode and reconnect timers stop cleanly on unmount.
+- **Chart warning cleanup:** Updated `app/ui-next/src/components/widgets/RiskGuardianWidget.tsx` to avoid SSR/test-time Recharts container warnings while preserving the live browser gauge.
+- **Hydration output hardening:** Reworked `app/scripts/hydrate_all.sh` to write per-step logs into `runs/logs/hydrate` and keep installer stdout concise unless a step fails.
+- **Ops status fix:** Updated `app/scripts/ui_status.sh` so installed-copy status checks honor an explicit target root instead of always reading from the current working directory.
+- **Repo hygiene:** Added root `node_modules/` ignore to `.gitignore`.
+- **Validation:** Backend `343 passed`; frontend lint/test/build green (`83` vitest passing); installer smoke passed; fast hydration passed; full fresh install on Ubuntu host passed again; installed copy served HTTP successfully on default `3967/8010`; strict installed-copy `e2e_smoke.py --check-http` passed.
+
+## 2026-03-06 (M17 cross-distro validation + bootstrap hardening)
+- **Shared dependency policy surfaced:** Added `--system-deps reuse|refresh` to `app/scripts/install_candle_compass.sh`, plus richer preflight/runtime status reporting for Node, npm, PostgreSQL, Redis/Valkey, and service state.
+- **Real distro assumptions corrected:** Fixed Fedora `dnf` package mapping (`postgresql-server-devel`, `valkey-compat-redis`) and Arch `pacman` package mapping (`valkey`). Installer now detects both Redis and Valkey binaries/services.
+- **PostgreSQL bootstrap hardened:** `dnf`/`yum` hosts now fall back to direct `initdb` when `postgresql-setup` cannot initialize the cluster; `pacman` direct-init path remains supported.
+- **Cross-distro matrix validation:** Added `app/scripts/installer_host_matrix_smoke.sh` and passed Fedora/Arch container validation for package names, service unit names, and PostgreSQL bootstrap paths.
+- **Fresh install rerun:** Re-ran `bash app/scripts/install_candle_compass.sh --non-interactive --action fresh --pg-policy keep --system-deps reuse` successfully on the local Ubuntu host, then revalidated the installed copy with strict HTTP smoke on `3969/8012`.
+
+## 2026-03-06 (M16 multi-tool prompt-pack parity)
+- **M16 Multi-Tool Prompt Pack Extension (complete):** Added `assistant/prompts/M17_M23_EXPANSION_PROMPT_PACK.md` with executable prompt variants for Cursor, Codex, Gemini, Windsurf/Windsor, and Claude across milestones `M17-M23`.
+- **Prompt-pack validation:** Added `app/scripts/validate_prompt_packs.py` and CI coverage so prompt-pack parity is checked mechanically instead of by manual review only.
+- **Context/index updates:** Indexed the new prompt pack in `assistant/FULL_CONTEXT_INDEX.md`, linked it from the next-instruction-set doc, and extended quality-gate guidance for prompt-pack validation.
+
+## 2026-03-06 (M13 completion, M15 sync automation, M17 installer UX hardening)
+- **M13 Theme & Skin Manager (complete):** Promoted custom skins to first-class theme selections in `ThemeContext`, rebuilt `AppearancePanel` around a persistent custom-skin library (apply/edit/import/export/delete), and reworked `ThemeEditor` to use scoped preview plus blocking WCAG contrast save policy. Added `app/ui-next/src/lib/theme.test.ts`.
+- **M15 Branch & Artifact Management (complete):** Added `app/scripts/git_sync_backup_branch.sh`, `app/scripts/git_sync_design_branch.sh`, `assistant/resources/design_tools_manifest.txt`, and `app/scripts/branch_sync_smoke.sh` to formalize the `main -> backup/*` and design-surface publish workflows. Updated `ci.yml`, `REPO_BOUNDARY_AND_BACKUP.md`, hook messaging, and command aliases to point to the real sync commands.
+- **M17 Installer & Platform Hardening (advanced):** Normalized dependency reuse behavior across `apt`, `dnf`, `yum`, and `pacman` so already-installed packages are reused instead of reinstalled blindly. Preflight and purge output now explicitly state that shared Node/Postgres/Redis dependencies are preserved.
+- **Validation:** Frontend `npm run lint`, `npm run test` (`83 passed`), `npm run build`; backend `.venv/bin/python -m pytest -q` (`343 passed`); installer smoke; branch sync smoke.
+
+## 2026-02-26 (UIA/Addendum execution, theme uploads, branch guards, installer M17 preflight)
+- **M18 Theme Consolidation (partial):** Added a canonical typed theme registry adapter (`app/ui-next/src/themes/index.ts`) that normalizes dynamic skins and exposes legacy theme config through one module API. Refactored `ThemeContext`, `AppearancePanel`, and `lib/theme` to import through the registry; added `src/themes/index.test.ts`. Added initial Theme Studio WCAG guardrails via `src/lib/colorContrast.ts` + tests and live contrast checks in `ThemeEditor`.
+- **M12 Navigation/Menu Polish:** Added desktop keyboard navigation and collapsed mobile menu support to `NavMenuBar`, with automated Vitest coverage for desktop click, keyboard focus flow, and mobile menu actions.
+- **M13 Theme/Skin Expansion (partial):** Added background atmosphere presets, custom background URL support, and safe local image uploads with MIME/size guardrails (SVG data URLs rejected). Wired through `AppearancePanel`, `uiPreferences`, and CSS background layers, with unit tests.
+- **M15 Branch & Artifact Management (partial):** Added local git branch guard hooks (`pre-commit`, `pre-push`) for `main / backup / design-tools` workflow and introduced `AI_TOOL_USAGE_LOG_TEMPLATE.md` for multi-tool milestone tracking.
+- **M17 Installer & Platform Hardening (partial):** Extended `install_candle_compass.sh` with package-manager detection (`apt`, `dnf`, `yum`, `pacman`), `--preflight/--dry-run` prerequisite mode, non-interactive `--action` parsing, and clearer section headers. Verified syntax and preflight runtime output.
+- **Continuity & Ops:** Updated TODO/WHERE_WE_LEFT_OFF/universal manifest, regenerated `CURRENT_CONTEXT_SNAPSHOT.md`, and rotated external backups after each milestone batch.
+
+## 2026-02-26 (RSIGlobe retirement audit + branding cleanup)
+- **Merge impact audit:** Verified reported GitHub Copilot merge from retired RSIGlobe repo did not modify runtime/YAML assets in commit `baee3d9`; it only added `CONSOLIDATION_LOG.md`.
+- **YAML integrity:** Parsed all repository YAML files outside caches/venv (`16` files, `0` parse errors).
+- **Branding cleanup:** Corrected remaining actionable branding drift (desktop launcher comment and user-guide launcher filename example).
+- **Branding audit tooling:** Rebuilt `app/scripts/brand_check.py` to support `--scope app|repo`, actionable-vs-allowed legacy reference classification, and repo-wide audit mode while preserving intentional legacy references for migration/compat docs.
+
+## 2026-02-25 (Grand Unification & Hyper-Aggressive Expansion)
+- **Phase 45-47 (Ecosystem Features):** Built the `Time Machine` historical replay engine, the `Strategy Laboratory` visual builder, and the `Newsroom` NLP narrative intelligence widget.
+- **Phase 48 & 54 (Flash Core):** Implemented `app/src/discovery/parallel_scanner.py` using `ProcessPoolExecutor` for blazing fast concurrent market scanning, supplementing the existing Numba `@jit` optimizations.
+- **Phase 49 & 55 (Sentinel Alerts):** Created the `TelegramProvider` notification dispatcher and `app/src/execution/alert_engine.py` to evaluate live market data against high-conviction rules (e.g., Confluence > 90 + Whale > $1M) and dispatch real-time alerts.
+- **Phase 50 & 51 (Widget Factory & Omni-Registry):** Rebuilt the dashboard component factory to support dynamic loading of all new massive widgets (`RiskGuardianWidget`, `SocialHypeWidget`, `WhaleWatchWidget`, `StrategyLaboratory`, etc.). Upgraded `widgetRegistry.ts` to categorize all tools into an accessible "App Store" UI.
+- **Phase 52 & 53 (Control Deck & Live Wire):** Implemented a global left-side `SidebarDock` with a prominent `+ Add Module` action. Unified all widget data fetching via `useWidgetData.ts` using `SWR` polling against backend JSON artifacts (`research_feed.json`, `arbitrage_opportunities.json`, etc.).
+- **System Stability:** Fixed UI compilation errors in `CommandCenter.tsx` related to prop passing. Corrected the `test_cortex_commander.py` test suite to match the upgraded `AGENT_EXECUTION` action payload. Full suite passing (`167 tests`).
+
+## 2026-02-18 (Display fix, Phase F/T/O, telemetry)
+- **UI display fix:** Resolved "white background, black text, no formatting" by moving html/body/headings into `@layer base` in `globals.css` so dark command-center styles override Tailwind preflight; added fallbacks for `--bg`, `--text-primary`; layout.tsx wrapper and body classes adjusted. Users should hard-refresh after pull.
+- **Phase F:** Extended artifact validation (symbol_catalog, service_console_actions, user_progression, run_metadata); run_ui_bundle.py writes run_metadata.json; unit tests for new schemas.
+- **Phase T:** CI installer_smoke job (install_candle_compass.sh with skip flags); API contract tests (strategyLab, externalBackup, timeMachineBacktest).
+- **Phase O:** OPS_RUNBOOK "Observability (Optional)" (alerting on runtime_error_events, Prometheus/metrics).
+
+## 2026-02-18 (Advancement, Security, Roadmap)
+- **Security and deployment:** Added `assistant/resources/docs/SECURITY_AND_DEPLOYMENT_CHECKLIST.md` (secrets, runtime auth, network, data, dependencies, observability, hardening, pre-deployment verification). Linked from README and FULL_CONTEXT_INDEX.
+- **Environment:** Enhanced `app/.env.example` with runtime control key, backup dir, optional API keys, and comments for production use.
+- **CI:** Added optional artifact schema validation step in `.github/workflows/ci.yml` (runs `validate_artifacts.py` when `runs/latest` exists).
+- **TODO roadmap:** Added "Phases, Milestones & Parts" to `assistant/TODO.md`: Phase S (Security), P (Performance), T (Testing), D (Documentation), O (Observability), F (Future product), plus milestone summary table for tracking and context.
+- **FIXME:** Marked Strategy Lab runtime binding as done (already implemented).
+- **Context:** Updated WHERE_WE_LEFT_OFF, FULL_CONTEXT_INDEX (new docs), README (security checklist link). Marked Phase 13 arbitrage risk item done in Trading-algorithm section.
+
+## 2026-02-17
+- Multi-agent development system and boundary enhancements (no runtime code changes):
+  - Added `assistant/AGENTS_AND_SYSTEM.md`: single source of truth for multiple AI coding agents (Cursor, Windsurf, Codex, Gemini, Claude, etc.) — handoff protocol, load order, repository boundaries, and best practices.
+  - Updated `assistant/MASTER_SYSTEM_PROMPT.md`: multi-agent context, explicit runtime vs system scope, handoff directive (update WHERE_WE_LEFT_OFF + TODO on session end).
+  - Enhanced `assistant/resources/docs/REPO_BOUNDARY_AND_BACKUP.md`: three-way separation (runtime `app/`, system `assistant/`, backup/external + branches); verification checklist extended for handoff and index updates.
+  - Created root `.cursorrules`: first steps for any agent (read AGENTS_AND_SYSTEM, WHERE_WE_LEFT_OFF, TODO), boundaries, handoff rules, pointers to ASSISTANT_LOADOUT and FULL_CONTEXT_INDEX.
+  - Updated `assistant/FULL_CONTEXT_INDEX.md`, `assistant/ASSISTANT_LOADOUT.md`, `assistant/memory_ingest.yaml`: added AGENTS_AND_SYSTEM.md and clarified TODO/FIXME and MCP.
+  - Updated `assistant/context/RULES_USER.md`: multi-agent handoff rule (read context at start; update WHERE_WE_LEFT_OFF and TODO on handoff).
+  - Updated `assistant/TODO.md`: new "Next Best Steps / Phases" (immediate, short-term, medium-term, trading-algorithm) and "If Interrupted — Continuity Checklist" for resumable work across agents.
+  - Updated `assistant/context/WHERE_WE_LEFT_OFF.md` with this session summary.
+  - Updated `README.md`: repo layout now references multi-agent system, `.cursorrules`, and boundary/backup separation.
+
+## 2026-02-16
+- Added symbol quality filtering + advanced override for symbol discovery:
+  - `app/ui-next/src/app/api/candle_compass/symbols/route.ts`
+    - default catalog responses now filter leveraged/synthetic low-quality crypto pairs,
+    - `quality=all` query enables full symbol list,
+    - response now exposes `quality_mode` + `quality_filtered_out`.
+  - `app/ui-next/src/components/dashboard/CommandCenter.tsx`
+    - launcher now includes `Symbols: Default/Advanced` toggle and quality-mode telemetry.
+  - `app/ui-next/src/lib/uiPreferences.ts`
+    - added persisted preference `includeAdvancedSymbols`.
+  - `app/ui-next/src/app/settings/page.tsx`
+    - added `Show advanced symbols` behavior toggle.
+  - docs/help updates:
+    - `app/ui-next/src/app/help/page.tsx`
+    - `assistant/resources/docs/APP_USER_GUIDE.md`
+- Added desktop launcher generator hardening:
+  - `scripts/create_desktop_launcher.sh`
+    - defaults to current repo root,
+    - generates `~/Desktop/RSIGlobe.desktop` by default with RSIGlobe naming.
+- Expanded API tests:
+  - `src/app/api/candle_compass/symbols/route.test.ts` now covers quality-filter behavior.
+
+- Added dedicated API test suites under `app/ui-next`:
+  - `src/app/api/candle_compass/route.auth.test.ts`
+    - covers runtime role-policy auth hierarchy/alias coercion and destructive confirm enforcement.
+  - `src/app/api/candle_compass/symbols/route.test.ts`
+    - covers symbol-catalog filtering, quote cache hit behavior, stale-cache fallback on refresh failure, and malformed-symbol handling.
+- Validation completed after test additions:
+  - full ESLint pass,
+  - full Vitest pass (`7` files, `18` tests),
+  - Next.js production build pass,
+  - Python suite pass (`135 passed`),
+  - detached desktop-launch smoke pass (alternate port `3201`).
+
+- Added external-backup automation controls to System Operations:
+  - new API operations in `/api/candle_compass`:
+    - `operations.externalBackup=run|status`
+    - `operations.externalBackupTimer=install|stop|status`
+  - new payload controls:
+    - `externalBackupKeep`
+    - `externalBackupTimerInterval`
+    - `externalBackupRoot`
+  - GET payload now includes:
+    - `externalBackupStatus`
+    - `externalBackupTimerStatus`
+    - `externalBackupTimerPreflight`
+- Added external backup timer scripts:
+  - `app/scripts/install_external_backup_timer.sh`
+  - `app/scripts/stop_external_backup_timer.sh`
+  - `app/scripts/external_backup_timer_status.sh`
+- Added dedicated runtime-error observability panel in System Operations (dashboard + pop-out):
+  - renders recent `runtime_error_events.jsonl` rows from API field `runtimeErrorEvents`,
+  - supports one-click `errorId` copy to clipboard per event.
+- Validation completed:
+  - targeted ESLint for touched UI/API files,
+  - Vitest pass (`5` files, `10` tests),
+  - Next.js production build pass,
+  - Python suite pass (`135 passed`),
+  - detached-launch desktop-path smoke pass on alternate port with isolated PID/log.
+
+## 2026-02-15
+- Added in-app Help Center route and navigation links:
+  - new route `app/ui-next/src/app/help/page.tsx`,
+  - top-nav `Help` button in `app/ui-next/src/components/layout/Navbar.tsx`,
+  - settings quick link to Help in `app/ui-next/src/app/settings/page.tsx`.
+- Added contextual module Help deep links in dashboard widget headers:
+  - `Price Chart` -> `/help#module-chart`
+  - `System Operations` -> `/help#module-system-ops`
+  - `Category Scanner` -> `/help#module-scanner`
+  - `Recent Signals Feed` -> `/help#module-signals`
+- Added and integrated end-user app documentation:
+  - new guide `assistant/resources/docs/APP_USER_GUIDE.md`,
+  - linked from root `README.md` and replaced generic `app/ui-next/README.md` with app-specific UI instructions.
+
+- Hardened runtime audit timer API and GUI reliability:
+  - added timer preflight checks in `/api/candle_compass` for `systemctl` availability, user systemd-session availability, and script existence.
+  - API now returns structured timer status/preflight payloads:
+    - `runtimeRolePolicyAuditTimerStatus`,
+    - `runtimeRolePolicyAuditTimerPreflight`.
+  - dashboard/pop-out/settings now surface timer active/enabled state and preflight warnings.
+- Hardened runtime operation UX in GUI:
+  - dashboard/pop-out/settings now treat action-level `ok:false` API responses as failures instead of success summaries.
+- Expanded HTTP smoke checks:
+  - `runtime_role_policy_audit_rotate_guard`,
+  - `runtime_role_policy_audit_timer_install_guard`.
+
+- Added runtime role-policy audit rotation + timer automation:
+  - `/api/candle_compass` now supports:
+    - `operations.runtimeRolePolicyAudit=rotate`,
+    - `operations.runtimeRolePolicyAuditTimer=install|stop|status`.
+  - Added scripts:
+    - `app/scripts/rotate_runtime_role_policy_audit.py`,
+    - `app/scripts/install_runtime_role_policy_audit_timer.sh`,
+    - `app/scripts/stop_runtime_role_policy_audit_timer.sh`,
+    - `app/scripts/runtime_role_policy_audit_timer_status.sh`.
+  - Rotation writes `runs/latest/runtime_role_policy_audit_rotation_status.json` and archives trimmed audit events under `runs/archive/runtime_role_policy_audit/`.
+- Expanded GUI controls for audit rotation/timer lifecycle:
+  - dashboard launcher + System Operations widget gained rotate + timer install/stop/status controls and timer interval input,
+  - pop-out System Operations and `/settings` Audit Trail now provide matching controls and rotation status cards.
+- Expanded smoke/runtime validation:
+  - `app/scripts/e2e_smoke.py` now includes `runtime_role_policy_audit_timer_status`,
+  - HTTP checks now use retry-backed request helpers to tolerate transient post-restart API readiness races.
+- Runtime verification:
+  - sequential API lifecycle (`install -> status -> stop -> status`) validated,
+  - one-shot timer service run completed with `status=0/SUCCESS` after Python path fix and script output cleanup.
+
+- Added runtime role-policy audit trim operation:
+  - `/api/candle_compass` now supports `operations.runtimeRolePolicyAudit=trim` with `runtimeRolePolicyAuditKeep`.
+  - keep count is clamped server-side (`1..500`) and trim is destructive-gated.
+- Expanded GUI controls for audit retention:
+  - dashboard System Operations + launcher include audit trim action and keep-count input,
+  - pop-out System Operations includes audit trim action and keep-count input,
+  - `/settings` Audit Trail includes trim action and keep-count input.
+- Expanded e2e HTTP probes:
+  - added `runtime_role_policy_audit_trim_guard`.
+
+- Added runtime role-policy audit operations:
+  - `/api/candle_compass` now supports `operations.runtimeRolePolicyAudit=status|clear`.
+  - `clear` is protected as destructive (role + `CONFIRM_RUNTIME_DESTRUCTIVE_ACTION` confirmation required).
+  - response payload now includes `runtimeRolePolicyAuditAction` for status/clear operation summaries.
+- Expanded System Operations controls (dashboard + pop-out):
+  - added `Runtime Role Policy Audit Status` and `Runtime Role Policy Audit Clear` actions,
+  - added audit count status cards,
+  - added audit export actions.
+- Expanded `/settings` audit panel:
+  - refresh audit via dedicated API operation,
+  - destructive audit clear workflow,
+  - retained JSON export.
+- Extended e2e HTTP probes in `app/scripts/e2e_smoke.py`:
+  - `runtime_role_policy_audit_status`,
+  - `runtime_role_policy_audit_clear_guard`.
+
+- Added runtime role-policy audit trail persistence and exposure:
+  - new artifact: `runs/latest/runtime_role_policy_audit.json`,
+  - set action now records `actorRole`, `previous`, `next`, `policyChanged`, `controlKeyProvided`.
+- Exposed runtime policy audit in API responses:
+  - GET `/api/candle_compass` now includes `runtimeRolePolicyAudit`,
+  - POST role-policy `status|set` now returns `runtimeRolePolicyAudit`.
+- Expanded `/settings` runtime console:
+  - new `Audit Trail` panel with event preview and JSON export.
+- Expanded e2e smoke coverage:
+  - new check `runtime_role_policy_set_guard` validates `set` operation guard responses for unauthorized/missing-payload paths.
+
+- Added runtime role policy persistence in `/api/candle_compass`:
+  - new operations: `runtimeRolePolicy=status|set`,
+  - persisted artifact: `runs/latest/runtime_role_policy.json`,
+  - response metadata now includes `runtimeAuth.policySource` and `runtimeAuth.policyUpdatedAt`.
+- Expanded System Operations controls (dashboard + pop-out):
+  - per-tier role selectors for `view`/`operate`/`destructive`,
+  - role policy status + set actions (set is destructive confirm-gated).
+- Added chart continuity upgrades:
+  - explicit fallback marker annotation in chart summary and crosshair tooltip,
+  - fallback label in recent signals (dashboard + pop-out),
+  - per-widget chart config persistence (`timeframe`, `chartType`, `indicators`) via `ChartPanel` `onConfigChange`.
+- Runtime validation probes:
+  - viewer role can read role-policy status,
+  - viewer is denied policy set,
+  - operator/admin can set policy with confirmation token,
+  - effective policy now loads from `policySource=file` after set.
+
+- Added runtime role matrix enforcement for `/api/candle_compass`:
+  - role hierarchy: `viewer` < `operator` < `admin` < `owner`,
+  - operation tiers: `view`, `operate`, `destructive`,
+  - per-request role requirement derived from requested operations.
+- Added API runtime authorization metadata in GET/POST payloads:
+  - `runtimeAuth.requiredRoles`,
+  - `runtimeAuth.roleHierarchy`,
+  - control-key/confirmation policy flags.
+- Expanded GUI runtime controls:
+  - dashboard launcher now shows selected operation required role and blocks insufficient-role execution,
+  - system-ops popout mirrors the same role-aware behavior.
+- Added dashboard recovery actions:
+  - `Ensure Core Modules` (Chart + System Operations),
+  - `Restore Defaults` (reset module set/layout).
+- Improved chart marker resiliency:
+  - trade signal normalization now ensures both BUY and SELL marker visibility using `FallbackMarker` entries when one side is missing.
+- Validation completed:
+  - lint/build pass for `app/ui-next`,
+  - full pytest pass (`113`),
+  - strict UI smoke and E2E smoke pass,
+  - startup validation remains warn-only (known non-fatal env gaps).
+- Runtime verification:
+  - restarted `candle_compass.service` and confirmed API now returns `runtimeAuth`,
+  - destructive operation denied for `viewer`,
+  - destructive operation allowed for `operator` when confirm text is present.
+
+## 2026-02-14
+- Completed local user-service deployment + installer parameterization:
+  - Installed and verified local user services:
+    - `candle_compass.service`
+    - `candle_compass-backend.service`
+  - Diagnosed UI service start failures caused by port conflict (`EADDRINUSE` on `127.0.0.1:3000`).
+  - Updated installer scripts to support explicit runtime host/port configuration:
+    - `app/scripts/install_service.sh` now injects `CANDLE_COMPASS_UI_HOST`, `CANDLE_COMPASS_UI_PORT`, `CANDLE_COMPASS_UI_RUNTIME` into unit file and ExecStart args.
+    - `app/scripts/install_backend_service.sh` now injects `CANDLE_COMPASS_BACKEND_HOST`, `CANDLE_COMPASS_BACKEND_PORT` into unit file.
+  - Reinstalled UI service on `127.0.0.1:3100`; service now active and responding.
+  - Backend service verified active and healthy on `127.0.0.1:8010`.
+- Validation:
+  - `systemctl --user is-active candle_compass.service` -> `active`
+  - `systemctl --user is-enabled candle_compass.service` -> `enabled`
+  - `systemctl --user is-active candle_compass-backend.service` -> `active`
+  - `systemctl --user is-enabled candle_compass-backend.service` -> `enabled`
+  - `curl http://127.0.0.1:3100/` -> success
+  - `curl http://127.0.0.1:8010/api/health` -> success
+  - full validation sweep re-run:
+    - `cd app/ui-next && npm run lint` -> pass
+    - `cd app/ui-next && npm run build` -> pass
+    - `.venv/bin/python -m pytest -q` -> `113 passed`
+    - smoke/startup scripts -> pass/warn (non-fatal env gaps)
+
+- Completed runtime-destructive auth hardening + service-log telemetry:
+  - Extended `/api/candle_compass` (`app/ui-next/src/app/api/candle_compass/route.ts`) with:
+    - server-side destructive-operation confirmation requirement (`CONFIRM_RUNTIME_DESTRUCTIVE_ACTION`),
+    - server-side role gate (`x-runtime-role` / `runtimeOperatorRole`) with required role configurable by `CANDLE_COMPASS_RUNTIME_REQUIRED_ROLE`,
+    - protected destructive ops for kill switch + service disable/history clear actions.
+  - Added API service log surfaces:
+    - GET returns `serviceLogs` (ui/backend/memory/bundle),
+    - POST supports `operations.serviceLogs=status`.
+  - Expanded System Operations dashboard/pop-out:
+    - runtime role + confirm-text input controls,
+    - service logs refresh action,
+    - UI/backend log tail preview and export actions.
+  - Added standalone pop-out API polling support for live log/status refresh cadence.
+- Validation:
+  - `cd app/ui-next && npm run lint` -> pass
+  - `cd app/ui-next && npm run build` -> pass
+  - `.venv/bin/python -m pytest -q` -> `113 passed`
+  - `.venv/bin/python app/scripts/ui_smoke_test.py --runs app/runs/latest --strict` -> pass
+  - `.venv/bin/python app/scripts/e2e_smoke.py --runs app/runs/latest --out app/runs/latest/e2e_smoke.json --strict` -> `status=ok`
+  - `.venv/bin/python app/scripts/validate_startup_config.py --config app/config.yaml --out app/runs/latest/startup_validation.json` -> `status=warn`
+  - live API probe verified:
+    - destructive clear without confirm -> `403`,
+    - destructive clear with wrong role -> `403`,
+    - destructive clear with confirm + required role -> `200`,
+    - `serviceLogs` keys present (`backend,bundle,memory,ui`).
+
+- Expanded service-console provisioning controls and safety prompts:
+  - Extended `/api/candle_compass` operations in `app/ui-next/src/app/api/candle_compass/route.ts`:
+    - `appService` and `backendService` now support `install|disable` in addition to runtime actions.
+    - added `serviceActionHistory: status|clear`.
+  - Expanded GUI controls in:
+    - `app/ui-next/src/components/dashboard/CommandCenter.tsx`
+    - `app/ui-next/src/app/popout/widget/[widgetId]/page.tsx`
+    with install/disable/status operations and action-history status/clear controls.
+  - Added standalone live polling in System Operations pop-out (`/popout/widget/[widgetId]`) to refresh API status every 5 seconds.
+  - Added client confirmation prompts for destructive operations (`disable`, `history clear`) in dashboard/pop-out.
+- Validation:
+  - `cd app/ui-next && npm run lint` -> pass
+  - `cd app/ui-next && npm run build` -> pass
+  - `.venv/bin/python -m pytest -q` -> `113 passed`
+  - `.venv/bin/python app/scripts/ui_smoke_test.py --runs app/runs/latest --strict` -> pass
+  - `.venv/bin/python app/scripts/e2e_smoke.py --runs app/runs/latest --out app/runs/latest/e2e_smoke.json --strict` -> `status=ok`
+  - `.venv/bin/python app/scripts/validate_startup_config.py --config app/config.yaml --out app/runs/latest/startup_validation.json` -> `status=warn`
+  - live API probe verified runtime-key protected `serviceActionHistory` clear/status behavior.
+
+- Completed runtime-control auth + backend service parity pass:
+  - Added runtime-control auth enforcement in `app/ui-next/src/app/api/candle_compass/route.ts` for `runBundle` and `operations` payloads.
+  - Added backend app-service parity in API:
+    - `serviceStatus.backendAppService`
+    - `operations.backendService` (`start|stop|restart|status`).
+  - Expanded dashboard/pop-out controls:
+    - `app/ui-next/src/components/dashboard/CommandCenter.tsx`
+    - `app/ui-next/src/app/popout/widget/[widgetId]/page.tsx`
+    with runtime key input/persistence, backend service actions, and service-action JSON export.
+  - Added backend systemd wrapper scripts:
+    - `app/scripts/run_backend_service.sh`
+    - `app/scripts/install_backend_service.sh`
+    - `app/scripts/stop_backend_service.sh`
+    - `app/scripts/backend_service_status.sh`
+  - Improved chart BUY/SELL marker visibility in `app/ui-next/src/components/ChartPanel.tsx`:
+    - marker text set to `BUY`/`SELL`,
+    - marker size increased,
+    - marker counts surfaced in chart header.
+- Validation:
+  - `cd app/ui-next && npm run lint` -> pass
+  - `cd app/ui-next && npm run build` -> pass
+  - `.venv/bin/python -m pytest -q` -> `113 passed`
+  - `.venv/bin/python app/scripts/ui_smoke_test.py --runs app/runs/latest --strict` -> pass
+  - `.venv/bin/python app/scripts/e2e_smoke.py --runs app/runs/latest --out app/runs/latest/e2e_smoke.json --strict` -> `status=ok`
+  - `.venv/bin/python app/scripts/validate_startup_config.py --config app/config.yaml --out app/runs/latest/startup_validation.json` -> `status=warn`
+  - Live API auth probe:
+    - unauthorized POST -> `403`,
+    - authorized POST -> `200`.
+
+- Completed runtime-service modernization + backend control expansion:
+  - Migrated UI runtime scripts from legacy static `/ui` serving to Next.js runtime execution in:
+    - `app/scripts/launch_ui.sh`
+    - `app/scripts/launch_ui_detached.sh`
+  - Updated systemd UI service installer to production Next runtime command in `app/scripts/install_service.sh`.
+  - Added backend detached scripts:
+    - `app/scripts/launch_backend_detached.sh`
+    - `app/scripts/stop_backend_detached.sh`
+    - `app/scripts/backend_status.sh`
+  - Added absolute-path root normalization in UI/memory/backend scripts to remove relative-root failures.
+  - Extended `/api/candle_compass` operations:
+    - new `backendServer` controls (`start|stop|restart|status`),
+    - `serviceStatus.backend` payload,
+    - persistent service-action audit artifact `runs/latest/service_console_actions.json`.
+  - Expanded System Operations module + pop-out with backend status cards, backend controls, and recent action timeline.
+- Validation:
+  - `cd app/ui-next && npm run lint` -> pass
+  - `cd app/ui-next && npm run build` -> pass
+  - `.venv/bin/python -m pytest -q` -> `113 passed`
+  - `.venv/bin/python app/scripts/ui_smoke_test.py --runs app/runs/latest --strict` -> pass
+  - `.venv/bin/python app/scripts/e2e_smoke.py --runs app/runs/latest --out app/runs/latest/e2e_smoke.json --strict` -> `status=ok`
+  - `.venv/bin/python app/scripts/validate_startup_config.py --config app/config.yaml --out app/runs/latest/startup_validation.json` -> `status=warn` (non-fatal)
+  - live API probes verified backend/UI/app/memory action responses and service history output.
+
+- Expanded System Operations into a full service console:
+  - Added detached UI operation controls in `/api/candle_compass` (`uiDetached: start|stop|restart|status`).
+  - Added app-service operation controls in `/api/candle_compass` (`appService: start|stop|restart|status`) targeting `candle_compass.service`.
+  - Extended `serviceStatus` with `appService` metadata (`available`, `active`, `enabled`, `activeState`, `enabledState`).
+  - Expanded launcher + widget actions in `app/ui-next/src/components/dashboard/CommandCenter.tsx`.
+  - Upgraded `SYSTEM_OPERATIONS_WIDGET` pop-out in `app/ui-next/src/app/popout/widget/[widgetId]/page.tsx` with interactive operation dropdown and quick control buttons.
+  - Added unresolved-issues tracker `assistant/FIXME.md`.
+- Validation:
+  - `cd app/ui-next && npm run lint` -> pass
+  - `cd app/ui-next && npm run build` -> pass
+  - `.venv/bin/python -m pytest -q` -> `113 passed`
+  - `.venv/bin/python app/scripts/ui_smoke_test.py --runs app/runs/latest --strict` -> pass
+  - `.venv/bin/python app/scripts/e2e_smoke.py --runs app/runs/latest --out app/runs/latest/e2e_smoke.json --strict` -> `status=ok`
+  - `.venv/bin/python app/scripts/validate_startup_config.py --config app/config.yaml --out app/runs/latest/startup_validation.json` -> `status=warn`
+  - API smoke confirmed `serviceStatus.appService` and `uiDetachedAction/appServiceAction` responses.
+
+- Completed System Operations module rollout:
+  - Added `SYSTEM_OPERATIONS` module in dashboard/add-module flow (`CommandCenter`, `AddModuleModal`).
+  - Extended `app/ui-next/src/app/api/candle_compass/route.ts` with:
+    - GET operational payloads (`startupValidation`, `e2eSmoke`, `serviceStatus`),
+    - POST `operations` controls for startup validation, e2e smoke, and memory server start/stop/status.
+  - Added operation launcher controls and widget-level action buttons in `CommandCenter`.
+  - Added pop-out support for `SYSTEM_OPERATIONS_WIDGET` in `app/ui-next/src/app/popout/widget/[widgetId]/page.tsx`.
+- Validation:
+  - `cd app/ui-next && npm run lint` -> pass
+  - `cd app/ui-next && npm run build` -> pass
+  - live API smoke verified new GET/POST operations payloads
+  - `.venv/bin/python app/scripts/ui_smoke_test.py --runs app/runs/latest --strict` -> pass
+
+- Implemented UI launchability + marker fallback improvements:
+  - Added advisory-based BUY/SELL marker fallback in `app/ui-next/src/app/api/candle_compass/route.ts` so chart markers still render when `trade_signals.json` and `trades.json` are absent.
+  - Added launcher control strip in `app/ui-next/src/components/dashboard/CommandCenter.tsx` with module dropdown, symbol dropdown, module launch action, bundle trigger, and primary-chart launch action.
+  - Added explicit per-widget `Launch` button support in `app/ui-next/src/components/dashboard/DashboardWidget.tsx` and wired launch behavior for all module types.
+  - Expanded pop-out widget route rendering in `app/ui-next/src/app/popout/widget/[widgetId]/page.tsx` to support category scanner, seasonality, portfolio summary, recent signals, opportunity board, and ghost protocol views.
+  - Added missing `Opportunity Board` entry in `app/ui-next/src/components/dashboard/AddModuleModal.tsx`.
+- Added next-best-step operational scripts:
+  - `app/scripts/validate_startup_config.py` for startup config gating with fatal/non-fatal issue classification.
+  - `app/scripts/e2e_smoke.py` for end-to-end artifact/API/websocket smoke checks.
+  - Updated command/runbook references in `assistant/commands/COMMANDS.md` and `assistant/resources/docs/OPS_RUNBOOK.md`.
+- Validation:
+  - `cd app/ui-next && npm run lint` -> pass
+  - `cd app/ui-next && npm run build` -> pass
+  - `.venv/bin/python app/scripts/validate_startup_config.py --config app/config.yaml --out app/runs/latest/startup_validation.json` -> `status=warn` (non-fatal missing keys + Redis unreachable)
+  - `.venv/bin/python app/scripts/e2e_smoke.py --runs app/runs/latest --out app/runs/latest/e2e_smoke.json --strict` -> `status=ok`
+  - `.venv/bin/python app/scripts/ui_smoke_test.py --runs app/runs/latest --strict` -> pass
+  - API probe `/api/candle_compass?symbol=BTC/USD` now returns fallback BUY marker payload (`tradeSignals_len=1`).
+
+- Completed night-stop backup/git tasks:
+  - committed full workspace checkpoint: `e153fd0` (`chore: night checkpoint save all updates`),
+  - pushed `main` to `origin/main`,
+  - pushed backup branch `backup/20260213-193946-night-stop`,
+  - pushed checkpoint tag `checkpoint-20260213-193946-night-stop`,
+  - created archive `/home/whyte/.cursor/CandleCompass_backup_20260213_193946.tar.gz`.
+- Updated continuity docs for handoff:
+  - refreshed `assistant/TODO.md` with `Night Stop - Remaining Unfinished (2026-02-14)` priorities,
+  - refreshed `assistant/context/WHERE_WE_LEFT_OFF.md` with latest debug/test/fix and launch validation notes.
+
+- Executed full debug/test/launch-validation pass:
+  - Added dashboard system-advisory rendering in `app/ui-next/src/components/dashboard/CommandCenter.tsx` for backend-provided config/runtime warnings.
+  - Extended warning generation in `app/ui-next/src/app/api/candle_compass/route.ts` for missing keys, data fallback paths, bundle-refresh failures, and RAM constraints.
+  - Added requested TODO note in `assistant/TODO.md` for outside-Codex Social Sentiment key provisioning + RAM capacity check for Genetic Optimizer concurrency.
+- Validation:
+  - `.venv/bin/python -m pytest -q` -> `113 passed`
+  - `.venv/bin/python -m compileall -q app/src app/main.py app/scripts tests` -> pass
+  - `cd app/ui-next && npm run lint` -> pass
+  - `cd app/ui-next && npm run build` -> pass
+  - backend startup + API probes (`/api/health`, `/api/health/trading`) -> pass with expected gate behavior
+  - frontend dev probes (`/api/candle_compass`, `/`) -> pass; warning payload verified in live response
+
+- Executed system integration & polish refinements:
+  - Added reusable pop-out HOC `app/ui-next/src/components/utils/PopOutWrapper.tsx`.
+  - Added dynamic widget pop-out route `app/ui-next/src/app/popout/widget/[widgetId]/page.tsx`.
+  - Applied pop-out wrapper to chart, orderflow heatmap, and Cortex chat panel surfaces.
+  - Extended chart layers in `app/ui-next/src/components/ChartPanel.tsx` with `layers.whaleBubbles` toggle support.
+  - Added Cortex event bridge `app/ui-next/src/components/cortex/cortexEvents.ts` and wired dashboard subscription in `CommandCenter`.
+  - Added commander intent support for whale-bubble dashboard patch actions in `app/src/agents/commander.py`.
+  - Added fallback whale-bubble intent handling in `app/ui-next/src/app/api/candle_compass/cortex/route.ts`.
+  - Added/updated tests in `tests/test_cortex_commander.py`.
+- Validation:
+  - `.venv/bin/python -m pytest -q` -> `113 passed`
+  - `cd app/ui-next && npm run lint` -> pass
+  - `cd app/ui-next && npm run build` -> pass
+
+- Executed Phase 12 Whale Hunter implementation:
+  - Added whale detection pipeline in `app/src/data/trade_stream.py`:
+    - `WhaleDetector` threshold filter (`whale_threshold_usd`),
+    - `WhaleEvent` payload model,
+    - stream callback path for immediate whale dispatch,
+    - per-tick whale tagging (`WHALE_BUY`/`WHALE_SELL`).
+  - Added backend whale websocket fanout in `app/main.py`:
+    - live `TradeStream` startup task,
+    - `GET /ws/whales` endpoint for frontend consumers,
+    - config/env controls for stream enable/exchange/symbol/threshold.
+  - Added `trade_stream` section in `app/config.yaml`.
+  - Updated chart UI in `app/ui-next/src/components/ChartPanel.tsx`:
+    - replaced whale markers with Whale Bubbles overlay,
+    - bubble radius scales with notional size,
+    - neon green/red coloring by side,
+    - added websocket ingestion path for live bubble updates.
+  - Added tests `tests/test_trade_stream_whales.py`.
+- Validation:
+  - `.venv/bin/python -m pytest -q` -> `112 passed`
+  - `.venv/bin/ruff check app/src/data/trade_stream.py app/main.py tests/test_trade_stream_whales.py` -> pass
+  - `cd app/ui-next && npm run lint` -> pass
+  - `cd app/ui-next && npm run build` -> pass
+  - backend startup probe + whale websocket handshake (`ws_ok`) -> pass
+
+- Executed Phase 11 evolutionary optimization implementation:
+  - Added `app/src/optimization/evolution.py` with `GeneticOptimizer` and mutation/fitness/selection/update workflow.
+  - Added nightly self-correction script `app/scripts/run_nightly_evolution.py`.
+  - Added evolution tests `tests/test_evolution_optimizer.py`.
+- Validation:
+  - `.venv/bin/python -m pytest -q tests/test_evolution_optimizer.py` -> `2 passed`
+  - `.venv/bin/python -m pytest -q` -> `110 passed`
+  - `.venv/bin/python app/scripts/run_nightly_evolution.py --population-size 3 --lookback-days 15` -> skip path OK when no weekly scored outcomes.
+
+- Executed Phase 10 Cortex command-and-control implementation:
+  - Added natural-language command parser `app/src/agents/commander.py` (`CortexAgent`) with structured actions:
+    - `NAVIGATE`, `TRADE_PREP`, `SCRAPE`, `QUERY_ACCURACY`, `SCAN`.
+  - Integrated SCRAPE/HYPE flow with `SocialVolumeScraper` for live hype scoring responses.
+  - Added CLI bridge `app/scripts/cortex_command.py`.
+  - Added UI API bridge `app/ui-next/src/app/api/candle_compass/cortex/route.ts` (Node runtime invoking Cortex Python runner).
+  - Added floating chat UI `app/ui-next/src/components/cortex/ChatWidget.tsx` with action cards for `TRADE_PREP`.
+  - Mounted chat widget globally in `app/ui-next/src/app/layout.tsx`.
+  - Added `/settings` route target page `app/ui-next/src/app/settings/page.tsx`.
+  - Added secure backend endpoint `POST /ai/actions/process_command` in `app/src/api/routers/ai_controller.py`.
+  - Added commander tests `tests/test_cortex_commander.py`.
+- Validation:
+  - `.venv/bin/python -m pytest -q tests/test_cortex_commander.py tests/test_ai_controller_router.py` -> `10 passed`
+  - `.venv/bin/python -m pytest -q` -> `108 passed`
+  - `cd app/ui-next && npm run lint` -> pass
+  - `cd app/ui-next && npm run build` -> pass
+  - runtime probe: `/api/candle_compass/cortex` returns structured `TRADE_PREP` and `NAVIGATE` payloads.
+
+## 2026-02-13
+- Executed drag-placement and archive export continuation pass:
+  - Replaced swap-only dashboard drag behavior with true grid-coordinate placement preview (ghost target + collision-blocked drop) in `app/ui-next/src/components/dashboard/CommandCenter.tsx`.
+  - Added S3-compatible object-lock archive exporter `app/scripts/export_audit_worm_s3.py`.
+  - Added retention validation probe workflow `app/scripts/validate_audit_worm_retention.py`.
+  - Added WORM environment preflight script `app/scripts/check_audit_worm_env.py`.
+  - Added object-lock export timer scripts:
+    - `app/scripts/install_audit_worm_export_timer.sh`
+    - `app/scripts/stop_audit_worm_export_timer.sh`
+  - Added admin API actions `wormExportRun`, `wormRetentionValidate`, and `wormEnvCheckRun` plus admin panel controls for in-app export/validation/preflight triggers (`/api/candle_compass/admin/control`, `AdminControlPanel.tsx`).
+  - Updated `app/scripts/ui_status.sh` to report audit WORM export timer + status artifact.
+- Validation:
+  - added regression coverage `tests/test_worm_env_check.py` (2 tests)
+  - `./.venv/bin/python -m pytest -q tests/test_worm_env_check.py` -> `2 passed`
+  - `./.venv/bin/python -m pytest -q` -> `103 passed`
+  - `./.venv/bin/python app/scripts/export_audit_worm_s3.py --help` -> pass
+  - `./.venv/bin/python app/scripts/export_audit_worm_s3.py --bucket dummy-bucket --dry-run` -> pass (idle/no archives)
+  - `./.venv/bin/python app/scripts/validate_audit_worm_retention.py --help` -> pass
+  - installed `boto3` in `.venv` and reran: `./.venv/bin/python app/scripts/validate_audit_worm_retention.py --dry-run --bucket dummy-bucket` -> structured `NoCredentialsError` (expected until credentials are provisioned), status artifact written
+  - `./.venv/bin/python app/scripts/check_audit_worm_env.py` -> pass with `not_ready` readiness status (missing bucket + credentials)
+  - `cd app/ui-next && npm run lint` -> pass
+  - `cd app/ui-next && npm run build` -> pass
+- Executed Command Center layout interaction refinement:
+  - Added mouse-driven snap-grid resize handles (`Rw` width, `Rh` height, `Rx` both) in `app/ui-next/src/components/dashboard/CommandCenter.tsx`.
+  - Added live collision-preview highlighting (red/green) during resize and blocked invalid collision commits with inline feedback.
+- Validation:
+  - `./.venv/bin/python -m pytest -q` -> `101 passed`
+  - `cd app/ui-next && npm run lint` -> pass
+  - `cd app/ui-next && npm run build` -> pass
+- Executed durability closure pass for admin-control audit shipping:
+  - Added WORM-style append-only archive writes from `/api/candle_compass/admin/control` to `runs/audit_worm/admin_control_audit_YYYYMMDD.ndjson`.
+  - Added WORM archive status artifact `runs/latest/admin_control_audit_worm_status.json` and surfaced it in admin controls payload/UI.
+  - Added standalone durable retry worker `app/scripts/admin_audit_ship_worker.py` with worker status artifact `runs/latest/admin_control_audit_worker_status.json`.
+  - Added service helpers `app/scripts/install_admin_audit_worker_service.sh` and `app/scripts/stop_admin_audit_worker_service.sh`.
+  - Updated `app/scripts/ui_status.sh` to report audit worker service/artifact status.
+- Validation:
+  - `./.venv/bin/python app/scripts/admin_audit_ship_worker.py` -> pass (idle when webhook not configured)
+  - `./.venv/bin/python -m pytest -q` -> `101 passed`
+  - `cd app/ui-next && npm run lint` -> pass
+  - `cd app/ui-next && npm run build` -> pass
+- Executed continuation hardening update:
+  - Added hash-chained admin audit events in `/api/candle_compass/admin/control` and optional off-host webhook shipping (`CANDLE_COMPASS_AUDIT_WEBHOOK_URL`, `CANDLE_COMPASS_AUDIT_WEBHOOK_TOKEN`).
+  - Added audit shipping status artifact (`runs/latest/admin_control_audit_ship_status.json`) and surfaced status in admin UI.
+  - Expanded admin notification preferences to scoped multi-user management (select/add/remove user entries, not just `default`).
+- Validation:
+  - `cd app/ui-next && npm run lint` -> pass
+  - `cd app/ui-next && npm run build` -> pass
+- Executed continuation pass for remaining control-plane enhancements:
+  - Upgraded dashboard layout engine to explicit persisted `x/y/w/h` metadata with per-widget nudge/resize controls (`CommandCenter`, `DashboardWidget`).
+  - Added role-scoped admin control policy via `x-admin-role` (`analyst`/`operator`/`superadmin`) in `/api/candle_compass/admin/control`.
+  - Added signed admin audit trail artifact `runs/latest/admin_control_audit.json` and export support via `GET /api/candle_compass/admin/control?export=audit`.
+  - Added approval requirements for sensitive actions:
+    - strategy-weight rollback requires approval payload,
+    - Ghost trigger requires approval payload + `CLOSE ALL` confirmation text.
+  - Expanded admin UI control panel with role selection, approval forms, and audit-log viewer/export actions.
+- Validation:
+  - `cd app/ui-next && npm run lint` -> pass
+  - `cd app/ui-next && npm run build` -> pass
+- Executed next-best-step implementation pass for open Phase 3/5/9 UI gaps:
+  - Added drag-and-drop dashboard widget reordering with persisted layout order in `app/ui-next/src/components/dashboard/CommandCenter.tsx`.
+  - Added Ghost status dashboard widget type (`GHOST_PROTOCOL`) and surfaced `ghostProtocolStatus` in `/api/candle_compass`.
+  - Added admin control API `app/ui-next/src/app/api/candle_compass/admin/control/route.ts` with:
+    - notification preference save/load (`notification_prefs.json`),
+    - strategy-weight update + rollback history (`strategy_weights.json`, `strategy_weights_history.json`),
+    - Ghost protocol trigger proxy requiring explicit `CLOSE ALL` confirmation.
+  - Added `app/ui-next/src/components/admin/AdminControlPanel.tsx` and integrated it into `/admin/accuracy`.
+- Validation:
+  - `cd app/ui-next && npm run lint` -> pass
+  - `cd app/ui-next && npm run build` -> pass
+- Executed metadata and continuity alignment pass:
+  - Updated `assistant/TODO.md` to reflect architect-manifest Phases 1-9 status (including new Phase 6-9 sections) and current next-best-step priorities.
+  - Updated `assistant/context/CURRENT_STATUS.md`, `assistant/context/WHERE_WE_LEFT_OFF.md`, and `assistant/context/PHASE_AUDIT.md` for latest runtime/test/ops truth.
+  - Normalized the legacy Phase 0-22 audit row for Phase 9 to `Done` with current evidence (`vectorized.py` realistic asset-class cost modeling).
+  - Updated ops/risk/strategy/data skills and operational docs to include Ghost protocol and risk-guardian workflows.
+- Executed Candle Compass Phase 9 hardening pass:
+  - Upgraded SMS transport to Twilio SDK (`twilio.rest.Client`) and added explicit dispatcher helpers `send_sms(...)` + `send_email(...)`.
+  - Added emergency execution API router `app/src/api/routers/execution.py` and mounted it in `app/main.py`.
+  - Added Ghost protocol controls:
+    - constant-time token verification,
+    - IP allowlist gate (`CANDLE_COMPASS_GHOST_ALLOWED_IPS`),
+    - cooldown/rate-limit (`CANDLE_COMPASS_GHOST_COOLDOWN_SECONDS`),
+    - status artifact (`runs/latest/ghost_protocol_status.json`).
+  - Added docs + env examples for Ghost protocol and notification configuration.
+- Validation snapshot:
+  - `.venv/bin/pytest -q` -> `101 passed`
+  - `.venv/bin/python app/scripts/ui_health_check.py --runs runs/latest --strict` -> OK
+  - `.venv/bin/python app/scripts/ui_smoke_test.py --runs runs/latest --strict` -> OK
+  - `python -m compileall -q app/src app/scripts tests` -> pass
+- Backup/safety checkpoints created and pushed:
+  - commit: `2fc4d43`
+  - branch: `backup/20260213-163033-save-all`
+  - tag: `checkpoint-20260213-163033`
+  - archive: `/home/whyte/.cursor/CandleCompass_backup_20260213_163033.tar.gz`
+- Executed Candle Compass Phase 5 implementation pass:
+  - Added notification dispatch stack in `app/src/notifications/dispatcher.py` with:
+    - abstract `NotificationProvider`,
+    - `EmailProvider` (SMTP or SendGrid),
+    - `SMSProvider` (Twilio),
+    - centralized `send_alert(user_id, alert_type, message, data)` routing based on preferences.
+  - Wired post-record BUY/SELL alert dispatch into `app/src/execution/trade_executor.py` so urgent alerts are emitted immediately after signal persistence.
+  - Added high-privilege AI controller API router `app/src/api/routers/ai_controller.py` and mounted it in `app/main.py` with endpoints:
+    - `GET /ai/status/market_summary`
+    - `POST /ai/actions/trigger_scrape`
+    - `GET /ai/analytics/performance_report`
+    - `POST /ai/config/update_strategy_weights`
+  - Added package scaffolding for router namespace: `app/src/api/__init__.py`, `app/src/api/routers/__init__.py`.
+  - Added tests:
+    - `tests/test_notification_dispatcher.py`
+    - `tests/test_ai_controller_router.py`
+    - extended `tests/test_trade_signal_recorder.py` to assert alert dispatch behavior.
+- Executed Candle Compass Phase 4 validation/hardening pass:
+  - Verified Phase 4 components are active (signal record model/store, recorder integration, background auditor, admin accuracy dashboard + API).
+  - Fixed enum signal normalization in `app/src/analytics/trade_signal_record.py` so `SignalType` enum inputs persist correctly.
+  - Added compatibility shim `app/src/strategies/orchestrator.py` to preserve legacy import paths.
+  - Added/validated accuracy tests:
+    - `tests/test_trade_signal_store.py`
+    - `tests/test_trade_signal_recorder.py`
+    - `tests/test_accuracy_auditor.py`
+- Validation:
+  - `.venv/bin/python -m pytest -q tests/test_notification_dispatcher.py tests/test_trade_signal_recorder.py tests/test_ai_controller_router.py tests/test_trade_signal_store.py tests/test_accuracy_auditor.py` -> `13 passed`
+  - `.venv/bin/python app/scripts/run_accuracy_auditor.py --lookback-hours 72 --fetch-limit 100` -> success
+  - `.venv/bin/python app/scripts/accuracy_dashboard_snapshot.py --window-days 30 --failures-limit 20` -> success
+  - `cd app/ui-next && npm run lint && npm run build` -> pass
+- Executed Candle Compass Phase 3 modular dashboard pass:
+  - Replaced the static command-center shell with a modular widget grid in `app/ui-next/src/components/dashboard/CommandCenter.tsx`.
+  - Added reusable dashboard module wrapper `app/ui-next/src/components/dashboard/DashboardWidget.tsx`.
+  - Added dedicated top navigation with `+ Add Module` in `app/ui-next/src/components/layout/Navbar.tsx`.
+  - Added add-module modal selector in `app/ui-next/src/components/dashboard/AddModuleModal.tsx` and wired dynamic widget insertion/removal state.
+  - Added hot-list category widget `app/ui-next/src/components/dashboard/CategoryScanner.tsx` with polling for:
+    - Strong Buys
+    - Strong Sells
+    - Meme Coins
+    - Trending Now (Volume)
+    - Stable Holds
+  - Added category API endpoint `app/ui-next/src/app/api/candle_compass/categories/route.ts`.
+  - Added backend asset categorization logic in `app/src/data/asset_manager.py` with `meme`, `bluechip`, `defi`, and `ai_token` tags plus `identify_trending_assets`.
+  - Added tests: `tests/test_asset_manager.py`.
+  - Refactored top-level `app/ui-next/src/components/CommandCenter.tsx` to delegate to the new dashboard command-center module.
+- Validation:
+  - `.venv/bin/python -m pytest -q tests/test_asset_manager.py tests/test_ingestion_service.py` -> `6 passed`
+  - `cd app/ui-next && npm run lint` -> pass
+  - `cd app/ui-next && npm run build` -> pass (routes include `/api/candle_compass/categories`)
+- Executed Candle Compass Phase 2 chart-engine implementation:
+  - Rebuilt `app/ui-next/src/components/ChartPanel.tsx` into a layered chart engine with:
+    - timeframe dropdown (`1m`, `5m`, `15m`, `1h`, `4h`, `1d`)
+    - chart type dropdown (Candlestick, Heikin Ashi, Line, Hollow Candles)
+    - multi-select indicators menu (RSI, MACD, Bollinger Bands, EMA 20/50/200, Ichimoku, VPIN)
+    - integrated pop-out action and persistent chart snapshot storage.
+  - Added dedicated persistent pop-up route: `app/ui-next/src/app/chart-popout/page.tsx`.
+  - Extended API route `app/ui-next/src/app/api/candle_compass/route.ts` to emit normalized `tradeSignals` payload from:
+    - `runs/latest/trade_signals.json` when present
+    - trade logs and orchestrator fallback when absent.
+  - Updated `app/ui-next/src/components/CommandCenter.tsx` to pass `tradeSignals`, `vpin` buckets, and symbol context to `ChartPanel`.
+  - Implemented BUY/SELL marker annotations on price candles with neon arrows and hover tooltip details (`Source`, `Confidence`, `Action`).
+  - Implemented indicator overlay logic:
+    - EMA overlays on price pane
+    - Bollinger bands + shaded envelope
+    - Ichimoku overlay lines/cloud shading
+    - RSI pane
+    - MACD pane (line/signal/histogram)
+    - VPIN pane.
+- Validation:
+  - `cd app/ui-next && npm run lint`
+  - `cd app/ui-next && npm run build` (routes include `/api/candle_compass` and `/chart-popout`)
+- Executed Candle Compass Phase 1 implementation pass:
+  - Enabled backend Redis in `app/config.yaml` and added explicit redis host/port/url config.
+  - Added `data_sources.polygon` config with `enabled: true` and `api_key_env: POLYGON_API_KEY`.
+  - Added `app/src/data/ingestion_service.py` with `initialize_sources` flow for CCXT + optional Polygon activation.
+  - Updated backend startup (`app/main.py`) and scanner (`app/engine/discovery/scanner.py`) to keep crypto sources active when Polygon key is missing and only degrade stock scanning.
+  - Renamed API route directory to `app/ui-next/src/app/api/candle_compass` and rewired UI fetch calls to `/api/candle_compass`.
+  - Completed global rename sweep from legacy naming to Candle Compass across code, docs, scripts, labels, and logs.
+  - Renamed install script to `app/scripts/install_candle_compass.sh` and MCP config to `assistant/resources/mcp/candle_compass_memory.json`.
+  - Added `app/ui-next/tailwind.config.js` with cyber palette tokens and updated `app/ui-next/src/app/globals.css` with cyber glass/neon design utilities (`.glass-panel`, `.cyber-buy`, `.cyber-sell`, `.cyber-hold`, `.mono-numeric`).
+  - Updated README title/intro to Candle Compass mission for high-precision signals and performance accountability.
+- Validation:
+  - `python -m compileall app/main.py app/engine/discovery/scanner.py app/src/data/ingestion_service.py app/ui/tray.py`
+  - `cd app/ui-next && npm run lint`
+  - `cd app/ui-next && npm run build` (route confirms `/api/candle_compass`)
+- Ingested the Candle Compass architect manifesto and queued the master phased execution plan in `assistant/TODO.md` (foundation/rebrand, layered charting, modular dashboard/categorization, intelligent backend accountability systems, and cyber-futurist glassmorphism standards).
+- Added explicit user rule in `assistant/context/RULES_USER.md` requiring every created phase/step/task/part to be tracked in `assistant/TODO.md`.
+- Rebuilt the assistant operating layer for stronger programming + design execution quality.
+- Rewrote `assistant/MASTER_SYSTEM_PROMPT.md` to unify build/design/ops behavior and tighten safety + data-contract guardrails.
+- Rewrote core rule files (`assistant/rules/PROJECT_RULES.md`, `assistant/rules/MEMORY_RULES.md`) to remove brittle workflow mandates and improve practical continuity.
+- Rewrote all prompt templates in `assistant/prompts/` with clearer structure for system/developer/user intent capture.
+- Standardized all skills in `assistant/skills/*/SKILL.md` with consistent frontmatter trigger metadata, workflows, validations, and output checklists.
+- Added missing skill interface metadata files:
+  - `assistant/skills/backtesting/agents/openai.yaml`
+  - `assistant/skills/data-ingestion/agents/openai.yaml`
+  - `assistant/skills/risk-management/agents/openai.yaml`
+  - `assistant/skills/strategy-design/agents/openai.yaml`
+- Refreshed assistant context scaffolding:
+  - `assistant/ASSISTANT_LOADOUT.md`
+  - `assistant/FULL_CONTEXT_INDEX.md`
+  - `assistant/context/README.md`
+- Added a persistent user rule in `assistant/context/RULES_USER.md` to keep prompts/rules/skills/context optimized for programming + design quality.
+
+## 2026-02-12
+- Chose and documented hybrid chart architecture as the target production direction: Lightweight Charts for primary price panel + Pixi WebGL for CVD/heatmap overlays.
+- Added mandatory git connectivity recovery item to `assistant/TODO.md` and marked prior git re-attach task done after verification.
+- Added `scripts/git_connectivity_check.sh` to verify `origin/main` reachability, remote head, and local tracking status.
+- Added git connectivity command wiring to `assistant/commands/COMMANDS.md`, `assistant/commands/ALIASES.md`, and `assistant/.shell_aliases.sh`.
+- Updated `assistant/resources/docs/OPS_RUNBOOK.md` and `assistant/context/NIGHTLY_CHECKLIST.md` to include git connectivity checks.
+- Updated `assistant/context/CURRENT_STATUS.md`, `assistant/context/WHERE_WE_LEFT_OFF.md`, and `assistant/context/PHASE_AUDIT.md` to reflect the selected architecture and operational git guardrail.
+- Added detached memory lifecycle scripts (`scripts/launch_memory_server.sh`, `scripts/memory_status.sh`, `scripts/stop_memory_server.sh`) to prevent stale memory PID handling.
+- Updated `scripts/ui_status.sh` to include memory server status output.
+- Added backend Redis mode toggles (`backend.redis.enabled`, `backend.redis.url`, and env overrides) with default no-Redis startup.
+- Backend scanner now loads `POLYGON_API_KEY` from env or unlocked encrypted secrets store and degrades gracefully when missing.
+- Updated docs/commands/aliases/memory references for memory server lifecycle commands plus Redis/Polygon operational guidance.
+- Completed hybrid primary-chart wiring: `ChartPanel.tsx` now renders a Lightweight Charts price panel with mapped news/whale markers.
+- Stabilized microstructure widgets for Next.js/Turbopack by switching `CvdWidget.tsx` and `HeatmapWidget.tsx` to Canvas2D rendering (WebGL capability note retained).
+- Added explicit asset-class cost modeling for backtests (`backtest.asset_cost_rates`, `backtest.default_asset_cost_rate`) and propagated config through backtest/walk-forward scripts.
+- Added unified opportunity ranking system via `scripts/opportunity_board.py` and wired it into the bundle (`runs/latest/opportunity_board.json`).
+- Exposed `opportunityBoard` in `ui-next` API and added an Opportunity Board panel in `CommandCenter.tsx` with action/direction/confidence/reason rows.
+- Added a dedicated `Stocks` market tab in `CommandCenter` so top stock opportunities are first-class alongside crypto/forex views.
+- Added inline Opportunity Board drill-down details (move probability, composite score, regime, technical/confluence factors, and full reasons).
+- Exposed `appSettings` in `/api/candle_compass` payload for UI-level watchlist consistency checks.
+- Added watchlist mismatch banner in `CommandCenter` when `app_settings.watchlist` symbols are missing from current bundle artifacts.
+- Updated `scripts/run_ui_bundle.py` to emit `runs/latest/vpin_signal.json` from `orderflow_proxy.json` for offline-safe strict health checks.
+- Added detached bundle refresh wrapper `scripts/run_bundle_refresh_job.py` for UI-triggered background refreshes.
+- Extended `/api/candle_compass`:
+  - GET now includes `bundleRefreshStatus` from `runs/latest/bundle_refresh_status.json`.
+  - POST now supports `runBundle` to trigger detached refresh jobs.
+  - Fixed the POST action guard so profile-only saves no longer fail validation.
+- Added `Refresh Bundle` action and bundle-status indicator messaging in `CommandCenter` header.
+- Fixed `scripts/health_check.py` to bootstrap `sys.path` from repo root so it runs directly without requiring manual `PYTHONPATH=app`.
+- Fixed `scripts/stop_memory_server.sh` PID cleanup to remove stale/empty PID files instead of leaving false stale state markers.
+- Validated full debug path on 2026-02-12:
+  - `.venv/bin/python -m pytest -q` -> `63 passed`
+  - `cd app/ui-next && npm run lint` -> clean pass (0 errors, 0 warnings)
+  - `cd app/ui-next && npm run build` -> pass
+  - `.venv/bin/python scripts/ui_health_check.py --runs runs/latest --strict` -> OK
+  - `.venv/bin/python scripts/ui_smoke_test.py --runs runs/latest --strict` -> OK
+  - launch probes: backend `uvicorn` and frontend `next dev` both start cleanly (timeout-bounded checks).
+
+## 2026-02-11
+- Ran full continuity load for coding handoff: prompts, rules, skills, MCP config, and context docs from the assistant loadout/index.
+- Verified all paths referenced by `assistant/FULL_CONTEXT_INDEX.md` and `assistant/ASSISTANT_LOADOUT.md` exist.
+- Repaired broken `templates -> app/templates` symlink target by creating `app/templates/.gitkeep`.
+- Ran strict UI artifact checks: `scripts/ui_health_check.py --runs runs/latest --strict` and `scripts/ui_smoke_test.py --runs runs/latest --strict` (both OK).
+- Ran full test suite: `.venv/bin/python -m pytest -q` (63 passed).
+- Validated Next.js launch flow (`cd app/ui-next && npm run dev`), confirming command center startup on first free port.
+- Validated local memory server startup command and `/health` response; sanitized stale `runs/memory_server.pid` state.
+- Updated current state and backlog files (`assistant/context/CURRENT_STATUS.md`, `assistant/context/WHERE_WE_LEFT_OFF.md`, `assistant/TODO.md`) to remove stale open items and capture remaining gaps.
+
+## 2026-02-06
+- Added dual shell aliases (slash + no-slash) and clarified shell alias behavior in `assistant/commands/ALIASES.md`.
+- Added backup retention policy to `assistant/rules/PROJECT_RULES.md` (max 3 backups, rotate oldest).
+- Rebuilt `.venv` and installed Python dependencies; added FastAPI + Uvicorn to `app/requirements.txt`.
+- Installed Next.js dependencies (`app/ui-next/package-lock.json` updated).
+- Restarted detached UI server; UI health + smoke checks both OK.
+- Created local backup archive `backups/CandleCompass_backup_20260206_012445.tar.gz` (secrets excluded).
+- Restored `app/data/` (fixtures/raw/memory/public) and reinstated `app/.env.example` from the broken repo copy.
+- Removed the backup archive from `main` history (reverted) and kept the archive locally in `backups/`.
+- Added `backups/` to `.gitignore` to prevent accidental commits on `main`.
+- Added `assistant/context/CURRENT_STATUS.md` and wired it into the loadout and context index.
+- Restored missing `app/src/data/` modules and added Phase 0–22 audit report (`assistant/context/PHASE_AUDIT.md`).
+- Removed tracked `app/src/data/__pycache__` files and added ignore rule to prevent re-adding.
+- Selected Next.js command center (`app/ui-next`) as the primary launch validation path; static UI remains fallback.
+- Added scanner defaults to prefer ccxt exchanges over Binance and documented regional fallback behavior.
+- Backend launch confirms no Binance 451 warnings; Redis and Polygon key remain optional/missing.
+- Normalized Yahoo Finance symbol handling so slash-form crypto pairs (e.g., `BTC/USD`) are fetched as dash-form (`BTC-USD`).
+- Added per-symbol OHLCV series export (`runs/latest/ohlcv_series.json`) in `scripts/run_ui_bundle.py` for UI charts.
+- Updated `ui-next` API to accept `?symbol=` and return chart data from OHLCV cache when available (with `chartSource` + `chartSymbol`).
+- Updated Command Center to fetch per-symbol data and display the resolved chart symbol in the UI.
+- Documented the OHLCV series artifact and `/api/candle_compass` symbol query behavior in the UI data contract.
+- Added OHLCV-derived orderflow proxy generator (`orderflow_proxy.json`) and wired `ui-next` API to use it per symbol (with `orderflowSource` + `orderflowSymbol`).
+- Added orderflow source/symbol labels in the Command Center for CVD + VPIN panels.
+- Suppressed pandas concat sort warnings in portfolio backtest and ranked list scripts (`sort=False`).
+- Added local-first user profile module (UI settings tab + `runs/latest/user_profile.json`) with API persistence.
+- App settings builder now loads `user_profile.json` and applies `riskProfile` + `defaultFocus` overrides; includes profile in output.
+- Refreshed `runs/latest` bundle outputs after UI/orderflow/profile changes.
+
+## 2026-02-05
+- Wired theme config into ThemeContext, added indicator tooltips to dashboard headers, and added Makefile setup target.
+- Added docker-compose stack with TimescaleDB/Redis and GPU-enabled backend service plus frontend build.
+- Added TimescaleDB init script for market tick hypertable and trade signal storage.
+- Added Nginx reverse proxy config for /api and /ws routing.
+- Expanded Makefile with docker lifecycle and DB init helpers.
+- Added hybrid ComputeManager with GPU/CPU failover and safe_compute OOM retry decorator.
+- Added backend FastAPI entrypoint with RegimeLogicGate dependency, WebSocket stream, and GPU-aware device selection.
+- Added unified exchange adapters for crypto/stock normalization with notional volume and balance aggregation.
+- Added MarketScanner service with unified asset universe seeding, hotlist detection, and WebSocket toast notifications.
+- Added GPU stress test script to validate hybrid compute failover.
+- Added news markers, whale trade overlay, and trade journaling workflow for institutional polish.
+- Added git safety scripts for checkpoint tags and rolling backup branch.
+- Fixed UI settings modal binding by deferring script load.
+- Updated UI bundle runner to support ad-hoc symbols and auto-provider yfinance fallback for crypto not covered by ccxt.
+- Added enhancement backlog items for themes, profiles, signal expansion, custom tools, and scraping adapters.
+- Segregated assistant/meta files under `assistant/` and updated references across docs and memory ingest.
+- Installer now skips offline smoke tests and app-only manifest excludes `data/fixtures`.
+- Added Market Microstructure directive to master system prompt and updated user rules to log missed work to TODO.
+- Added tick-level trade stream (ccxt.pro), CVD calculator, and absorption divergence detector with orderflow runner and tests.
+- Added VPIN toxicity module and liquidity void scanner for order flow microstructure.
+- Added Gaussian HMM regime classifier module and `scripts/regime_hmm.py` runner.
+- Added NLP alpha bridge for RSS headline sentiment velocity and `scripts/nlp_alpha_bridge.py`.
+- Added BTC/ETH pairs trading z-score logic with `scripts/pairs_trade.py`.
+- Added tests for HMM regime, NLP RSS parsing, and pairs trading signal.
+- Added `hmmlearn` dependency and updated command/system overview docs.
+- Updated master system prompt to prefer WebGL (Pixi.js/Three.js) for CVD + heatmap visuals with fallback rendering.
+- Added StrategyOrchestrator (regime + VPIN logic gating) with MA crossover and pairs mean reversion routing.
+- Added `scripts/run_orchestrator.py` and wired it into `scripts/run_ui_bundle.py` with optional regime override.
+- Added UI settings control for manual regime override and stored in app settings defaults.
+- Added `ui-next/` Next.js command center with Tailwind + Framer Motion, TradingView charts, Pixi.js WebGL CVD/heatmap widgets, and deep-theme engine.
+- Added theme-aware CSS variables, clamp/rem scaling, and modal blur styling for the new web UI.
+- Added UI error boundaries, reconnecting overlay for lagging feeds, wallpaper upload with brightness filter, and dry-run toggle with projected profit display.
+- Added performance analytics module + alpha report generator with trade heatmap and adverse excursion summary.
+- Added cross-asset intelligence module (macro correlations, lead-lag DXY pause, economic calendar gatekeeper) with UI panels.
+- Added app-only installer manifest and updated installer to copy only runtime files (assistant/meta files excluded).
+- Documented installer manifest in README, ops runbook, and context index.
+- Added Monte Carlo stress testing module + CLI guard output (`runs/latest/monte_carlo.json`).
+- Added anchored walk-forward validation utilities and CLI runner.
+- Orchestrator now reads strategy guard + dry-run state to block fragile live deployments.
+- Documented Monte Carlo + anchored walk-forward artifacts in system overview and UI data contract.
+- Added alias expansions for MCP/sub-agents and Monte Carlo/walk-forward runs.
+- Added tests for Monte Carlo stress results and anchored walk-forward segmenting.
+- Exposed Monte Carlo + strategy guard payloads in ui-next API responses.
+- Implemented deep-theme glassmorphism overlays for settings and tab controls in ui-next.
+- Added dynamic chart glow (buy pulse, sell price-line glow) and micro-interactions for market tab switches.
+- Added responsive settings sidebar that collapses to icon-only on small screens.
+- Added SignalGatekeeper (regime + VPIN + DXY) and integrated into orchestrator decisions.
+- Added manual logic gate override file (`logic_gate_override.json`) and ui-next freeze control.
+- Updated orchestrator output fields for gatekeeper + DXY trend/manual freeze, and adjusted tests.
+- Added multi-source trade stream with stale-data failover (ccxt.pro + CoinGecko) and wired into `scripts/run_orderflow.py`.
+- Added UI latency monitor (500ms warning) and latency status persistence for slippage widening.
+- Added health check script + systemd timer for API permissions, rate limits, and disk space, with push notifications.
+- Added `CANDLE_COMPASS_PUSH_WEBHOOK` to `.env.example` for health check notifications.
+- Added smart execution planner (TWAP/VWAP/Iceberg) with slippage optimizer and breakout buffer logic.
+- Added execution planning tests for TWAP/VWAP/slippage/breakout buffer behaviors.
+- Added smart execution CLI (`scripts/smart_execute.py`) to output `execution_plan.json`.
+- Moved runtime app into `app/` with root-level symlinks for developer convenience.
+- Installer now reads the app-only manifest relative to `app/` and copies from `app/` root.
+- Updated baseline regression scripts + memory tool to resolve assistant context from repo root when present.
+- Added instruction alias `load_everything` and `load_master`, plus `regime_confidence` shell alias.
+- Documented app/assistant segregation in README and system overview; clarified installer manifest path in ops runbook.
+- Updated command catalog with `scripts/regime_confidence.py` and added TODO items for WebGL CVD/heatmap rendering and custom market tools.
+- Updated UI data contract with regime confidence + trade tag/post-mortem artifacts.
+- Updated memory guide with app/ segregation note.
+- Added AES-256 secrets store with `scripts/secrets_tool.py` and migrated API key access to encrypted secrets (no keys in .env).
+- Added IP whitelist checker + security lock output (`scripts/ip_whitelist_check.py`) and wired lock into orchestrator/gatekeeper.
+- Added emergency kill-switch (`scripts/kill_switch.py`) with UI shortcut and security lock flagging (live mode gated).
+- Updated UI API/CommandCenter to surface security lock status and kill-switch shortcut.
+- Updated docs/aliases/commands for new security tooling and artifacts.
+- Added tests for secrets store round-trip and IP whitelist change lock.
+- Updated `.env.example` to remove secret fields; secrets now set via `scripts/secrets_tool.py`.
+- Memory server auth token now read from encrypted secrets store.
+- Updated memory docs to note token storage in secrets store.
+- Added `security` config section for emergency exchanges and live trading gate.
+- Updated research/advisory docs to note The Graph key stored via secrets tool.
+- UI bundle runner now unlocks secrets at startup and runs IP whitelist check before orchestrator.
+- Added RegimeLogicGate middleware for final execution authorization (VPIN halt, DXY USD-long filter, Z-score gating) and exposed gate decision in orchestrator output.
+- Refactored CommandCenter layout to a 4-column command palette grid, added asset selector with buffered price/delta updates, and applied 0.5px widget borders with accent-tinted shadows.
+- Added global ThemeContext with Solar Flare/Bloodline profiles, active-glow system with VPIN pulse animation, and glassmorphism modal depth scaling.
+- Replaced the main chart with a WebGL PixiJS renderer featuring dynamic momentum line colors, a CVD ribbon, and a liquidity heatmap overlay.
+- Added quick-entry slider with 1% risk sizing, RSI-driven wallpaper mood gradient, and optional haptic/audio feedback toggles.
+- Added warning-mode theme override driven by HMM/VPIN/gatekeeper signals and wired increased blur via theme context.
+- Added GPU-focused environment setup script to install CUDA PyTorch and dependencies.
+- Added deep-theme configuration object for Solar Flare and Bloodline profiles.
+- Added interactive signal glossary definitions and hover tooltip component for indicator education.
+- Added `pytest.ini` to limit test discovery to `tests/` and avoid collecting script utilities.
+- Fixed escaped-quote syntax errors in vectorized backtest + walk-forward modules.
+- Adjusted absorption-divergence detector to require an extra CVD sample before alerting.
+- Normalized regime parsing to recognize "Ranging" in RegimeLogicGate and SignalGatekeeper.
+- Hardened secrets retrieval so wrong passwords raise (no cached bypass).
+- Updated GPU stress test script import path resolution for direct execution.
+- Ran pytest (62 tests) successfully; installed CPU-only PyTorch due to disk constraints.
+
+## 2026-02-02
+- Added local memory guide and rules for Candle Compass (Codex).
+- Added local memory system doc in resources.
+- Updated assistant loadout and full context index to include memory files.
+- Added local memory tool (add/search/list/delete/ingest) and ingest pipeline.
+- Tuned ingest scope and added memory ingest config.
+- Added local memory HTTP server wrapper.
+- Added MCP-style endpoint and tool listing on memory server.
+- Re-ingested memory store with expanded scope and started local memory server.
+- Added optional bearer-token auth for memory server.
+- Added .env auto-load for memory tool/server and enabled auth with a generated token.
+- Expanded risk report to include drawdown, tail risk, and exposure metrics.
+- Added risk report tests and enhanced risk dashboard/CLI to accept positions/equity.
+- Added asset universe config + loader and universe fetch script.
+- Added ccxt OHLCV support and provider-aware caching with legacy fallback.
+- Extended backtest/optimization scripts to accept provider/exchange parameters.
+- Added tests for universe loading and cache naming.
+- Added provider retry/backoff support and data health check utility.
+- Added tag-based exposure analytics using asset universe tags.
+- Added tag exposure tests and universe integration in risk report/dashboard.
+- Added risk metric baselines and CI regression checks.
+- Added in-app risk tolerance profiles with UI controls and thresholds.
+- Expanded roadmap/todo with research-only decision-support features.
+- Added Codex trust entry for Candle Compass.
+
+## 2026-02-03
+- Added advisory dashboard spec doc and UI controls for advisory focus/watchlist.
+- Wired UI to render advisory cards and scanner results from advisory JSON.
+- Added advisory engine tests and extended advisory JSON output metadata.
+- Added advisory data-quality heuristics (coverage, staleness) and UI badges.
+- Added desktop launcher helper to reliably open the UI from desktop icon.
+- Added advisory card quality banners for warn/poor data.
+- Added global data freshness summary banner and quality tooltips.
+- Improved advisory run UX (clipboard command + crypto symbol auto-expansion).
+- Added dependency checks to advisory runner with guided install steps.
+- Improved OHLCV loader to parse legacy Date/unnamed timestamp columns.
+- Added tests for flexible OHLCV timestamp parsing.
+- Added market context engine (regime + sentiment proxy) and UI block.
+
+## 2026-02-04
+- Added UI defaults/watchlist/alerts config + `app_settings` export.
+- Added ranked lists by asset class, derivatives/flow dashboards, scorecards, alerts, optimizer, stress tests, and top traders outputs with UI panels.
+- Added signal library, confluence decay weighting, and regime confidence to advisory pipeline outputs.
+- Added docs for asset taxonomy, Robinhood access assessment, and public data inputs; updated master system prompt, system overview, UI data contract, ops runbook, README, and commands.
+- Added backup script and updated nightly checklist.
+- Fixed new dashboard scripts to include repo root in `sys.path`.
+- Ran `scripts/run_ui_bundle.py` (auto provider) and `scripts/ui_health_check.py` (OK).
+- Created backup archive `/home/whyte/.cursor/CandleCompass_backup_20260204_135733.tar.gz` (excluded `.venv`, `.pytest_cache`, `backups/`, and `__pycache__`).
+- Added explicit `requests` dependency for derivatives dashboard fetches.
+- Added UI smoke test script and documented it in quality gates/commands.
+- Added sample `data/public/top_traders.csv` template and unignored public data folder.
+- Added user rule to log suggested questions into TODO/backlog lists.
+- Re-ingested local memory store to capture latest docs and scripts.
+- Updated UI launch scripts to wait for server readiness and open the default browser reliably; desktop launcher now delegates browser open to `launch_ui.sh`.
+- Installer now ensures `launch_ui.sh` is executable and ops docs include host/port overrides.
+- Desktop launcher script now ensures `launch_ui.sh` is executable.
+- Fixed `launch_ui.sh` argument parsing so flags work without passing a root directory.
+- Added detached UI launcher (`scripts/launch_ui_detached.sh`) with PID/log handling and stop script; desktop launcher now uses detached mode.
+- Updated `ui_status.sh` to report detached UI PID status and added detached commands to README/runbooks.
+- Ran full UI bundle refresh, UI health check, and UI smoke test; all OK.
+- Started detached UI server (PID stored in `runs/ui_server.pid`).
+- Added enhancement backlog items to `assistant/TODO.md`.
+- Created backup archive `/home/whyte/.cursor/CandleCompass_backup_20260204_164646.tar.gz` (excluded `.venv`, `.pytest_cache`, `backups/`, and `__pycache__`).
+- Created backup archive `/home/whyte/.cursor/CandleCompass_backup_20260204_180540.tar.gz` (excluded `.venv`, `.pytest_cache`, `backups/`, and `__pycache__`).
+- Added external sentiment ingestion (Alternative.me + optional Alpha Vantage).
+- Added UI settings modal and UI bundle runner for dashboards.
+- Ranked list now aligns symbol series by timestamp to avoid length errors.
+- OHLCV loader now coerces numeric columns for robust analytics.
+- UI now serves from repo root; data sources load correctly in browser.
+- Added exchange selector (Coinbase/Kraken/etc) with UI bundle filtering.
+- UI server now serves repo root and opens /ui/ for data visibility.
+- Asset universe updated to Coinbase/Kraken ccxt pairs.
+- Added Uniswap subgraph data source (requires THEGRAPH_API_KEY).
+- Added bundle refresh timer (systemd user service + timer).
+- Added SEC EDGAR + Alpha Vantage research aggregation in advisory cards.
+- Added auto data source selection + ccxt multi-exchange aggregation.
+- Added resources docs for exchanges and research sources.
+- Added top crypto/stock panels, research feed panel, and exchange stats panel.
+- Added auto data-source aggregation and Uniswap DEX support to top lists and stats.
+- Normalized crypto symbol matching (dash vs slash) across universe resolver and UI watchlist.
+- Advisory cards updated to Oracle-style layout with technical strength, fundamental health, and scanner blocks.
+- Added one-click watchlist add from scanner results, top lists, and ranked list.
+- Status card now reflects live/offline data mode and selected data source.
+- Asset universe defaults now resolve end date to today for live data windows.
+- UI bundle runner now filters symbols with dash/slash variants and passes provider into ranked list generation.
+- Ran full UI bundle refresh (auto provider) and generated fresh `runs/latest` outputs.
+- Created project backup archive `/home/whyte/.cursor/CandleCompass_backup_20260203_052458.tar.gz` (excluded `.venv`, `.pytest_cache`, `backups/`, and `__pycache__`; stored one level above repo).
+- Updated advisory engine test expectations for BUY/SELL/HOLD labels.
+- Created full backup archive `/home/whyte/.cursor/CandleCompass_full_backup_20260203_054815.tar.gz` (includes `.venv` and raw data; stored one level above repo).
+- Removed empty `backups/` folder from repo after moving archives.
+
+## 2026-02-04
+- Added confluence engine (technical/fundamental/scanner/context blend) with advisory JSON outputs.
+- Added advisory confluence and market regime summaries in `scripts/run_advisory.py`.
+- Extended advisory UI cards with confluence block and added Confluence Summary + Market Regime panels.
+- Added watchlist management panel (remove/clear) and module view filter navigation.
+- Added navigation bar with anchors for key UI modules.
+- Added confluence engine tests (`tests/test_confluence_engine.py`).
+- Updated advisory spec and memory guide for confluence + navigation updates.
+- Added operational UI artifact checker `scripts/ui_health_check.py`.
+- Added skills: `advisory-pipeline`, `ui-console`, `ops-automation`, `memory-ops` with references and agents metadata.
+- Added MCP config stub `assistant/resources/mcp/candle_compass_memory.json` for local memory server.
+- Added UI health check step to nightly checklist.
+- Enhanced master system prompt, prompt templates, and project rules to enforce UI data contracts and health checks.
+- Added system documentation: `assistant/resources/docs/SYSTEM_OVERVIEW.md`, `assistant/resources/docs/UI_DATA_CONTRACT.md`, `assistant/resources/docs/OPS_RUNBOOK.md`.
+- Updated loadout/index docs and README/AI dev guide with UI health check guidance.
+- Updated `assistant/MEMORY_GUIDE.md` with UI health check reference.
+- Added `assistant/resources/docs/QUALITY_GATES.md` and indexed it in loadout/context docs.
+- Fixed `scripts/plot_diagnostics.py` to handle empty/non-numeric series without crashing.
+- Refreshed UI bundle in offline mode (fixtures) and verified UI health check passes.
+- Updated timestamp parsing to suppress noisy warnings (`format=\"mixed\"` in `src/data/fetch.py`).
+- Ran online UI bundle refresh (auto provider) and verified UI health check passes.
+- Created backup archive `/home/whyte/.cursor/CandleCompass_backup_20260204_125254.tar.gz` (excluded `.venv`, `.pytest_cache`, `backups/`, and `__pycache__`; stored one level above repo).
+
+## 2026-02-01
+- Added portfolio backtest, volatility targeting, and portfolio runner.
+- Added portfolio smoke test and pytest config.
+- Added walk-forward evaluation and parameter sweep utilities.
+- Added ccxt order-book ingestion and execution simulator.
+- Added long/short support with borrow costs in portfolio backtest.
+- Integrated execution simulator into portfolio backtest path.
+- Added drift detection and regression baseline checks.
+- Extended walk-forward to select parameters from training windows.
+- Added CI workflow and integrated execution simulator into single-asset backtest.
+- Added risk report generation.
+- Added CI regression job for baseline checks.
+- Added offline fixtures and portfolio regression checks in CI.
+- Added offline fixtures for BTC/ETH and fixed portfolio gross scaling.
+- Created full backup and tar.gz archive of the project.
+- Added longer-window fixtures and refreshed baselines.
+- Updated assistant/rules/prompts to reflect CI fixture usage and script import behavior.
+- Created refreshed backups after fixture/baseline updates.
+- Added 6-month fixtures with oscillation to trigger signals.
+- Added host installer script.
+- Created updated backups after 6-month fixtures and installer.
+- Added 12-month fixtures (Jan–Dec 2020) and refreshed baselines.
+- Added 2-year fixtures (2019–2020) and drift thresholds.
+- Added drift thresholds rationale and tuning script.
+- Added stability report and risk dashboard scripts.
+- Added diagnostic plotting and drift threshold recommendation.
+- Added research dashboard and asset scoring (non-recommendation).
+- Added ranked list export with narrative explanation (non-recommendation).
+- Expanded asset scoring inputs and added report bundling.
+- Added local UI dashboard and launch script.
+- Added desktop launcher script and installer integration.
+- UI launcher now auto-opens the browser.
+- Added optional systemd user service install script.
+- Created updated backups after service integration.
+- Added tray indicator option and stop-service script.
+- Added UI status and toggle scripts.
+- Added nightly checklist for shutdown/backup.
+- Created updated backups after UI control scripts.
+- Added one-shot run_all launcher script.
+- Added assistant loadout and advanced dev docs.
+- Added CI artifact upload for reports and plots.
+
+## 2026-02-16
+- Fixed detached memory launcher reliability in `app/scripts/launch_memory_server.sh` by preferring `setsid` with `nohup` fallback.
+- Verified local memory lifecycle and MCP endpoint health (`memory_status.sh`, `/health`, `/mcp`).
+- Re-ingested local memory context (`python scripts/memory_tool.py ingest --replace` -> `added=357 skipped=0 errors=0`).
+- Added `app/ui-next/src/components/widgets/TimeMachineSimulator.test.tsx` to cover preset save/import/overwrite UX.
+- Marked Phase 17 Time Machine preset UX component-test follow-up as done in `assistant/TODO.md`.

@@ -1,0 +1,4 @@
+- Respect module boundaries in system/design-docs/ARCHITECTURE.md.
+- Keep domain logic out of UI components.
+- API layer orchestrates; domain layer owns invariants.
+- Any new dependency must be justified in logs/DECISION_LOG.md.

@@ -1,0 +1,14 @@
+---
+description: "When to load master context; reference load order from AGENTS.md and AI_CONTEXT_INDEX"
+alwaysApply: true
+---
+
+# Context Load
+
+When the user says **"load master architectural systems now!"** or context appears **reset, incomplete, or timed out**:
+
+1. Load files in canonical order from **AGENTS.md** or **system/docs/AI_CONTEXT_INDEX.md** (system/prompts/MASTER_SYSTEM_PROMPT_ETHERWEAVE.md, system/docs/KERNEL_CONTRACT.md, PROJECT_RULES.md, MASTER_AI_REFERENCE.md, etc.).
+2. If context is tight, load in step parts and confirm readiness after each part.
+3. After load, state briefly what was loaded and that the agent is ready. Notify the operator if context was reset and request full reload before proceeding.
+
+Shorter reload list: **system/prompts/CURSOR_CONTEXT_GUIDE.md**. Skills: use **etherweave-load-context** skill for full procedure.

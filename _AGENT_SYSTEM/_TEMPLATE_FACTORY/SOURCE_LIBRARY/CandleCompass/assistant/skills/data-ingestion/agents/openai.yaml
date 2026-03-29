@@ -1,0 +1,4 @@
+interface:
+  display_name: "Data Ingestion"
+  short_description: "Build robust fetch, cache, and validation flows"
+  default_prompt: "Use $data-ingestion to update Candle Compass data acquisition and quality checks."

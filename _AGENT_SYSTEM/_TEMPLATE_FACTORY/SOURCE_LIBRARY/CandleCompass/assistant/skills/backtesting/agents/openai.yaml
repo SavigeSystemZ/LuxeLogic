@@ -1,0 +1,4 @@
+interface:
+  display_name: "Backtesting"
+  short_description: "Build and validate backtest engines"
+  default_prompt: "Use $backtesting to implement or refine Candle Compass backtest logic."

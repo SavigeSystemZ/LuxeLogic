@@ -1,0 +1,245 @@
+# Etherweave-Nexus: Cursor AI Project Rules
+
+## 🎯 Project Mission
+Create the world's most advanced wireless penetration testing platform—a crisp, beautiful, eye-popping piece of artwork that is both powerful and intuitive. This is a professional-grade tool for authorized security testing and research.
+
+## 🏗️ Architecture Overview
+
+### Core Technologies
+- **Language**: Python 3.12+ with type hints
+- **GUI Framework**: PyQt6 (modern, responsive, cyberpunk-themed)
+- **Database**: SQLite3 with performance indexes
+- **Security Tools**: Aircrack-ng suite, Hashcat, Scapy, Aircrack-ng
+- **Hardware**: RTX 5060 GPU optimization, wireless chipset detection
+- **Containerization**: Docker with Kali Linux base
+
+### Project Structure
+```
+etherweave/
+├── gui/              # PyQt6 GUI components
+│   ├── main_window.py      # Main application window (14,000+ lines)
+│   ├── popup_windows.py    # Dialog windows
+│   ├── scan_worker.py      # Background scanning threads
+│   └── theme_manager.py    # Appearance management
+├── lib/              # Core logic modules
+│   ├── core_controller.py  # CLI/GUI bridge
+│   ├── database.py         # SQLite database with indexes
+│   ├── radio_manager.py    # Wireless interface management
+│   ├── validation_layer.py # Input sanitization
+│   └── error_oracle.py     # Error tracking system
+└── interactive_menu.py      # CLI interface
+```
+
+## 🚨 CRITICAL RULES (MUST FOLLOW)
+
+### 1. Graphical & Layout Rules
+- **NEVER use `place()`** - Always use `QVBoxLayout` or `QHBoxLayout`
+- **NEVER add redundant QGroupBox stylesheets** - Use global style only (prevents doubled borders)
+- **ALWAYS use `setMinimumHeight()`** for QTextEdit and QListWidget widgets
+- **ALWAYS add 15px bottom padding** to prevent border clipping
+- **ALWAYS use `QThread`** for long-running operations (never block UI thread)
+- **ALWAYS use `QTimer.singleShot(0, ...)`** for thread-safe GUI updates
+- **Use `ScrolledFrame`** for tabs that may exceed window height
+
+### 2. The 10-Button Rule
+- **CRITICAL**: No tab (excluding global headers) may contain more than 10 action buttons
+- Global buttons (Settings, Cache Sudo, System_Maintenance, Global Panic) do NOT count
+- If 11th button needed, move to pop-out dialog or "Advanced" sub-menu
+- Use `ButtonAuditor` to verify button counts
+
+### 3. Hardware & Performance Rules
+- **ALWAYS check RTX 5060 thermal state** before GPU operations
+- Use `GPUThermalGuard.get_current_temperature()` before cracking
+- Pause operations if temperature exceeds 85°C, resume at 70°C
+- Use `nice` and `ionice` for GPU priority management
+- Bind wireless interface IRQs to CPU cores 2+ (leave 0/1 for GUI)
+
+### 4. Security & Authorization Rules
+- **ALWAYS use `SudoCache`** for sudo session management
+- **NEVER store passwords** in plain text
+- **ALWAYS validate input** with `ValidationLayer` before processing
+- **ALWAYS use `sudo -K`** for explicit cache clearing
+- **ALWAYS use `hasattr()` checks** before accessing widget properties
+- Encrypt all sensitive data (handshakes, passwords) with `LootManager`
+
+### 5. Code Quality Rules
+- **ALWAYS use type hints** for function parameters and return values
+- **ALWAYS use docstrings** (Google style) for all functions and classes
+- **NEVER use bare `except:` clauses** - Always use `except Exception as e:` with logging
+- **ALWAYS handle exceptions gracefully** - Display user-friendly messages via `QMessageBox` or toast notifications
+- **ALWAYS log errors** with `ErrorOracle` or `logger.exception()`
+- **ALWAYS use `self.db`** (single instance) for database operations
+- **ALWAYS use `self.radio_manager`** (single instance) for interface management
+
+### 6. Feature Parity Rules
+- **EVERY GUI feature must have CLI equivalent** - Use `CoreController` for shared logic
+- Maintain identical functionality between GUI and CLI
+- All operations must be triggerable via both interfaces
+
+### 7. Error Handling Rules
+- Wrap all operations in try-except blocks
+- Use `logger.exception()` for detailed error logging
+- Display user-friendly error messages (never show raw exceptions)
+- Never let exceptions crash the application
+- Use `ErrorOracle` for centralized error tracking
+
+### 8. Database Rules
+- **ALWAYS use database indexes** for frequently queried columns (bssid, essid, channel)
+- Use parameterized queries to prevent SQL injection
+- Commit transactions explicitly
+- Handle database errors gracefully
+
+### 9. Threading & Concurrency Rules
+- **ALWAYS use `QThread` subclasses** for background operations
+- Use `pyqtSignal` for thread-safe GUI updates
+- Never access GUI widgets directly from worker threads
+- Clean up threads properly (call `wait()` before destruction)
+
+### 10. Import & Code Organization Rules
+- Group imports: standard library, third-party, local
+- Remove unused imports
+- Use module-level imports (not inside functions)
+- Handle optional dependencies gracefully with try/except ImportError
+
+## 📋 Common Patterns
+
+### Thread-Safe GUI Updates
+```python
+# CORRECT: Use QTimer.singleShot for thread-safe updates
+QTimer.singleShot(0, lambda: self.some_widget.append(text))
+
+# WRONG: Direct widget access from thread
+self.some_widget.append(text)  # ❌ Thread-unsafe
+```
+
+### Database Operations
+```python
+# CORRECT: Use single instance
+result = self.db.get_network(bssid)
+
+# WRONG: Create new instance
+db = NetworkDatabase()  # ❌ Inefficient
+result = db.get_network(bssid)
+```
+
+### Exception Handling
+```python
+# CORRECT: Specific exception with logging
+try:
+    operation()
+except Exception as e:
+    logger.exception(f"Operation failed: {e}")
+    self._show_toast_error(f"Failed: {str(e)}")
+
+# WRONG: Bare except
+try:
+    operation()
+except:  # ❌ Bad practice
+    pass
+```
+
+### Widget Access
+```python
+# CORRECT: Defensive checks
+if hasattr(self, 'some_widget') and self.some_widget:
+    self.some_widget.append(text)
+
+# WRONG: Direct access
+self.some_widget.append(text)  # ❌ May not exist
+```
+
+## 🔍 Before Making Changes
+
+1. **Read `PROJECT_RULES.md`** - Master manifest of all rules
+2. **Read `MASTER_AI_REFERENCE.md`** - Complete architecture reference
+3. **Check if feature exists** - Don't duplicate functionality
+4. **Verify no breaking changes** - Test with live application
+5. **Follow existing patterns** - Use similar code as template
+6. **Update documentation** - If adding new features
+
+## 🎨 UI/UX Standards
+
+### Cyberpunk Theme
+- Neon borders: `#4a00ff` (cyan), `#b300ff` (magenta)
+- Background: `#0a0a0f` (dark), `#1a0a1f` (lighter dark)
+- Text: `#00d9ff` (cyan), `#ffffff` (white)
+- Success: `#00ff66` (green)
+- Error: `#ff0040` (red)
+- Translucent backgrounds: 85% opacity for wallpaper visibility
+
+### Widget Sizing
+- Buttons: `min-height: 22px`, `min-width: 60px`, `padding: 4px 8px`
+- QTextEdit: `min-height: 150px` (output widgets)
+- QListWidget: `min-height: 100px` (list widgets)
+- QGroupBox: Use global style, no redundant stylesheets
+
+### Layout Spacing
+- Main layout margins: `setContentsMargins(10, 10, 10, 15)` (5px extra bottom)
+- Group box margins: `margin-bottom: 15px`
+- Internal padding: `padding: 10px 12px`
+
+## 🚫 What NOT to Do
+
+- ❌ Never use `place()` for widget positioning
+- ❌ Never add redundant QGroupBox stylesheets
+- ❌ Never block the UI thread with long operations
+- ❌ Never use bare `except:` clauses
+- ❌ Never access widgets without `hasattr()` checks
+- ❌ Never create multiple database/manager instances
+- ❌ Never store passwords or sensitive data in plain text
+- ❌ Never skip input validation
+- ❌ Never let exceptions crash the application
+- ❌ Never break feature parity between GUI and CLI
+
+## ✅ What TO Do
+
+- ✅ Always use layout managers (QVBoxLayout, QHBoxLayout)
+- ✅ Always use QThread for background operations
+- ✅ Always use type hints and docstrings
+- ✅ Always validate input with ValidationLayer
+- ✅ Always use ErrorOracle for error tracking
+- ✅ Always use single instances (self.db, self.radio_manager)
+- ✅ Always check hardware thermal state before GPU operations
+- ✅ Always maintain feature parity (GUI ↔ CLI)
+- ✅ Always follow the 10-button rule
+- ✅ Always test changes with live application
+
+## 📚 Key Documentation Files
+
+- `PROJECT_RULES.md` - Master manifest (READ FIRST)
+- `MASTER_AI_REFERENCE.md` - Complete architecture (READ FOR MAJOR CHANGES)
+- `CURSOR_ENHANCED_SETUP.md` - Cursor IDE setup guide
+- `OPTIMIZATION_COMPLETE.md` - Recent optimizations
+- `DISPLAY_FIXES_COMPLETE.md` - UI fixes documentation
+
+## 🎯 Development Goals
+
+1. **World's Best Platform**: Every feature should be best-in-class
+2. **Beautiful UI**: Cyberpunk aesthetic with adaptive theming
+3. **High Performance**: Optimized for RTX 5060 and large databases
+4. **Professional Quality**: Production-ready, well-tested, documented
+5. **User-Friendly**: Intuitive interface, helpful error messages
+6. **Feature-Rich**: Comprehensive wireless security capabilities
+7. **Secure**: Zero-trust security, encrypted storage, proper authorization
+
+## 🔧 Extension Points
+
+When adding new features:
+- Use `CoreController` for shared logic (GUI/CLI bridge)
+- Use `ValidationLayer` for input validation
+- Use `ErrorOracle` for error tracking
+- Use `LootManager` for encrypted data storage
+- Use `GPUThermalGuard` for GPU operations
+- Use `SudoCache` for privilege management
+- Follow existing patterns and conventions
+
+---
+
+## Cursor context and rules
+
+- **Load order and context docs**: See `AGENTS.md`, `system/docs/AI_CONTEXT_INDEX.md`, `system/docs/CONTEXT_DOCUMENTS.md`. Do not add these or `system/` to `.cursorignore`.
+- **Skills, Commands, Subagents, Rules**: See `docs/CURSOR_NEXUS.md` (single reference). Project rules in `.cursor/rules/`; Skills in `.cursor/skills/`; Commands in `.cursor/commands/`; Subagents in `.cursor/agents/`.
+- **Quick start**: `QUICK_START_CURSOR.md`. Setup: `docs/CURSOR_SETUP.md`.
+
+**Last Updated**: 2026-01-30
+**Status**: ACTIVE - All code changes must follow these rules

@@ -1,0 +1,39 @@
+{
+  "data_sources": [
+    "https://pandas.pydata.org/docs/",
+    "https://numpy.org/doc/",
+    "https://www.backtrader.com/docu/",
+    "https://www.quantconnect.com/docs/",
+    "https://www.sec.gov/edgar/sec-api-documentation",
+    "https://www.alphavantage.co/documentation/",
+    "https://docs.uniswap.org/api/subgraph/overview",
+    "https://coinbase-cloud.mintlify.app/api-reference/exchange-api/rest-api/products/get-product-candles",
+    "https://docs.kraken.com/api/docs/rest-api/get-ohlc-data/"
+  ],
+  "brokers_apis": [
+    "https://docs.alpaca.markets/",
+    "https://binance-docs.github.io/apidocs/",
+    "https://polygon.io/docs/"
+  ],
+  "research": [
+    "https://www.quantstart.com/articles/",
+    "https://www.algorithmictrading.net/",
+    "https://risk-engineering.org/"
+  ],
+  "testing": [
+    "https://docs.pytest.org/en/stable/",
+    "https://hypothesis.readthedocs.io/en/latest/"
+  ],
+  "exchanges": [
+    "https://www.nyse.com/",
+    "https://www.nasdaq.com/",
+    "https://www.londonstockexchange.com/",
+    "https://www.jpx.co.jp/english/",
+    "https://www.hkex.com.hk/",
+    "https://www.sse.com.cn/",
+    "https://www.szse.cn/",
+    "https://www.euronext.com/",
+    "https://www.nseindia.com/",
+    "https://www.bseindia.com/"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "mcpServers": {
+    "semgrep": {
+      "command": "semgrep",
+      "args": ["mcp"]
+    },
+    "sentry": {
+      "type": "streamable-http",
+      "url": "https://mcp.sentry.dev/mcp"
+    },
+    "socket-mcp": {
+      "type": "http",
+      "url": "https://mcp.socket.dev/"
+    },
+    "ref": {
+      "type": "streamable-http",
+      "url": "https://api.staging-ref.tools/mcp"
+    },
+    "jam": {
+      "type": "streamable-http",
+      "url": "https://mcp.jam.dev/mcp"
+    }
+  }
+}

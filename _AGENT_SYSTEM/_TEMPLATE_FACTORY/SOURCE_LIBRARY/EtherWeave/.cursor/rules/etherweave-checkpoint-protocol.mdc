@@ -1,0 +1,18 @@
+---
+description: "Phase checkpoint: verify, commit, push, backup, CONTEXT_PACK; do not mark complete if verify fails"
+alwaysApply: true
+---
+
+# Phase Checkpoint Protocol
+
+At end of **Phase** (or major milestone):
+
+1. **Preflight** — Confirm scope completed; review git status.
+2. **Verify** — Run tools/verify.sh. If fail: follow DEBUG_REPAIR_PLAYBOOK; do not mark phase complete.
+3. **Commit** — Conventional commit (feat/fix/refactor(scope): ...); cohesive, self-contained.
+4. **Push/Sync** — Push to origin; if unavailable, record in WORKLOG and create local bundle.
+5. **Protected snapshot** — Maintain at most one manual app backup: run `./backup_project.sh` when needed (it keeps only the latest; do not create multiple backup copies). Do not snapshot secrets.
+6. **Context pack** — Update docs/CONTEXT_PACK.md: shipped items, decisions, verification commands, known issues, next steps.
+7. **Session log** — Append checkpoint summary to logs/cursor/ or logs/codex/.
+
+Do not mark phase complete if verification fails. Reference: docs/PHASE_CHECKPOINT_PROTOCOL.md, AGENTS.md.

@@ -1,0 +1,14 @@
+---
+description: "Key context documents to load; reference system/docs/CONTEXT_DOCUMENTS.md and load order"
+alwaysApply: true
+---
+
+# Context Documents
+
+When loading full context (e.g. "load master architectural systems now!" or new session):
+
+1. Use the **load order** in `system/docs/AI_CONTEXT_INDEX.md` or `AGENTS.md` (system/prompts/, system/docs/ for governance; SESSION_STATE in docs/).
+2. **Single reference for Cursor assets**: `system/docs/CURSOR_NEXUS.md` — Skills, Commands, Subagents, Rules.
+3. **Checklist and do-not-ignore list**: `system/docs/CONTEXT_DOCUMENTS.md` — key docs to load and ensure not in .cursorignore.
+
+Do not add key context docs (AGENTS.md, PROJECT_RULES.md, system/docs/AI_CONTEXT_INDEX.md, system/docs/CURSOR_NEXUS.md, system/docs/CONTEXT_DOCUMENTS.md, system/docs/MULTI_AGENT_AND_TOOL_AWARENESS.md, docs/CODING_SYSTEM_INDEX.md, docs/WHERE_WE_LEFT_OFF.md, docs/MCP_SETUP.md, docs/MCP_LATER_INSTALLS.md, system/prompts/, system/docs/KERNEL_CONTRACT.md) to .cursorignore so Cursor can index and use them.

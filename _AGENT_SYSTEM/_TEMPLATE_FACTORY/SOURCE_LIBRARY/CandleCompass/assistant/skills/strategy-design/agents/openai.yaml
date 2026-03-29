@@ -1,0 +1,4 @@
+interface:
+  display_name: "Strategy Design"
+  short_description: "Design and tune strategy signal logic"
+  default_prompt: "Use $strategy-design to create or refine Candle Compass strategy behavior."

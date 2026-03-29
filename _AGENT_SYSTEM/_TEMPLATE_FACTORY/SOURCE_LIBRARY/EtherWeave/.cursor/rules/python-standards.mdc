@@ -1,0 +1,37 @@
+---
+description: "Python standards: type hints, docstrings, exception handling, logging"
+globs: ["**/*.py"]
+alwaysApply: false
+---
+
+# Python Standards
+
+## Required
+
+- **Type hints** — All function parameters and return values.
+- **Docstrings** — Google style for functions, classes, modules.
+- **Exceptions** — Never bare `except:`. Use `except Exception as e:` with logging (e.g. `logger.exception(...)`).
+- **Input validation** — Validate at boundaries; use ValidationLayer for user/external input in this app.
+- **Logging** — Use logger.debug/info/error/exception appropriately; do not log secrets.
+
+## Examples
+
+```python
+# ❌ BAD
+def process(data):
+    try:
+        return run(data)
+    except:
+        pass
+
+# ✅ GOOD
+def process(data: str) -> dict[str, Any]:
+    """Process input and return result dict."""
+    try:
+        return run(data)
+    except Exception as e:
+        logger.exception("Process failed: %s", e)
+        raise
+```
+
+Reference: PROJECT_RULES.md, .cursorrules.

@@ -1,0 +1,35 @@
+{
+  "product": "MOS",
+  "source_template_version": "0.1.2",
+  "donors": [
+    {
+      "name": "AIAST_TEMPLATE",
+      "path": "TEMPLATE/",
+      "role": "primary installable donor",
+      "used_for": [
+        "authority model",
+        "bootstrap script patterns",
+        "golden example policy"
+      ]
+    },
+    {
+      "name": "AIAST_TEMPLATE_FACTORY",
+      "path": "_TEMPLATE_FACTORY/",
+      "role": "factory pattern donor",
+      "used_for": [
+        "automation lane",
+        "clean-room smoke",
+        "source-template validation"
+      ]
+    },
+    {
+      "name": "META_AGENT_SYSTEM_WORKSPACE",
+      "path": "_META_AGENT_SYSTEM/",
+      "role": "boundary and maintainer-state donor",
+      "used_for": [
+        "master-repo-only separation",
+        "maintainer context strategy"
+      ]
+    }
+  ]
+}

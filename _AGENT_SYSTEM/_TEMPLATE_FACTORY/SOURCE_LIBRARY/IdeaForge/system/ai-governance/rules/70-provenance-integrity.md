@@ -1,0 +1,4 @@
+- Every Artifact MUST have provenance: GeneratorRun id, inputs snapshot hash, and timestamp.
+- Export manifest MUST include artifact hashes and run lineage.
+- Any user edits create a new artifact version (immutable history).
+- Diff/merge operations MUST be recorded as audit events.

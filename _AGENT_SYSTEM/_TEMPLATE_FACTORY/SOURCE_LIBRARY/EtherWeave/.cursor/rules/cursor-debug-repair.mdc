@@ -1,0 +1,14 @@
+---
+description: "When something fails: stop feature work, follow DEBUG_REPAIR_PLAYBOOK, verify before proceeding"
+alwaysApply: true
+---
+
+# Debug/Repair First-Class
+
+If anything **fails** (build/import error, runtime crash, wrong output, UI regression, perf regression):
+
+1. **Stop** feature work.
+2. **Follow** docs/DEBUG_REPAIR_PLAYBOOK.md: triage → reproduce → localize → hypothesis → minimal fix → verification ladder.
+3. **Do not proceed** until verification passes OR the issue is explicitly tracked in docs/KNOWN_ISSUES.md.
+
+Output format for fixes: root cause, fix summary, files changed, verification commands, risk + rollback, checkpoint status. Reference: docs/DEBUG_REPAIR_PLAYBOOK.md, docs/KERNEL_CONTRACT.md.

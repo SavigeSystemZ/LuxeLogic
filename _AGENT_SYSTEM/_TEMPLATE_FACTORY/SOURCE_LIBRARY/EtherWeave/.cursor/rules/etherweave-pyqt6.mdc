@@ -1,0 +1,25 @@
+---
+description: "PyQt6 rules for Etherweave: layouts only, no place(), QThread for long ops, thread-safe updates, 10-button rule"
+globs: ["**/gui/**/*.py", "etherweave/gui/**/*.py"]
+alwaysApply: false
+---
+
+# Etherweave PyQt6 Rules
+
+## Layout (mandatory)
+
+- **No place()** — Use QVBoxLayout or QHBoxLayout only.
+- **No redundant QGroupBox stylesheets** — Use global style only (avoids doubled borders).
+- **Min heights** — QTextEdit: 150px; QListWidget: 100px. Add 15px bottom margin to prevent border clipping.
+
+## Threading (mandatory)
+
+- **No UI blocking** — Long operations in QThread (or equivalent).
+- **Thread-safe updates** — From workers use `QTimer.singleShot(0, lambda: widget.update(...))` or pyqtSignal. Never touch widgets from worker threads.
+- **Widget access** — Use `hasattr(self, 'widget_name')` and check before access; widgets may not exist during teardown.
+
+## Buttons
+
+- **10-button rule** — No tab may have more than 10 action buttons. Move excess to a dialog or "Advanced" sub-menu. Global header buttons (Settings, Cache Sudo, etc.) do not count.
+
+Reference: PROJECT_RULES.md, .cursorrules, MASTER_AI_REFERENCE.md.

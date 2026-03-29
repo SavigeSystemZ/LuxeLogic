@@ -1,0 +1,4 @@
+- Run redaction preflight before embeddings, evaluations, and export.
+- Run evaluation suite before export when enabled.
+- Block export when severity threshold exceeded (configurable).
+- Store evaluation evidence as artifacts and link to exact artifact hashes.

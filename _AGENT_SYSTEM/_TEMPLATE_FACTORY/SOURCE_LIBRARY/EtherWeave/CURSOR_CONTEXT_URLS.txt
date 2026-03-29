@@ -1,0 +1,148 @@
+# Cursor Context URLs - Etherweave-Nexus Development
+# Copy these URLs into Cursor Settings → Features → Context URLs
+# One URL per line
+
+# Python Core Documentation
+https://docs.python.org/3/
+https://docs.python.org/3/library/
+https://docs.python.org/3/tutorial/
+https://docs.python.org/3/reference/
+
+# PyQt6 & Qt Documentation
+https://www.riverbankcomputing.com/static/Docs/PyQt6/
+https://www.riverbankcomputing.com/static/Docs/PyQt6/tutorial/
+https://doc.qt.io/qtforpython/
+https://doc.qt.io/qt-6/qtmodules.html
+https://doc.qt.io/qt-6/qtwidgets-index.html
+https://doc.qt.io/qt-6/qtcore-index.html
+
+# Wireless Security & Tools
+https://www.aircrack-ng.org/doku.php
+https://www.aircrack-ng.org/doku.php?id=getting_started
+https://hashcat.net/wiki/
+https://hashcat.net/wiki/doku.php?id=frequently_asked_questions
+https://scapy.readthedocs.io/
+https://scapy.readthedocs.io/en/latest/usage.html
+
+# Wireless Protocols & Standards
+https://en.wikipedia.org/wiki/IEEE_802.11
+https://en.wikipedia.org/wiki/Wi-Fi_Protected_Access
+https://en.wikipedia.org/wiki/Wi-Fi_Protected_Setup
+https://en.wikipedia.org/wiki/WPA3
+https://en.wikipedia.org/wiki/Extensible_Authentication_Protocol
+
+# Linux Wireless & System Programming
+https://wireless.wiki.kernel.org/
+https://wireless.wiki.kernel.org/en/users/Documentation/iw
+https://wireless.wiki.kernel.org/en/users/Documentation/iw/scanning
+https://developer.gnome.org/NetworkManager/stable/
+https://docs.python.org/3/library/subprocess.html
+https://docs.python.org/3/library/os.html
+https://docs.python.org/3/library/threading.html
+https://docs.python.org/3/library/asyncio.html
+
+# GPU & CUDA
+https://docs.nvidia.com/cuda/
+https://docs.nvidia.com/cuda/cuda-c-programming-guide/
+https://pynvml.readthedocs.io/
+https://hashcat.net/wiki/doku.php?id=frequently_asked_questions#how_to_speed_up_hashcat
+
+# Security & Penetration Testing
+https://owasp.org/www-project-wireless-security/
+https://owasp.org/www-project-top-ten/
+https://www.first.org/cvss/
+https://docs.python.org/3/library/cryptography.html
+https://cryptography.io/en/latest/
+
+# SQLite & Databases
+https://www.sqlite.org/docs.html
+https://www.sqlite.org/lang_createindex.html
+https://docs.python.org/3/library/sqlite3.html
+https://www.sqlite.org/queryplanner.html
+
+# Testing & Quality
+https://docs.pytest.org/
+https://docs.pytest.org/en/stable/getting-started.html
+https://docs.python-guide.org/writing/tests/
+https://pep8.org/
+https://google.github.io/styleguide/pyguide.html
+https://mypy.readthedocs.io/
+https://flake8.pycqa.org/
+
+# Design Patterns
+https://python-patterns.guide/
+https://refactoring.guru/design-patterns/python
+https://doc.qt.io/qt-6/qtglobal.html#qobject
+https://doc.qt.io/qt-6/signalsandslots.html
+
+# Code Quality & Best Practices
+https://realpython.com/python-code-quality/
+https://realpython.com/python-type-checking/
+https://realpython.com/python-application-layouts/
+https://docs.python.org/3/library/typing.html
+
+# PyQt6 Specific
+https://www.riverbankcomputing.com/static/Docs/PyQt6/signals_slots.html
+https://www.riverbankcomputing.com/static/Docs/PyQt6/threading.html
+https://doc.qt.io/qt-6/qthread.html
+https://doc.qt.io/qt-6/qsignalspy.html
+
+# Error Handling & Logging
+https://docs.python.org/3/tutorial/errors.html
+https://docs.python.org/3/library/logging.html
+https://realpython.com/python-exceptions/
+https://realpython.com/python-logging/
+
+# Performance Optimization
+https://docs.python.org/3/library/profile.html
+https://docs.python.org/3/library/cProfile.html
+https://realpython.com/python-performance-tips/
+https://wiki.python.org/moin/PythonSpeed/PerformanceTips
+
+# Security Best Practices
+https://owasp.org/www-project-top-ten/
+https://cheatsheetseries.owasp.org/cheatsheets/Python_Security_Cheat_Sheet.html
+https://docs.python.org/3/library/secrets.html
+https://cryptography.io/en/latest/fernet/
+
+# Network Programming
+https://docs.python.org/3/library/socket.html
+https://docs.python.org/3/library/ipaddress.html
+https://scapy.readthedocs.io/en/latest/usage.html#sending-packets
+
+# Threading & Concurrency
+https://docs.python.org/3/library/threading.html
+https://docs.python.org/3/library/multiprocessing.html
+https://docs.python.org/3/library/concurrent.futures.html
+https://www.riverbankcomputing.com/static/Docs/PyQt6/signals_slots.html#threading
+
+# Database Optimization
+https://www.sqlite.org/queryplanner.html
+https://www.sqlite.org/optoverview.html
+https://www.sqlite.org/lang_createindex.html
+https://www.sqlite.org/faq.html#q19
+
+# GUI Best Practices
+https://doc.qt.io/qt-6/qtwidgets-index.html
+https://doc.qt.io/qt-6/stylesheet-reference.html
+https://www.riverbankcomputing.com/static/Docs/PyQt6/stylesheet.html
+
+# Wireless Security Research
+https://www.wi-fi.org/security
+https://tools.ietf.org/html/rfc80211
+https://tools.ietf.org/html/rfc8021x
+
+# Hardware Integration
+https://docs.python.org/3/library/ctypes.html
+https://docs.python.org/3/library/platform.html
+https://pynvml.readthedocs.io/en/latest/
+
+# Container & Deployment
+https://docs.docker.com/
+https://docs.docker.com/engine/reference/builder/
+https://docs.python.org/3/library/venv.html
+
+# Documentation Tools
+https://www.sphinx-doc.org/
+https://sphinx-rtd-theme.readthedocs.io/
+https://github.com/google/styleguide/blob/gh-pages/pyguide.md

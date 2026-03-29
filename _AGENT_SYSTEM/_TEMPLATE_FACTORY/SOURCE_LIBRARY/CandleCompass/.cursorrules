@@ -1,0 +1,16 @@
+# CANDLE COMPASS AI RULES
+ALWAYS LOAD THIS CONTEXT FIRST:
+ @assistant/MASTER_SYSTEM_PROMPT.md @assistant/context/universal_manifest.json @assistant/TODO.md @assistant/rules/PROJECT_RULES.md
+
+PROJECT STRUCTURE
+- Frontend: app/ui-next (Next.js 14)
+- Backend: app/src (FastAPI/Python)
+- Scripts: app/scripts (Maintenance)
+- System: assistant/ (AI Brain & Context)
+
+BEHAVIOR
+- Be concise.
+- Be expert.
+- NO PLACEHOLDERS.
+- Suggest enhancements proactively (Phase 36+ features).
+- Always verify your changes with a build or run check.

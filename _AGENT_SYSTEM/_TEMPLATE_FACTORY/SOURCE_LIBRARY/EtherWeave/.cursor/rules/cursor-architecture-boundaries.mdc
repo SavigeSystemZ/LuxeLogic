@@ -1,0 +1,26 @@
+---
+description: "Clean Architecture dependency rule and layer boundaries: Domain, Ports, Adapters, GUI"
+alwaysApply: true
+---
+
+# Dependency Rule
+
+- **Domain** — Pure types/invariants. Depends on nothing. Standard library only.
+- **Application** — Depends on Domain + Ports only.
+- **Adapters** — Implement Ports. Depend on Domain + Ports + external deps.
+- **GUI** — Depends on Adapters + Qt only. No direct subprocess or core imports.
+
+# Allowed Imports
+
+- Domain: stdlib only.
+- Application: Domain + Ports.
+- Adapters: Domain + Ports + external.
+- GUI: Adapters + Qt.
+
+# Violations to avoid
+
+- GUI importing application/core/lib.
+- GUI calling subprocess directly (use adapters or process-runner wrapper).
+- Worker threads mutating UI directly (use QTimer.singleShot or pyqtSignal).
+
+Reference: docs/ARCHITECTURE_BOUNDARIES.md, docs/ARCHITECTURE_FITNESS_FUNCTIONS.md.

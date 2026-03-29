@@ -1,0 +1,4 @@
+- Validate all inputs at the API boundary.
+- Enforce authz checks on any idea/artifact access (even single-user; keep seam).
+- Redact secrets in logs and exports.
+- Record security-relevant events to AuditEvent + logs/THREAT_MODEL_LOG.md.

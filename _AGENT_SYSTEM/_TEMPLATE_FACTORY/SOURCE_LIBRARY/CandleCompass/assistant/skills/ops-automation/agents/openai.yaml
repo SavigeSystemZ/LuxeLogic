@@ -1,0 +1,4 @@
+interface:
+  display_name: "Ops Automation"
+  short_description: "Maintain runbooks, services, and refresh jobs"
+  default_prompt: "Use $ops-automation to update Candle Compass ops scripts and services."

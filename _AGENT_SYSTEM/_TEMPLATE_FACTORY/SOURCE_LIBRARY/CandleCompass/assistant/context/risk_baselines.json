@@ -1,0 +1,36 @@
+{
+  "single_asset": {
+    "annualized_vol": 0.17643599102730548,
+    "var_95": -0.015796763912230116,
+    "cvar_95": -0.01627983727518321,
+    "var_99": -0.016580259753435946,
+    "cvar_99": -0.01677017196608252,
+    "skew": 0.02058656056468846,
+    "kurtosis": -1.3514095987502068,
+    "max_drawdown": -0.11758198836211461,
+    "current_drawdown": -0.10591410690026255,
+    "max_drawdown_duration": 21.0,
+    "avg_gross_exposure": 0.9165526675786594,
+    "max_gross_exposure": 1.0,
+    "avg_net_exposure": 0.9165526675786594,
+    "net_exposure_std": 0.27674654029416895,
+    "exposure_pct_time": 0.9165526675786594
+  },
+  "portfolio": {
+    "annualized_vol": 0.07450489492522869,
+    "var_95": -0.0030464664448298477,
+    "cvar_95": -0.0043622694464659426,
+    "var_99": -0.005378833451177709,
+    "cvar_99": -0.005962422546055149,
+    "skew": 0.419883799501565,
+    "kurtosis": -0.4802293118178649,
+    "max_drawdown": -0.017063474882143055,
+    "current_drawdown": -0.0048317252320247625,
+    "max_drawdown_duration": 13.0,
+    "avg_gross_exposure": 0.572258000892424,
+    "max_gross_exposure": 0.9373466953392953,
+    "avg_net_exposure": -0.009740901029222886,
+    "net_exposure_std": 0.40994454400524794,
+    "exposure_pct_time": 0.9316005471956225
+  }
+}

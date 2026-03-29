@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "ideaforge-readonly": {
+      "command": "node",
+      "args": [
+        "./mcp-server/dist/index.js",
+        "--mode=readonly"
+      ],
+      "env": {
+        "IDEAFORGE_URL": "http://localhost:3000"
+      }
+    },
+    "github-readonly": {
+      "command": "npx",
+      "args": [
+        "@example/github-mcp-server",
+        "--readonly"
+      ],
+      "env": {}
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "campaign_id": "core-matrix",
+  "title": "Core Test App Matrix",
+  "description": "Curated first-wave test apps that cover the primary AIAST blueprint families before broader downstream trials.",
+  "apps": [
+    {
+      "slug": "control-plane",
+      "app_name": "AIASTControlPlane",
+      "blueprint": "UNIVERSAL_APP_PLATFORM",
+      "category": "platform",
+      "goal": "Exercise multi-surface coordination across packaging, ops, mobile, and AI scaffolds."
+    },
+    {
+      "slug": "portal-web",
+      "app_name": "AIASTPortalWeb",
+      "blueprint": "NEXT_JS_FULLSTACK",
+      "category": "web",
+      "goal": "Exercise the fullstack web bootstrap and blueprint projection path."
+    },
+    {
+      "slug": "service-api",
+      "app_name": "AIASTServiceApi",
+      "blueprint": "FASTAPI_API",
+      "category": "api",
+      "goal": "Exercise the Python API bootstrap and service-oriented validation path."
+    },
+    {
+      "slug": "ops-mobile",
+      "app_name": "AIASTOpsMobile",
+      "blueprint": "FLUTTER_ANDROID_CLIENT",
+      "category": "mobile",
+      "goal": "Exercise the mobile-first bootstrap and Android packaging assumptions."
+    },
+    {
+      "slug": "admin-cli",
+      "app_name": "AIASTAdminCli",
+      "blueprint": "PYTHON_CLI_TOOL",
+      "category": "cli",
+      "goal": "Exercise the CLI-first repo shape and lean runtime scaffolding path."
+    }
+  ]
+}

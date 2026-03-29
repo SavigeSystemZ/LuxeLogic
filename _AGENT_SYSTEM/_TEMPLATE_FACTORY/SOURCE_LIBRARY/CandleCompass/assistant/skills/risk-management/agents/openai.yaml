@@ -1,0 +1,4 @@
+interface:
+  display_name: "Risk Management"
+  short_description: "Implement and enforce risk guardrails"
+  default_prompt: "Use $risk-management to update Candle Compass risk controls and reporting."

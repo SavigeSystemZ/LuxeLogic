@@ -1,0 +1,8 @@
+---
+alwaysApply: true
+---
+# Environment and MCP (Etherweave)
+
+- When any MCP server shows "errored" or a tool call fails: note it once in your response (e.g. "OpenMemory/Context7 returned an error; using in-repo context") and continue with in-repo sources (docs/, code, MASTER_AI_REFERENCE, openmemory.md). Do not block the task or retry repeatedly.
+- Full model: system/docs/ENVIRONMENT_AND_MCP_MODEL.md (environment vs MCP, workspace vs user-level servers, bootstrap checklist).
+- Setup/troubleshooting: docs/MCP_TROUBLESHOOTING.md, docs/OPENMEMORY_SETUP.md, docs/KDE_KEYRING_AND_ENVIRONMENT.md.

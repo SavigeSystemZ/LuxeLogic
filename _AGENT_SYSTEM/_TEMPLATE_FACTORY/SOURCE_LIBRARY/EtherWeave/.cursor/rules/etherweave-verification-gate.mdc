@@ -1,0 +1,14 @@
+---
+description: "Verification before push or checkpoint; follow DEBUG_REPAIR_PLAYBOOK on failure"
+alwaysApply: true
+---
+
+# Verification Gate
+
+Before **push** or **checkpoint**:
+
+1. Run **tools/verify.sh** (import/fitness, lightweight secrets scan). If missing, run available checks (e.g. `python tools/fitness_check.py`, lint, tests).
+2. If verification **fails**: follow **docs/DEBUG_REPAIR_PLAYBOOK.md**. Do not push or mark phase complete until resolved or recorded in docs/KNOWN_ISSUES.md.
+3. If verification **passes**: safe to push/checkpoint.
+
+Do not claim tests or checks ran unless you include actual command output. Reference: AGENTS.md, docs/PHASE_CHECKPOINT_PROTOCOL.md.

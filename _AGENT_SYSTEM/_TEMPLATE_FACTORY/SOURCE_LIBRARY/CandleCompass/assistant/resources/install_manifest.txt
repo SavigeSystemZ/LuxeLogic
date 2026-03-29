@@ -1,0 +1,49 @@
+# App-only install manifest (relative to app/ root)
+# Directories (fixtures excluded to reduce install size)
+# Include stop_legacy_rsiglobe_services.sh so installer can silence old bundle timer
+scripts/
+main.py
+core/
+engine/
+src/
+ui/
+ui-next/src/
+ui-next/public/
+ui-next/next.config.ts
+ui-next/package.json
+ui-next/package-lock.json
+ui-next/tsconfig.json
+ui-next/tailwind.config.js
+ui-next/postcss.config.mjs
+ui-next/eslint.config.mjs
+ui-next/vitest.config.ts
+ui-next/vitest.setup.ts
+data/public/
+# Explicitly include sub-levels if needed by certain tools
+src/advisory/
+src/agents/
+src/analysis/
+src/analytics/
+src/api/
+src/backtest/
+src/data/
+src/discovery/
+src/execution/
+src/gamification/
+src/memory/
+src/monitoring/
+src/notifications/
+src/optimization/
+src/portfolio/
+src/risk/
+src/security/
+src/strategies/
+src/strategies/builder/
+src/strategies/builder/blocks.py
+src/validation/
+
+# Root files
+config.yaml
+asset_universe.yaml
+requirements.txt
+.env.example

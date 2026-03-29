@@ -1,0 +1,14 @@
+{
+  "name": "sample-plugin",
+  "version": "0.1.0",
+  "description": "Example MOS plugin manifest for validation and documentation.",
+  "hooks": [
+    "validation.preflight"
+  ],
+  "owned_paths": [
+    "meta_system/plugins/sample-plugin/"
+  ],
+  "requires": [
+    "META_PLUGIN_CONTRACT.md"
+  ]
+}

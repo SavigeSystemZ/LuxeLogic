@@ -1,0 +1,4 @@
+- Prompts must be self-contained and reference canonical docs by name.
+- Use strict delimiters around user-provided notes/constraints.
+- Never echo secrets into artifacts or logs.
+- Store every generation as GeneratorRun with an input snapshot.

@@ -1,0 +1,19 @@
+---
+description: "Etherweave is developed by multiple AI tools (Cursor, Codex, Gemini, Claude, Windsurf) that take turns; follow shared rules and handoff protocol"
+alwaysApply: true
+---
+
+# Multi-Tool Awareness
+
+This repo is designed, built, and configured by **multiple AI coding tools that take turns** (Cursor, Codex, Gemini, Claude, Windsurf, and others). You may be one of them.
+
+## You must
+
+- **Follow shared governance** — AGENTS.md load order, output contract, verification gate, checkpoint protocol. These apply regardless of which tool is active.
+- **Assume another tool may continue** — Persist decisions and next steps in repo docs (WHERE_WE_LEFT_OFF, SESSION_STATE, CONTEXT_PACK, TODO, WORKLOG), not only in this chat.
+- **On handoff** — Before ending your turn after meaningful work: update WHERE_WE_LEFT_OFF and SESSION_STATE; run `./tools/verify.sh` if code changed; commit when appropriate so the next tool has the latest tree.
+- **Not contradict shared rules** — Cursor-specific rules (this folder) extend behavior but must align with AGENTS.md and PROJECT_RULES.md.
+
+## Reference
+
+- **system/docs/MULTI_AGENT_AND_TOOL_AWARENESS.md** — Full multi-tool and handoff rules.

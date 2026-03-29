@@ -1,0 +1,24 @@
+# Nightly Checklist
+
+- Save work and ensure clean state.
+- Run `./scripts/ui_status.sh`.
+- Run `./scripts/memory_status.sh`.
+- Run `python scripts/ui_health_check.py --runs runs/latest`.
+- Run `python scripts/ui_smoke_test.py --runs runs/latest`.
+- Run `.venv/bin/pytest -q` (or targeted suites when time-constrained).
+- Run `./scripts/git_connectivity_check.sh`.
+- If Ghost protocol is enabled, inspect `runs/latest/ghost_protocol_status.json` for unexpected triggers.
+- If audit webhook shipping is enabled, inspect:
+  - `runs/latest/admin_control_audit_ship_status.json`
+  - `runs/latest/admin_control_audit_worker_status.json`
+  - `runs/latest/admin_control_audit_worm_status.json`
+- If WORM export is enabled, inspect:
+  - `runs/latest/admin_control_audit_worm_export_status.json`
+  - `runs/latest/admin_control_audit_worm_retention_validation.json`
+  - `runs/latest/admin_control_audit_worm_env_check.json`
+- Stop service if running: `./scripts/stop_service.sh`.
+- Record changes in `assistant/context/CHANGELOG.md`.
+- Update `assistant/context/CURRENT_STATUS.md` with the latest runtime state.
+- Run `./scripts/backup_project.sh ~/candle_compass` (or `full` for full backup).
+- Confirm backups exist for latest state (stored in `/home/whyte/.cursor/` or `backups/`).
+- Enforce backup retention: keep at most 3 backups and delete the oldest before creating a new one.

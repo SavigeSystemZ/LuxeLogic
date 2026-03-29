@@ -1,0 +1,99 @@
+WRAITHS-ETHERWEAVE CURSOR TODO
+
+RESUME NEXT (reboot-safe)
+- Fix sudo cache failure in GUI (capture new debug logs; check TTY/biometric)
+- Verify rfkill unblock status and re-test interface detection
+- Confirm repo state: `git status -sb`
+- Verify system-wide Codex alias (if needed): `/etc/profile.d/codex.sh`
+- Run gates: `./tools/verify.sh`
+- Confirm settings/appearance apply flow:
+  - Wallpaper clear applies immediately
+  - Font family/size apply globally
+- Confirm ops readiness behavior:
+  - App starts with ops locked (header badge shows 🔒 OPS LOCKED)
+  - Caching sudo updates UI button states live
+
+Live Testing Fixes (2026-01-13)
+- Add global bottom-left terminal panel (collapsible) with "Detach" to pop-out; run in install directory, show command per button action.
+- Add app clipboard viewer panel (last command + clipboard history); default in-memory, optional persistence toggle.
+- Developer Console: archive log on clear, add copy-to-clipboard, add "Debug Now" helper output.
+- Panic button: block inbound/outbound traffic, stop running processes/services, save state, produce report.
+- NetworkManager restart reliability; ensure monitor mode does not break wired networking or NM tray.
+- Interface tab: auto-detect interfaces on open, refresh works, show error if sudo not cached.
+- Increase sudo cache timeout default to >= 60 minutes.
+- Consolidate hardware info into System Information; repurpose Refresh Hardware to re-detect hardware/interfaces.
+- Add explicit target/monitor indicator in Live Networks (selection marks current target).
+
+Priority 0 - Safety + Architecture
+- Enforce GUI-free core: ensure no PyQt imports in etherweave/core, etherweave/application, etherweave/lib.
+- Expand fitness checks to include subprocess usage in gui and UI mutation in QThreads.
+- Add token auth option to daemon client and document ETHERWEAVE_DAEMON_TOKEN usage.
+- Review daemon socket auth (SO_PEERCRED) in all launch paths (sudo/pkexec).
+
+Priority 1 - Critical Bug Fixes
+- Fix XAUTHORITY/xhost handling in remaining launch scripts (verify launch_gui_wrapper.sh, launch_gui_no_elevation_fixed.sh).
+- Fix installer preflight dpkg detection and verify package mapping for Fedora/Arch.
+- Fix API CORS defaults in deployment docs and environment variables.
+- Fix API dashboard_router import (already done) and verify API startup.
+
+Priority 2 - Feature Stability
+- Align Pineapple widget to API client for all actions; add connection status and error surface.
+- Validate Pwnagotchi widget container restart handling and status refresh.
+- Add ops readiness checks to any remaining privileged actions not yet gated.
+  - Ensure Interface + Capture + any other privileged surfaces have consistent tooltips and disabled states when ops are locked.
+
+Priority 3 - Architecture Refactor
+- Port remaining subprocess calls into adapters/use-cases.
+- Expand ports: AuthPort/TelemetryPort usage across GUI/daemon.
+- Standardize AppEvent emissions for all long-running tasks.
+- Introduce use-case for system maintenance operations and wire to GUI.
+
+Priority 4 - Testing
+- Add pytest-qt minimal GUI test for event-to-UI wiring.
+- Add tests for ops mode state + authorized ops toggle.
+- Add tests for adapters (toolrunner, sqlite, system ops, gpu status).
+- Add tests for daemon socket auth and JSON framing.
+
+Priority 5 - Docs Alignment
+- Align Python version requirements across all docs to 3.10+.
+- Update log references in all docs to actual log locations.
+- Add ops locked/ready behavior to USER_GUIDE.md.
+
+Priority 6 - Distribution Support
+- Update install_tools.sh to map packages for Debian/Fedora/Arch.
+- Add distro-specific hints for WiFi drivers and monitor mode.
+- Add optional container runtime checks (Docker/Podman).
+
+Priority 7 - UX and Design
+- Ensure 10-Button Rule per tab; move overflow actions into dialogs.
+- Improve contrast in neon themes while preserving cyberpunk style.
+- Add header badge messaging for ops locked/ready.
+
+Priority 7a - Tabs Completion Milestone (multi-phase)
+- Phase 1: Define per-tab scope + capability map (wireless-only) and validate against ROADMAP.md.
+- Phase 2: For each tab, implement missing core workflows end-to-end via CoreController/use-cases/ports/adapters (no GUI subprocess).
+- Phase 3: Add per-tab overflow dialogs, progressive disclosure, and consistent quick actions (target context).
+- Phase 4: Add per-tab tests (unit/use-case/adapter), plus one thin GUI smoke test for the tab.
+- Phase 5: UX/polish pass: performance, error surfaces, tooltips, accessibility, theme consistency.
+
+Priority 8 - WRAITHS Suite Integration
+- Define inter-platform interface contract for future suite integration.
+- Create placeholder adapter/port for suite-level orchestration.
+
+Priority 9 - AI/Agent Integration (future)
+- Define AI adapter port with strict safety constraints.
+- Add read-only “advisor” mode to suggest operations without execution.
+
+Priority 10 - Backup & Release
+- Run `backup_project.sh` prior to major phases.
+- Tag release milestones with changelog updates.
+  - Prefer `scripts/checkpoint_phase.sh "<milestone>" "<phase>"` for phase checkpoints (runs `tools/verify.sh` + backup + hashes).
+
+Priority 11 - World-Class Differentiators
+- Establish case → evidence → remediation as the primary workflow (Case object, artifact hashing, deterministic bundles).
+- Add replay harness + golden datasets for regression-proof testing.
+- Build capability matrix + feature gating by chipset/driver.
+- Expand RF spectrum + interference analytics (channel utilization history).
+- Add site survey mapping + heatmaps (floorplan import).
+- Add enterprise Wi‑Fi posture checks (802.1X hygiene + RADIUS correlation).
+- Treat GitHub as release train (CI smoke checks, lint/type checks, packaging, signed releases).

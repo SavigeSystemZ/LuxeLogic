@@ -80,6 +80,20 @@ Apply `PROMOTION_CRITERIA.md` before promoting or rejecting a candidate and keep
   - no installed-pack promotion
   - revisit only if a concrete neutral-pattern gap emerges
 
+## Review: 2026-03-29
+
+### Candidate: Orignym
+
+- Strong signals:
+  - score 93.7 driven by context coverage, packaging surfaces, and aiaast-surface breadth
+  - promising structure with clean separation of concerns
+- Why not promoted now:
+  - score is inflated by a nested template copy rather than original neutral-pattern depth
+  - current donors already provide more stable evidence of the same maturity patterns
+- Decision:
+  - no installed-pack promotion
+  - monitor for stability and original pattern contribution after nested-template artifacts are cleaned up
+
 ## Result
 
 - Current primary donors remain unchanged.

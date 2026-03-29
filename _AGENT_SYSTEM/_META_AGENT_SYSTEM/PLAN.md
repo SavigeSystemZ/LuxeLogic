@@ -12,7 +12,7 @@ workspace.
   across 18 repos and 3 runtime test apps, exposing that the handoff quality
   gap is the highest-leverage remaining improvement — bad handoffs waste agent
   context window on state reconstruction instead of productive work
-- Forcing function: leave the repo ready for a 1.15.0 version bump with the
+- Forcing function: leave the repo ready for a 1.16.0 version bump with the
   new governance and validation surfaces, and keep future work gated behind
   real downstream evidence
 
@@ -47,7 +47,7 @@ workspace.
 
 ## Next execution slice
 
-1. Version bump to `1.15.0` to capture the handoff governance and validation
+1. Version bump to `1.16.0` to capture the handoff governance and validation
    enhancements
 2. Regenerate host adapters and downstream-facing surfaces
 3. Run full factory validation (both lanes)

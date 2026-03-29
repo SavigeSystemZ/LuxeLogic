@@ -6,7 +6,7 @@
     "containers",
     "runs"
   ],
-  "generated_at": "2026-03-29T02:53:10Z",
+  "generated_at": "2026-03-29T18:48:29Z",
   "repos": [
     {
       "is_git": true,
@@ -14,7 +14,7 @@
         "context_hits": 9,
         "doc_dir_count": 5,
         "evidence_file_count": 7,
-        "file_count": 650,
+        "file_count": 677,
         "packaging_surface_count": 8,
         "profile_checked": 10,
         "profile_completion_ratio": 1.0,
@@ -25,7 +25,7 @@
       },
       "name": "LedgerLoop",
       "path": "/home/whyte/.MyAppZ/LedgerLoop",
-      "score": 114.2,
+      "score": 114.9,
       "signals": [
         "strong-context",
         "filled-profile",
@@ -41,7 +41,7 @@
         "context_hits": 9,
         "doc_dir_count": 11,
         "evidence_file_count": 7,
-        "file_count": 1050,
+        "file_count": 1055,
         "packaging_surface_count": 6,
         "profile_checked": 10,
         "profile_completion_ratio": 1.0,
@@ -67,7 +67,7 @@
         "context_hits": 9,
         "doc_dir_count": 15,
         "evidence_file_count": 7,
-        "file_count": 1246,
+        "file_count": 1251,
         "packaging_surface_count": 4,
         "profile_checked": 15,
         "profile_completion_ratio": 1.0,
@@ -93,7 +93,7 @@
         "context_hits": 9,
         "doc_dir_count": 3,
         "evidence_file_count": 7,
-        "file_count": 1786,
+        "file_count": 1791,
         "packaging_surface_count": 7,
         "profile_checked": 10,
         "profile_completion_ratio": 1.0,
@@ -119,7 +119,7 @@
         "context_hits": 9,
         "doc_dir_count": 3,
         "evidence_file_count": 7,
-        "file_count": 1374,
+        "file_count": 1470,
         "packaging_surface_count": 5,
         "profile_checked": 15,
         "profile_completion_ratio": 1.0,
@@ -145,7 +145,7 @@
         "context_hits": 9,
         "doc_dir_count": 6,
         "evidence_file_count": 7,
-        "file_count": 1771,
+        "file_count": 1776,
         "packaging_surface_count": 6,
         "profile_checked": 0,
         "profile_completion_ratio": 0.0,
@@ -170,7 +170,7 @@
         "context_hits": 9,
         "doc_dir_count": 3,
         "evidence_file_count": 7,
-        "file_count": 539,
+        "file_count": 544,
         "packaging_surface_count": 4,
         "profile_checked": 6,
         "profile_completion_ratio": 0.4,
@@ -181,7 +181,7 @@
       },
       "name": "HQIQ",
       "path": "/home/whyte/.MyAppZ/HQIQ",
-      "score": 101.5,
+      "score": 101.6,
       "signals": [
         "strong-context",
         "deep-tests",
@@ -195,7 +195,7 @@
         "context_hits": 9,
         "doc_dir_count": 2,
         "evidence_file_count": 7,
-        "file_count": 720,
+        "file_count": 725,
         "packaging_surface_count": 4,
         "profile_checked": 10,
         "profile_completion_ratio": 1.0,
@@ -220,7 +220,31 @@
         "context_hits": 9,
         "doc_dir_count": 3,
         "evidence_file_count": 7,
-        "file_count": 571,
+        "file_count": 526,
+        "packaging_surface_count": 5,
+        "profile_checked": 6,
+        "profile_completion_ratio": 0.4,
+        "profile_total": 15,
+        "runtime_surface_count": 3,
+        "system_surface_count": 3,
+        "test_dir_count": 1
+      },
+      "name": "Orignym",
+      "path": "/home/whyte/.MyAppZ/Orignym",
+      "score": 93.7,
+      "signals": [
+        "strong-context",
+        "packaging-ready",
+        "full-aiaast"
+      ]
+    },
+    {
+      "is_git": true,
+      "metrics": {
+        "context_hits": 9,
+        "doc_dir_count": 3,
+        "evidence_file_count": 7,
+        "file_count": 576,
         "packaging_surface_count": 5,
         "profile_checked": 0,
         "profile_completion_ratio": 0.0,
@@ -231,7 +255,7 @@
       },
       "name": "PromptMage",
       "path": "/home/whyte/.MyAppZ/PromptMage",
-      "score": 89.3,
+      "score": 89.4,
       "signals": [
         "strong-context",
         "packaging-ready",
@@ -243,33 +267,9 @@
       "is_git": true,
       "metrics": {
         "context_hits": 9,
-        "doc_dir_count": 3,
-        "evidence_file_count": 7,
-        "file_count": 480,
-        "packaging_surface_count": 5,
-        "profile_checked": 0,
-        "profile_completion_ratio": 0.0,
-        "profile_total": 15,
-        "runtime_surface_count": 3,
-        "system_surface_count": 3,
-        "test_dir_count": 1
-      },
-      "name": "Orignym",
-      "path": "/home/whyte/.MyAppZ/Orignym",
-      "score": 88.5,
-      "signals": [
-        "strong-context",
-        "packaging-ready",
-        "full-aiaast"
-      ]
-    },
-    {
-      "is_git": true,
-      "metrics": {
-        "context_hits": 9,
         "doc_dir_count": 2,
         "evidence_file_count": 7,
-        "file_count": 453,
+        "file_count": 458,
         "packaging_surface_count": 5,
         "profile_checked": 0,
         "profile_completion_ratio": 0.0,
@@ -280,10 +280,35 @@
       },
       "name": "IdeaForge",
       "path": "/home/whyte/.MyAppZ/IdeaForge",
-      "score": 85.8,
+      "score": 86.0,
       "signals": [
         "strong-context",
         "packaging-ready",
+        "full-aiaast"
+      ]
+    },
+    {
+      "is_git": true,
+      "metrics": {
+        "context_hits": 9,
+        "doc_dir_count": 3,
+        "evidence_file_count": 7,
+        "file_count": 421,
+        "packaging_surface_count": 4,
+        "profile_checked": 0,
+        "profile_completion_ratio": 0.0,
+        "profile_total": 15,
+        "runtime_surface_count": 4,
+        "system_surface_count": 3,
+        "test_dir_count": 0
+      },
+      "name": "FlipHole",
+      "path": "/home/whyte/.MyAppZ/FlipHole",
+      "score": 84.0,
+      "signals": [
+        "strong-context",
+        "packaging-ready",
+        "multi-surface",
         "full-aiaast"
       ]
     },
@@ -317,7 +342,7 @@
         "context_hits": 9,
         "doc_dir_count": 2,
         "evidence_file_count": 7,
-        "file_count": 392,
+        "file_count": 397,
         "packaging_surface_count": 4,
         "profile_checked": 0,
         "profile_completion_ratio": 0.0,
@@ -328,7 +353,7 @@
       },
       "name": "SecuritySentinel",
       "path": "/home/whyte/.MyAppZ/SecuritySentinel",
-      "score": 66.3,
+      "score": 66.4,
       "signals": [
         "strong-context",
         "packaging-ready",
@@ -341,7 +366,7 @@
         "context_hits": 9,
         "doc_dir_count": 2,
         "evidence_file_count": 7,
-        "file_count": 366,
+        "file_count": 371,
         "packaging_surface_count": 4,
         "profile_checked": 0,
         "profile_completion_ratio": 0.0,
@@ -352,7 +377,79 @@
       },
       "name": "AegisSwarm",
       "path": "/home/whyte/.MyAppZ/AegisSwarm",
-      "score": 65.7,
+      "score": 65.8,
+      "signals": [
+        "strong-context",
+        "packaging-ready",
+        "full-aiaast"
+      ]
+    },
+    {
+      "is_git": false,
+      "metrics": {
+        "context_hits": 9,
+        "doc_dir_count": 2,
+        "evidence_file_count": 7,
+        "file_count": 371,
+        "packaging_surface_count": 4,
+        "profile_checked": 0,
+        "profile_completion_ratio": 0.0,
+        "profile_total": 15,
+        "runtime_surface_count": 2,
+        "system_surface_count": 3,
+        "test_dir_count": 0
+      },
+      "name": "NeuroNest",
+      "path": "/home/whyte/.MyAppZ/NeuroNest",
+      "score": 65.8,
+      "signals": [
+        "strong-context",
+        "packaging-ready",
+        "full-aiaast"
+      ]
+    },
+    {
+      "is_git": false,
+      "metrics": {
+        "context_hits": 9,
+        "doc_dir_count": 2,
+        "evidence_file_count": 7,
+        "file_count": 371,
+        "packaging_surface_count": 4,
+        "profile_checked": 0,
+        "profile_completion_ratio": 0.0,
+        "profile_total": 10,
+        "runtime_surface_count": 2,
+        "system_surface_count": 3,
+        "test_dir_count": 0
+      },
+      "name": "VERITAS (dating app...)",
+      "path": "/home/whyte/.MyAppZ/VERITAS (dating app...)",
+      "score": 65.8,
+      "signals": [
+        "strong-context",
+        "packaging-ready",
+        "full-aiaast"
+      ]
+    },
+    {
+      "is_git": false,
+      "metrics": {
+        "context_hits": 9,
+        "doc_dir_count": 2,
+        "evidence_file_count": 7,
+        "file_count": 371,
+        "packaging_surface_count": 4,
+        "profile_checked": 0,
+        "profile_completion_ratio": 0.0,
+        "profile_total": 10,
+        "runtime_surface_count": 2,
+        "system_surface_count": 3,
+        "test_dir_count": 0
+      },
+      "name": "WRAITHS",
+      "path": "/home/whyte/.MyAppZ/WRAITHS",
+      "score": 65.8,
       "signals": [
         "strong-context",
         "packaging-ready",
@@ -384,76 +481,66 @@
       ]
     },
     {
-      "is_git": false,
+      "is_git": true,
       "metrics": {
-        "context_hits": 9,
-        "doc_dir_count": 2,
-        "evidence_file_count": 7,
-        "file_count": 366,
-        "packaging_surface_count": 4,
+        "context_hits": 0,
+        "doc_dir_count": 12,
+        "evidence_file_count": 0,
+        "file_count": 817,
+        "packaging_surface_count": 1,
         "profile_checked": 0,
         "profile_completion_ratio": 0.0,
-        "profile_total": 15,
-        "runtime_surface_count": 2,
-        "system_surface_count": 3,
+        "profile_total": 0,
+        "runtime_surface_count": 0,
+        "system_surface_count": 0,
         "test_dir_count": 0
       },
-      "name": "NeuroNest",
-      "path": "/home/whyte/.MyAppZ/NeuroNest",
-      "score": 65.7,
+      "name": "LuxeLogic",
+      "path": "/home/whyte/.MyAppZ/LuxeLogic",
+      "score": 43.5,
       "signals": [
-        "strong-context",
-        "packaging-ready",
-        "full-aiaast"
+        "docs-heavy"
       ]
     },
     {
       "is_git": false,
       "metrics": {
-        "context_hits": 9,
-        "doc_dir_count": 2,
-        "evidence_file_count": 7,
-        "file_count": 366,
-        "packaging_surface_count": 4,
+        "context_hits": 0,
+        "doc_dir_count": 0,
+        "evidence_file_count": 0,
+        "file_count": 0,
+        "packaging_surface_count": 0,
         "profile_checked": 0,
         "profile_completion_ratio": 0.0,
-        "profile_total": 10,
-        "runtime_surface_count": 2,
-        "system_surface_count": 3,
+        "profile_total": 0,
+        "runtime_surface_count": 0,
+        "system_surface_count": 0,
         "test_dir_count": 0
       },
-      "name": "VERITAS (dating app...)",
-      "path": "/home/whyte/.MyAppZ/VERITAS (dating app...)",
-      "score": 65.7,
-      "signals": [
-        "strong-context",
-        "packaging-ready",
-        "full-aiaast"
-      ]
+      "name": "ContextCore",
+      "path": "/home/whyte/.MyAppZ/ContextCore",
+      "score": 0.0,
+      "signals": []
     },
     {
       "is_git": false,
       "metrics": {
-        "context_hits": 9,
-        "doc_dir_count": 2,
-        "evidence_file_count": 7,
-        "file_count": 366,
-        "packaging_surface_count": 4,
+        "context_hits": 0,
+        "doc_dir_count": 0,
+        "evidence_file_count": 0,
+        "file_count": 0,
+        "packaging_surface_count": 0,
         "profile_checked": 0,
         "profile_completion_ratio": 0.0,
-        "profile_total": 10,
-        "runtime_surface_count": 2,
-        "system_surface_count": 3,
+        "profile_total": 0,
+        "runtime_surface_count": 0,
+        "system_surface_count": 0,
         "test_dir_count": 0
       },
-      "name": "WRAITHS",
-      "path": "/home/whyte/.MyAppZ/WRAITHS",
-      "score": 65.7,
-      "signals": [
-        "strong-context",
-        "packaging-ready",
-        "full-aiaast"
-      ]
+      "name": "WraithsCast",
+      "path": "/home/whyte/.MyAppZ/WraithsCast",
+      "score": 0.0,
+      "signals": []
     }
   ],
   "scan_root": "/home/whyte/.MyAppZ",

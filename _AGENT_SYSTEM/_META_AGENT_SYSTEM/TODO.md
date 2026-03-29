@@ -18,14 +18,14 @@
 - [x] Add bootstrap permissions checker (check-bootstrap-permissions.sh)
 - [x] Enhance WHERE_LEFT_OFF.md and TODO.md templates
 - [x] Integrate new checks into system-doctor (16 total)
-- [x] Version bump to 1.15.0 with all version surfaces updated
-- [ ] Confirm automation lane passes on 1.15.0
-- [ ] Commit and push 1.15.0
+- [x] Version bump to 1.16.0 and 1.16.0 with all version surfaces updated
+- [x] Confirm automation lane passes on 1.16.0
+- [ ] Commit and push 1.16.0
 - [ ] Hold further product changes unless downstream evidence shows a gap
 
 ## Ready Queue
 
-- [ ] Optionally refresh downstream repos to 1.15.0 with
+- [ ] Optionally refresh downstream repos to 1.16.0 with
   `update-template.sh --refresh-managed`
 - [ ] EtherWeave: user needs `sudo chown` on root-owned app files
 - [ ] Keep using `COMPLETION_SHEET.md` as the primary finish-line reference
@@ -49,7 +49,7 @@
 - [x] Updated EXECUTION_PROTOCOL.md, VALIDATION_GATES.md,
   HALLUCINATION_DEFENSE_PROTOCOL.md, CONTEXT_INDEX.md, LOAD_ORDER.md
 - [x] Integrated 3 new checks into system-doctor.sh (16 total)
-- [x] Bumped version to 1.15.0 across all version surfaces
+- [x] Bumped version to 1.16.0 across all version surfaces
 - [x] Regenerated SYSTEM_REGISTRY.json, KEY.md, INTEGRITY_MANIFEST.sha256
 - [x] system-doctor.sh --strict → system_doctor_ok (16/16)
 - [x] run-maintainer-lane.sh → maintainer_lane_ok

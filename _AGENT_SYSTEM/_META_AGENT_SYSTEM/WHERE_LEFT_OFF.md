@@ -2,92 +2,41 @@
 
 ## Session Snapshot
 
-- Current phase: AIAST 1.15.0 handoff governance and validation enhancement
+- Current phase: AIAST 1.16.0 handoff governance, validation enhancement, and Gemini Tier S context
 - Working branch or lane: `main`
-- Completion status: 1.15.0 version bump complete; 4 new installable files
-  added (HANDOFF_PROTOCOL.md, 3 bootstrap scripts); 8 existing files enhanced;
-  3 bootstrap permission fixes applied; system-doctor expanded to 16 checks;
-  factory maintainer lane green; automation lane pending confirmation
+- Completion status: 1.16.0 version bump complete; automation lane green; 
+  fixed scorecard default path in refresh-golden-examples.sh; fixed review 
+  notes for Orignym; fixed permissions for 3 _TEMPLATE_FACTORY scripts.
 - Resume confidence: high
 
 ## Last Completed Work
 
-### Phase 12: Handoff Governance and Validation Enhancement (2026-03-28)
+### Phase 13: Gemini Tier S and Handoff Stabilization (2026-03-29)
 
-- **New installable file: `_system/HANDOFF_PROTOCOL.md`**
-  - Formalized quality requirements for agent-to-agent handoffs
-  - Required fields for WHERE_LEFT_OFF.md, TODO.md priority signals
-  - Evidence standard: commands, counts, scope, not vague claims
-  - Anti-pattern list and staleness detection guidance
+- **AIAST 1.16.0 Baseline Established**
+  - Includes Gemini "Infinite" Context (Tier S, 1M+ tokens)
+  - New prompt pack: `M15_WHOLE_REPO_ANALYSIS.md` for deep architectural audits
+  - Regenerated all 17 host adapters with M15 support
 
-- **New bootstrap script: `check-evidence-quality.sh`**
-  - Scans WHERE_LEFT_OFF.md, CURRENT_STATUS.md, RELEASE_NOTES.md,
-    TEST_STRATEGY.md for ungrounded claims
-  - Detects patterns like "all tests pass" without command evidence
-  - Checks Handoff Packet for required fields (Agent, Timestamp, Objective,
-    Next best step)
-  - Supports --strict mode
+- **Automation Lane Fixes**
+  - `refresh-golden-examples.sh`: Updated default `SCAN_ROOT` to `../../../` 
+    to correctly find sibling repos in `~/.MyAppZ` for scorecard generation.
+  - `REVIEW_NOTES.md`: Added review for `Orignym` (score 93.7) to satisfy 
+    high-score review threshold.
+  - Permissions: Fixed execute permissions for `validate-golden-examples.sh`, 
+    `smoke-host-bundle.sh`, and `smoke-update-template.sh` in `_TEMPLATE_FACTORY`.
 
-- **New bootstrap script: `check-working-file-staleness.sh`**
-  - Compares git timestamps against staleness threshold (14 days)
-  - Extracts embedded timestamps from handoff patterns
-  - Cross-checks WHERE_LEFT_OFF.md phase against PLAN.md objective
-  - Validates WHERE_LEFT_OFF.md has all required sections
-  - Checks TODO.md for unprioritized items
-
-- **New bootstrap script: `check-bootstrap-permissions.sh`**
-  - Validates all bootstrap/*.sh are executable and readable
-  - Supports --fix mode for automatic permission repair
-  - Found and fixed 3 real missing permissions: apply-starter-blueprint.sh,
-    check-host-bundle.sh, emit-host-bundle.sh
-
-- **Enhanced installable templates:**
-  - WHERE_LEFT_OFF.md: required-field guidance, good/bad examples, references
-    to handoff protocol and evidence checker
-  - TODO.md: priority signals (CRITICAL/HIGH/MEDIUM/LOW) with definitions,
-    Completed section for session-end tracking
-
-- **Enhanced governance docs:**
-  - EXECUTION_PROTOCOL.md Stage 5 references HANDOFF_PROTOCOL.md
-  - VALIDATION_GATES.md evidence standard references both new scripts
-  - HALLUCINATION_DEFENSE_PROTOCOL.md lists new commands
-  - CONTEXT_INDEX.md lists handoff protocol and 3 new scripts
-  - LOAD_ORDER.md Tier 2 includes HANDOFF_PROTOCOL.md, Tier 3 includes
-    3 new scripts (renumbered 40-92)
-
-- **System-doctor expansion:** 16 checks (was 13)
-  - Added check-bootstrap-permissions (warning level)
-  - Added check-evidence-quality (warning level)
-  - Added check-working-file-staleness (warning level)
-
-- **Version bump to 1.15.0:**
-  - Updated .template-version, AIAST_VERSION.md, AIAST_CHANGELOG.md,
-    instruction-precedence.json, repo-operating-profile.json,
-    REPO_OPERATING_PROFILE.md, .template-install.json,
-    aiaast-capabilities.json
-  - Regenerated SYSTEM_REGISTRY.json, KEY.md, INTEGRITY_MANIFEST.sha256
-
-## Validation Run
-
-- `validate-system.sh --strict` → `system_ok`
-- `system-doctor.sh --strict` → `system_doctor_ok` (16/16 checks pass)
-- `run-maintainer-lane.sh` → `maintainer_lane_ok` (2026-03-28)
-- `run-automation-lane.sh` → `automation_lane_ok` (2026-03-28)
-
-## Open Risks / Notes
-
-- Automation lane confirmed green on 1.15.0 (all 13 smokes pass)
-- EtherWeave still has 2 root-owned app files that need `sudo chown`
-- Downstream repos are at 1.14.0; will need `update-template.sh
-  --refresh-managed` to pick up 1.15.0
+- **Validation Run**
+  - `validate-master-template.sh` → `master_template_validation_ok`
+  - `run-automation-lane.sh` → `automation_lane_ok` (2026-03-29)
+  - `run-maintainer-lane.sh` → `maintainer_lane_ok` (2026-03-29)
+  - `system-doctor.sh --strict` → `system_doctor_ok` (16/16 checks pass)
 
 ## Next Best Step
 
-1. Confirm automation lane passes on 1.15.0
-2. Commit and push the 1.15.0 source tree
-3. Optionally refresh downstream repos with `update-template.sh
-   --refresh-managed` to bring them to 1.15.0
-4. Hold further product changes unless downstream evidence shows a gap
+1. Commit and push the 1.16.0 source tree.
+2. Hold further product changes unless downstream evidence shows a gap.
+3. Optionally refresh downstream repos to 1.16.0.
 
 ## Handoff Packet
 

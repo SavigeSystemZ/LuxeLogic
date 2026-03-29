@@ -1,0 +1,25 @@
+name: database
+base: core24
+version: "0.1.0"
+summary: database packaged from an AIAST project scaffold
+description: |
+  Generic Snap scaffold for database.
+  Review plugs, confinement, and launch command before release.
+
+grade: devel
+confinement: strict
+
+apps:
+  database:
+    command: bin/database
+    plugs:
+      - network
+      - network-bind
+      - home
+
+parts:
+  database:
+    plugin: dump
+    source: .
+    organize:
+      dist/database: bin/database

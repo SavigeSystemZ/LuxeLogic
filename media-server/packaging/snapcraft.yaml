@@ -1,0 +1,25 @@
+name: media-server
+base: core24
+version: "0.1.0"
+summary: media-server packaged from an AIAST project scaffold
+description: |
+  Generic Snap scaffold for media-server.
+  Review plugs, confinement, and launch command before release.
+
+grade: devel
+confinement: strict
+
+apps:
+  media-server:
+    command: bin/media-server
+    plugs:
+      - network
+      - network-bind
+      - home
+
+parts:
+  media-server:
+    plugin: dump
+    source: .
+    organize:
+      dist/media-server: bin/media-server

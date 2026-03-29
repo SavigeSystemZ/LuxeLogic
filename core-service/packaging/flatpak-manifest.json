@@ -1,0 +1,31 @@
+{
+  "app-id": "io.aiaast.core.service",
+  "runtime": "org.freedesktop.Platform",
+  "runtime-version": "24.08",
+  "sdk": "org.freedesktop.Sdk",
+  "command": "core-service",
+  "finish-args": [
+    "--share=network",
+    "--socket=fallback-x11",
+    "--socket=wayland",
+    "--device=dri",
+    "--filesystem=xdg-config/core-service:create",
+    "--filesystem=xdg-data/core-service:create"
+  ],
+  "modules": [
+    {
+      "name": "core-service",
+      "buildsystem": "simple",
+      "build-commands": [
+        "install -Dm755 ./dist/core-service /app/bin/core-service",
+        "install -Dm644 ./packaging/io.aiaast.core.service.desktop /app/share/applications/io.aiaast.core.service.desktop"
+      ],
+      "sources": [
+        {
+          "type": "dir",
+          "path": ".."
+        }
+      ]
+    }
+  ]
+}

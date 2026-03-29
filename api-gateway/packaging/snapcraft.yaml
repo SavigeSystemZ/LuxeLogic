@@ -1,0 +1,25 @@
+name: api-gateway
+base: core24
+version: "0.1.0"
+summary: api-gateway packaged from an AIAST project scaffold
+description: |
+  Generic Snap scaffold for api-gateway.
+  Review plugs, confinement, and launch command before release.
+
+grade: devel
+confinement: strict
+
+apps:
+  api-gateway:
+    command: bin/api-gateway
+    plugs:
+      - network
+      - network-bind
+      - home
+
+parts:
+  api-gateway:
+    plugin: dump
+    source: .
+    organize:
+      dist/api-gateway: bin/api-gateway

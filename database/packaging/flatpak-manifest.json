@@ -1,0 +1,31 @@
+{
+  "app-id": "io.aiaast.database",
+  "runtime": "org.freedesktop.Platform",
+  "runtime-version": "24.08",
+  "sdk": "org.freedesktop.Sdk",
+  "command": "database",
+  "finish-args": [
+    "--share=network",
+    "--socket=fallback-x11",
+    "--socket=wayland",
+    "--device=dri",
+    "--filesystem=xdg-config/database:create",
+    "--filesystem=xdg-data/database:create"
+  ],
+  "modules": [
+    {
+      "name": "database",
+      "buildsystem": "simple",
+      "build-commands": [
+        "install -Dm755 ./dist/database /app/bin/database",
+        "install -Dm644 ./packaging/io.aiaast.database.desktop /app/share/applications/io.aiaast.database.desktop"
+      ],
+      "sources": [
+        {
+          "type": "dir",
+          "path": ".."
+        }
+      ]
+    }
+  ]
+}

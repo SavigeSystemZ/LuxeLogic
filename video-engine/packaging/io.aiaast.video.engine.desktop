@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=video-engine
+Comment=Launch video-engine
+Exec=video-engine
+Icon=io.aiaast.video.engine
+Terminal=false
+Categories=Utility;
+StartupNotify=true

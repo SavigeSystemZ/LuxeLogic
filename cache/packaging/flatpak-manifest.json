@@ -1,0 +1,31 @@
+{
+  "app-id": "io.aiaast.cache",
+  "runtime": "org.freedesktop.Platform",
+  "runtime-version": "24.08",
+  "sdk": "org.freedesktop.Sdk",
+  "command": "cache",
+  "finish-args": [
+    "--share=network",
+    "--socket=fallback-x11",
+    "--socket=wayland",
+    "--device=dri",
+    "--filesystem=xdg-config/cache:create",
+    "--filesystem=xdg-data/cache:create"
+  ],
+  "modules": [
+    {
+      "name": "cache",
+      "buildsystem": "simple",
+      "build-commands": [
+        "install -Dm755 ./dist/cache /app/bin/cache",
+        "install -Dm644 ./packaging/io.aiaast.cache.desktop /app/share/applications/io.aiaast.cache.desktop"
+      ],
+      "sources": [
+        {
+          "type": "dir",
+          "path": ".."
+        }
+      ]
+    }
+  ]
+}

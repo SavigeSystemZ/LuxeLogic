@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=core-service
+Comment=Launch core-service
+Exec=core-service
+Icon=io.aiaast.core.service
+Terminal=false
+Categories=Utility;
+StartupNotify=true

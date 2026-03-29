@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=cache
+Comment=Launch cache
+Exec=cache
+Icon=io.aiaast.cache
+Terminal=false
+Categories=Utility;
+StartupNotify=true

@@ -1,0 +1,32 @@
+version: 1
+
+script:
+  - mkdir -p AppDir/usr/bin
+  - mkdir -p AppDir/usr/share/applications
+  - mkdir -p AppDir/usr/share/icons/hicolor/256x256/apps
+  - install -Dm755 ./dist/media-server AppDir/usr/bin/media-server
+  - install -Dm644 ./packaging/io.aiaast.media.server.desktop AppDir/usr/share/applications/io.aiaast.media.server.desktop
+
+AppDir:
+  path: ./AppDir
+  app_info:
+    id: io.aiaast.media.server
+    name: media-server
+    icon: io.aiaast.media.server
+    version: 0.1.0
+    exec: usr/bin/media-server
+    exec_args: "$@"
+
+  runtime:
+    env:
+      APP_BIND_ADDRESS: 127.0.0.1
+      APP_CONFIG_DIR: /etc/media-server
+      APP_DATA_DIR: /var/lib/media-server
+
+  test:
+    fedora-latest:
+      command: ./AppRun --version
+
+AppImage:
+  arch: x86_64
+  update-information: guess

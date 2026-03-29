@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=media-server
+Comment=Launch media-server
+Exec=media-server
+Icon=io.aiaast.media.server
+Terminal=false
+Categories=Utility;
+StartupNotify=true

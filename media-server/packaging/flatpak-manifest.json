@@ -1,0 +1,31 @@
+{
+  "app-id": "io.aiaast.media.server",
+  "runtime": "org.freedesktop.Platform",
+  "runtime-version": "24.08",
+  "sdk": "org.freedesktop.Sdk",
+  "command": "media-server",
+  "finish-args": [
+    "--share=network",
+    "--socket=fallback-x11",
+    "--socket=wayland",
+    "--device=dri",
+    "--filesystem=xdg-config/media-server:create",
+    "--filesystem=xdg-data/media-server:create"
+  ],
+  "modules": [
+    {
+      "name": "media-server",
+      "buildsystem": "simple",
+      "build-commands": [
+        "install -Dm755 ./dist/media-server /app/bin/media-server",
+        "install -Dm644 ./packaging/io.aiaast.media.server.desktop /app/share/applications/io.aiaast.media.server.desktop"
+      ],
+      "sources": [
+        {
+          "type": "dir",
+          "path": ".."
+        }
+      ]
+    }
+  ]
+}

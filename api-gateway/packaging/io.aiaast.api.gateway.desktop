@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=api-gateway
+Comment=Launch api-gateway
+Exec=api-gateway
+Icon=io.aiaast.api.gateway
+Terminal=false
+Categories=Utility;
+StartupNotify=true

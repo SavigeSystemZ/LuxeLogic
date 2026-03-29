@@ -1,0 +1,25 @@
+name: cache
+base: core24
+version: "0.1.0"
+summary: cache packaged from an AIAST project scaffold
+description: |
+  Generic Snap scaffold for cache.
+  Review plugs, confinement, and launch command before release.
+
+grade: devel
+confinement: strict
+
+apps:
+  cache:
+    command: bin/cache
+    plugs:
+      - network
+      - network-bind
+      - home
+
+parts:
+  cache:
+    plugin: dump
+    source: .
+    organize:
+      dist/cache: bin/cache

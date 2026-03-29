@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=database
+Comment=Launch database
+Exec=database
+Icon=io.aiaast.database
+Terminal=false
+Categories=Utility;
+StartupNotify=true

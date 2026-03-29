@@ -1,0 +1,31 @@
+{
+  "app-id": "io.aiaast.api.gateway",
+  "runtime": "org.freedesktop.Platform",
+  "runtime-version": "24.08",
+  "sdk": "org.freedesktop.Sdk",
+  "command": "api-gateway",
+  "finish-args": [
+    "--share=network",
+    "--socket=fallback-x11",
+    "--socket=wayland",
+    "--device=dri",
+    "--filesystem=xdg-config/api-gateway:create",
+    "--filesystem=xdg-data/api-gateway:create"
+  ],
+  "modules": [
+    {
+      "name": "api-gateway",
+      "buildsystem": "simple",
+      "build-commands": [
+        "install -Dm755 ./dist/api-gateway /app/bin/api-gateway",
+        "install -Dm644 ./packaging/io.aiaast.api.gateway.desktop /app/share/applications/io.aiaast.api.gateway.desktop"
+      ],
+      "sources": [
+        {
+          "type": "dir",
+          "path": ".."
+        }
+      ]
+    }
+  ]
+}

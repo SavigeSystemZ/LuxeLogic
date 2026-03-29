@@ -1,0 +1,11 @@
+{
+  "app_name": "api-gateway",
+  "install_mode": "copied-template",
+  "installed_at": "2026-03-29T18:56:29Z",
+  "last_event": "install",
+  "source_template": "TEMPLATE",
+  "system_readme_path": "README.md",
+  "template_name": "AIAST",
+  "template_version": "1.16.0",
+  "updated_at": "2026-03-29T18:56:29Z"
+}

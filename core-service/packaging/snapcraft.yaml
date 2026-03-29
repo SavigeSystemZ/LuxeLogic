@@ -1,0 +1,25 @@
+name: core-service
+base: core24
+version: "0.1.0"
+summary: core-service packaged from an AIAST project scaffold
+description: |
+  Generic Snap scaffold for core-service.
+  Review plugs, confinement, and launch command before release.
+
+grade: devel
+confinement: strict
+
+apps:
+  core-service:
+    command: bin/core-service
+    plugs:
+      - network
+      - network-bind
+      - home
+
+parts:
+  core-service:
+    plugin: dump
+    source: .
+    organize:
+      dist/core-service: bin/core-service

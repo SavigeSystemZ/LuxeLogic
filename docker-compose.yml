@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  api-gateway:
+    image: traefik:v2.10
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+      - "8080:8080" # Dashboard
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    networks:
+      - luxelogic_net
+
+  postgres-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: luxeadmin
+      POSTGRES_PASSWORD: supersecretpassword
+      POSTGRES_DB: luxelogic
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - luxelogic_net
+
+  dragonfly-cache:
+    image: docker.dragonflydb.io/dragonflydb/dragonfly
+    ulimits:
+      memlock: -1
+    ports:
+      - "6380:6379"
+    networks:
+      - luxelogic_net
+
+  mock-media-server:
+    image: tiangolo/nginx-rtmp
+    ports:
+      - "1935:1935" # RTMP
+      - "8088:80"   # HLS HTTP playback
+    networks:
+      - luxelogic_net
+
+  core-service:
+    build: ./core-service
+    depends_on:
+      - postgres-db
+      - dragonfly-cache
+    environment:
+      DATABASE_URL: postgresql://luxeadmin:supersecretpassword@postgres-db:5432/luxelogic
+      CACHE_URL: redis://dragonfly-cache:6379
+    networks:
+      - luxelogic_net
+
+  video-engine:
+    build: ./video-engine
+    networks:
+      - luxelogic_net
+
+networks:
+  luxelogic_net:
+    driver: bridge
+
+volumes:
+  pgdata:

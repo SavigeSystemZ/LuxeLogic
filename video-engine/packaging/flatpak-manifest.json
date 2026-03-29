@@ -1,0 +1,31 @@
+{
+  "app-id": "io.aiaast.video.engine",
+  "runtime": "org.freedesktop.Platform",
+  "runtime-version": "24.08",
+  "sdk": "org.freedesktop.Sdk",
+  "command": "video-engine",
+  "finish-args": [
+    "--share=network",
+    "--socket=fallback-x11",
+    "--socket=wayland",
+    "--device=dri",
+    "--filesystem=xdg-config/video-engine:create",
+    "--filesystem=xdg-data/video-engine:create"
+  ],
+  "modules": [
+    {
+      "name": "video-engine",
+      "buildsystem": "simple",
+      "build-commands": [
+        "install -Dm755 ./dist/video-engine /app/bin/video-engine",
+        "install -Dm644 ./packaging/io.aiaast.video.engine.desktop /app/share/applications/io.aiaast.video.engine.desktop"
+      ],
+      "sources": [
+        {
+          "type": "dir",
+          "path": ".."
+        }
+      ]
+    }
+  ]
+}

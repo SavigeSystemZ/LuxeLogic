@@ -1,0 +1,25 @@
+name: video-engine
+base: core24
+version: "0.1.0"
+summary: video-engine packaged from an AIAST project scaffold
+description: |
+  Generic Snap scaffold for video-engine.
+  Review plugs, confinement, and launch command before release.
+
+grade: devel
+confinement: strict
+
+apps:
+  video-engine:
+    command: bin/video-engine
+    plugs:
+      - network
+      - network-bind
+      - home
+
+parts:
+  video-engine:
+    plugin: dump
+    source: .
+    organize:
+      dist/video-engine: bin/video-engine

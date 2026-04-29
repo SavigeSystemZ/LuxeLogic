@@ -2,6 +2,9 @@
 
 Use `AGENTS.md` as the repo contract.
 
+## Component Context
+- Implements a stable Celery-based FFmpeg worker for video processing.
+
 ## Minimum startup
 1. `AGENTS.md`
 2. `_system/INSTRUCTION_PRECEDENCE_CONTRACT.md`

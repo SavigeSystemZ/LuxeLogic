@@ -2,6 +2,9 @@
 
 Use `AGENTS.md` as the repo contract.
 
+## Component Context
+- Utilizes shared volume storage for media, accessible across microservices.
+
 ## Minimum startup
 1. `AGENTS.md`
 2. `_system/INSTRUCTION_PRECEDENCE_CONTRACT.md`

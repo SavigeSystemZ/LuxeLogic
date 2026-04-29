@@ -2,7 +2,7 @@
 
 Factory-only artifact. This scorecard helps maintainers decide which repos should inform the neutral golden-example pack.
 
-- Generated at: `2026-04-29T00:27:22Z`
+- Generated at: `2026-04-29T00:28:37Z`
 - Scan root: `/home/whyte/.MyAppZ`
 - Repos scored: `37`
 

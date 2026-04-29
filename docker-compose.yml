@@ -9,8 +9,8 @@ services:
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
     ports:
-      - "80:80"
-      - "8080:8080" # Dashboard
+      - "38280:80"
+      - "38281:8080" # Dashboard
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
     networks:
@@ -53,8 +53,10 @@ services:
   mock-media-server:
     image: tiangolo/nginx-rtmp
     ports:
-      - "1935:1935" # RTMP
-      - "8088:80"   # HLS HTTP playback
+      - "38235:1935" # RTMP
+      - "38288:80"   # HLS HTTP playback
+    volumes:
+      - media_storage:/usr/local/nginx/html/media
     networks:
       - luxelogic_net
 
@@ -70,9 +72,20 @@ services:
       CACHE_URL: ${LUXELOGIC_CACHE_URL:-redis://dragonfly-cache:6379/0}
     networks:
       - luxelogic_net
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.core-service.rule=PathPrefix(`/api/`)"
+      - "traefik.http.routers.core-service.middlewares=core-strip-prefix"
+      - "traefik.http.middlewares.core-strip-prefix.stripprefix.prefixes=/api"
+      - "traefik.http.services.core-service.loadbalancer.server.port=8000"
 
   video-engine:
     build: ./video-engine
+    command: ["celery", "-A", "src.worker.celery_app", "worker", "--loglevel=info"]
+    environment:
+      CACHE_URL: ${LUXELOGIC_CACHE_URL:-redis://dragonfly-cache:6379/0}
+    volumes:
+      - media_storage:/app/media
     networks:
       - luxelogic_net
 
@@ -82,3 +95,4 @@ networks:
 
 volumes:
   pgdata:
+  media_storage:

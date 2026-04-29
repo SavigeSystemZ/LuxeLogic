@@ -97,27 +97,35 @@ Apply `PROMOTION_CRITERIA.md` before promoting or rejecting a candidate and keep
 ## Review: 2026-04-28
 
 ### Candidate: ModPilot
+- Why not promoted now: Score driven by broad template coverage rather than a novel neutral pattern.
 - Decision: no installed-pack promotion
 
 ### Candidate: DeepWeave
+- Why not promoted now: Score driven by broad template coverage rather than a novel neutral pattern.
 - Decision: no installed-pack promotion
 
 ### Candidate: SteadyStack
+- Why not promoted now: Score driven by broad template coverage rather than a novel neutral pattern.
 - Decision: no installed-pack promotion
 
 ### Candidate: BudgetBeacon
+- Why not promoted now: Score driven by broad template coverage rather than a novel neutral pattern.
 - Decision: no installed-pack promotion
 
 ### Candidate: FlipHole
+- Why not promoted now: Score driven by broad template coverage rather than a novel neutral pattern.
 - Decision: no installed-pack promotion
 
 ### Candidate: Veritas
+- Why not promoted now: Score driven by broad template coverage rather than a novel neutral pattern.
 - Decision: no installed-pack promotion
 
 ### Candidate: ForgeCouncil
+- Why not promoted now: Score driven by broad template coverage rather than a novel neutral pattern.
 - Decision: no installed-pack promotion
 
 ### Candidate: WisdomWarp
+- Why not promoted now: Score driven by broad template coverage rather than a novel neutral pattern.
 - Decision: no installed-pack promotion
 
 ## Result

@@ -128,6 +128,9 @@ env_example = repo / "ops" / "env" / ".env.example"
 if env_example.exists():
     env_text = env_example.read_text()
 
+    def env_has_key(key: str) -> bool:
+        return re.search(rf"^{re.escape(key)}=.*$", env_text, re.MULTILINE) is not None
+
     def env_value(key: str) -> str:
         match = re.search(rf"^{re.escape(key)}=(.*)$", env_text, re.MULTILINE)
         return match.group(1).strip() if match else ""
@@ -135,6 +138,24 @@ if env_example.exists():
     bind_address = env_value("APP_BIND_ADDRESS")
     if bind_address in {"0.0.0.0", "::", "localhost"}:
         issues.append("ops/env/.env.example must default to loopback instead of a wildcard or localhost alias")
+
+    exec_start = env_value("APP_EXEC_START")
+    if exec_start and "http.server" in exec_start and "--bind" not in exec_start:
+        issues.append("ops/env/.env.example APP_EXEC_START must include an explicit bind flag")
+
+    for key in (
+        "REDIS_URL",
+        "REDIS_HOST",
+        "REDIS_PORT",
+        "PUBLISH_REDIS_PORT",
+        "REDIS_HOST_BIND",
+    ):
+        if not env_value(key):
+            issues.append(f"ops/env/.env.example is missing required backend placeholder: {key}")
+
+    for key in ("REDIS_USERNAME", "REDIS_PASSWORD"):
+        if not env_has_key(key):
+            issues.append(f"ops/env/.env.example is missing required backend placeholder: {key}")
 
     start = env_value("APP_PORT_RANGE_START")
     end = env_value("APP_PORT_RANGE_END")
@@ -151,6 +172,33 @@ if env_example.exists():
     )
     if shell_result.returncode != 0:
         issues.append("ops/env/.env.example must be sourceable by bash without shell syntax errors")
+
+compose_file = repo / "ops" / "compose" / "compose.yml"
+if compose_file.exists():
+    compose_text = compose_file.read_text()
+    for service_name in ("postgres", "redis", "dragonfly", "minio"):
+        service_match = re.search(rf"(?ms)^  {service_name}:\n(.*?)(?=^  [a-zA-Z0-9_-]+:|\Z)", compose_text)
+        if not service_match:
+            continue
+        service_block = service_match.group(1)
+        if re.search(r"(?m)^\s+ports:\s*$", service_block):
+            issues.append(f"ops/compose/compose.yml must not publish internal backend `{service_name}` to the host by default")
+        if not re.search(r"(?m)^\s+healthcheck:\s*$", service_block):
+            issues.append(f"ops/compose/compose.yml is missing a healthcheck for `{service_name}`")
+        if not re.search(r"(?m)^\s+restart:\s+", service_block):
+            issues.append(f"ops/compose/compose.yml is missing a restart policy for `{service_name}`")
+
+for rel in (
+    "docs/security/architecture.md",
+    "docs/security/backend-inventory.md",
+    "docs/security/validation.md",
+    "docs/security/rollback.md",
+    "registry/ports.yaml",
+    "registry/backend-assignments.yaml",
+    "tools/security-preflight.sh",
+    "tools/check-port-collisions.py",
+):
+    ensure_exists(rel, "file")
 
 installer_commands = split_csv(field("Installer commands"))
 for rel in installer_commands:

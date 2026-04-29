@@ -4,29 +4,29 @@ Use this file to define the repo's confidence model, validation lanes, and known
 
 ## Confidence model
 
-- required confidence for local changes:
-- required confidence for risky changes:
-- required confidence for release candidates:
+- required confidence for local changes: run the smallest impacted validation lane plus any touched bootstrap or system checks
+- required confidence for risky changes: run unit, integration, and any relevant smoke, build, packaging, or security lanes before handoff
+- required confidence for release candidates: run every defined lane in this file and record exact outcomes in release-facing notes or handoff
 
 ## Validation lanes
 
-- format or lint:
-- typecheck:
-- unit tests:
-- integration tests:
-- end-to-end or smoke:
-- build or packaging checks:
-- security or policy checks:
+- format or lint: no format or lint command inferred yet; confirm manually
+- typecheck: no typecheck command inferred yet; confirm manually
+- unit tests: no unit-test command inferred yet; confirm manually
+- integration tests: no integration-test command inferred yet; confirm manually
+- end-to-end or smoke: no smoke command inferred yet; confirm manually
+- build or packaging checks: no build or packaging command inferred yet; confirm manually
+- security or policy checks: bootstrap/scan-security.sh /home/whyte/.MyAppZ/LuxeLogic/_AGENT_SYSTEM/TEMPLATE
 
 ## Coverage expectations
 
-- critical flows that must be proven:
-- areas allowed to rely on lighter validation:
-- expected evidence for high-risk changes:
+- critical flows that must be proven: primary user flow, startup or install path, and any high-risk surface touched by the change
+- areas allowed to rely on lighter validation: docs, prompt wording, and low-risk content-only changes after targeted checks
+- expected evidence for high-risk changes: exact commands run, pass or fail outcomes, notable warnings, and any skipped lanes with reasons
 
 ## Known gaps
 
-- None recorded yet.
+- Confirm the seeded validation lanes against the first real repo-local run and record any missing coverage explicitly.
 
 ## Usage rules
 

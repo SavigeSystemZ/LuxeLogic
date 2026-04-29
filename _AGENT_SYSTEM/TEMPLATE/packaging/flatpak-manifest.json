@@ -1,0 +1,31 @@
+{
+  "app-id": "io.aiaast.template",
+  "runtime": "org.freedesktop.Platform",
+  "runtime-version": "24.08",
+  "sdk": "org.freedesktop.Sdk",
+  "command": "template",
+  "finish-args": [
+    "--share=network",
+    "--socket=fallback-x11",
+    "--socket=wayland",
+    "--device=dri",
+    "--filesystem=xdg-config/template:create",
+    "--filesystem=xdg-data/template:create"
+  ],
+  "modules": [
+    {
+      "name": "template",
+      "buildsystem": "simple",
+      "build-commands": [
+        "install -Dm755 ./dist/template /app/bin/template",
+        "install -Dm644 ./packaging/io.aiaast.template.desktop /app/share/applications/io.aiaast.template.desktop"
+      ],
+      "sources": [
+        {
+          "type": "dir",
+          "path": ".."
+        }
+      ]
+    }
+  ]
+}

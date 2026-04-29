@@ -21,3 +21,9 @@ npm-debug.log
 .DS_Store
 .idea/
 .vscode/
+.aider*
+.gemini/
+.claudecode/
+.plandex/
+.openhands_state/
+!.ai/

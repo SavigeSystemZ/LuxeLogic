@@ -18,25 +18,37 @@ services:
 
   postgres-db:
     image: postgres:16-alpine
+    restart: unless-stopped
     environment:
-      POSTGRES_USER: luxeadmin
-      POSTGRES_PASSWORD: supersecretpassword
-      POSTGRES_DB: luxelogic
-    ports:
-      - "5433:5432"
+      POSTGRES_USER: ${LUXELOGIC_POSTGRES_USER:-luxeadmin}
+      POSTGRES_PASSWORD: ${LUXELOGIC_POSTGRES_PASSWORD:-change-me}
+      POSTGRES_DB: ${LUXELOGIC_POSTGRES_DB:-luxelogic}
+    expose:
+      - "5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
       - luxelogic_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${LUXELOGIC_POSTGRES_USER:-luxeadmin}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   dragonfly-cache:
     image: docker.dragonflydb.io/dragonflydb/dragonfly
+    restart: unless-stopped
     ulimits:
       memlock: -1
-    ports:
-      - "6380:6379"
+    expose:
+      - "6379"
     networks:
       - luxelogic_net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   mock-media-server:
     image: tiangolo/nginx-rtmp
@@ -49,11 +61,13 @@ services:
   core-service:
     build: ./core-service
     depends_on:
-      - postgres-db
-      - dragonfly-cache
+      postgres-db:
+        condition: service_healthy
+      dragonfly-cache:
+        condition: service_healthy
     environment:
-      DATABASE_URL: postgresql://luxeadmin:supersecretpassword@postgres-db:5432/luxelogic
-      CACHE_URL: redis://dragonfly-cache:6379
+      DATABASE_URL: postgresql://${LUXELOGIC_POSTGRES_USER:-luxeadmin}:${LUXELOGIC_POSTGRES_PASSWORD:-change-me}@postgres-db:5432/${LUXELOGIC_POSTGRES_DB:-luxelogic}
+      CACHE_URL: ${LUXELOGIC_CACHE_URL:-redis://dragonfly-cache:6379/0}
     networks:
       - luxelogic_net
 

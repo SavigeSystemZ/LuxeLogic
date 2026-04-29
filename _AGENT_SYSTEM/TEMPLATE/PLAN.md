@@ -4,22 +4,22 @@ Use this file as the current implementation plan for the active repo milestone o
 
 ## Objective
 
-- Current target outcome: set this to the active repo milestone
-- Why it matters now: record why this work matters to the repo, user, or release
-- Deadline or forcing function: record if one exists
+- Current target outcome: Establish a clean, validated baseline for TEMPLATE
+- Why it matters now: The repo needs a truthful operating picture before deeper feature work begins.
+- Deadline or forcing function: Complete onboarding before the first substantial implementation pass.
 
 ## Success criteria
 
-- User or operator outcome:
-- Technical outcome:
-- Design or product-quality outcome:
+- User or operator outcome: A new agent can enter the repo and immediately see how to build, validate, and continue safely.
+- Technical outcome: Runtime boundaries, validation commands, and current repo structure are documented and verified.
+- Design or product-quality outcome: The first visible surface should already reflect intentional design and best-practice structure.
 
 ## Scope lock
 
-- In scope:
-- Out of scope:
-- Dependencies:
-- Known unknowns:
+- In scope: profile completion, validation mapping, first smoke check, and working-state initialization.
+- Out of scope: broad product expansion before the baseline is proven.
+- Dependencies: repo inspection, `PRODUCT_BRIEF.md`, available toolchain, and at least one real validation command.
+- Known unknowns: framework-specific gaps, deployment assumptions, and missing environment details.
 
 ## Assumptions
 
@@ -33,19 +33,19 @@ Use this file as the current implementation plan for the active repo milestone o
 
 ## Validation plan
 
-- Commands to run:
-- Evidence to capture:
-- Stop conditions:
-- Release-blocking checks:
+- Commands to run: start with the smallest real build, test, or smoke command for the repo.
+- Evidence to capture: the first passing validation result and any unresolved onboarding gaps.
+- Stop conditions: missing runtime path understanding, failing baseline validation, or hidden environment blockers.
+- Release-blocking checks: baseline validation must be explicit before any release claim exists.
 
 ## Risks
 
-- Risks that could invalidate the plan:
-- Fallback path if the plan fails:
+- Risks that could invalidate the plan: incorrect framework assumptions, hidden dependencies, or stale repo docs.
+- Fallback path if the plan fails: reduce scope, document the blocker, and stabilize the repo state before proceeding.
 
 ## Done definition
 
-- Define what "done" means for this repo milestone.
+- Define what "done" means for this repo milestone: the repo profile is meaningfully filled, the first validation path is proven, and the next milestone is explicit.
 
 ## Master template note
 

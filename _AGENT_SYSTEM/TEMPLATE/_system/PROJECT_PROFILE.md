@@ -22,10 +22,10 @@ Fill this file in immediately after copying the operating system into a real rep
 
 ## Identity
 
-- App name:
-- App id:
-- Desktop entry id:
-- Android application id:
+- App name: TEMPLATE
+- App id: io.aiaast.template
+- Desktop entry id: io.aiaast.template
+- Android application id: io.aiaast.template
 - Repo purpose:
 - Product category:
 - Primary users:
@@ -37,15 +37,15 @@ Fill this file in immediately after copying the operating system into a real rep
 
 - Runtime code roots:
 - Test roots:
-- Scripts / tooling roots:
-- Packaging / deploy roots:
+- Scripts / tooling roots: tools/
+- Packaging / deploy roots: ops/, packaging/, mobile/, ai/
 - Infrastructure roots:
 - Agent-system root: `_system/`
 - No-touch zones:
 
 ## Stack
 
-- Primary languages:
+- Primary languages: Python
 - Primary frameworks:
 - Components:
 - Datastores:
@@ -60,9 +60,9 @@ Fill this file in immediately after copying the operating system into a real rep
 - Packaging targets:
 - Native package targets:
 - Universal package targets:
-- Packaging manifest paths:
-- Installer commands:
-- Signing identity:
+- Packaging manifest paths: packaging/appimage.yml, packaging/flatpak-manifest.json, packaging/snapcraft.yaml
+- Installer commands: ops/install/install.sh, ops/install/repair.sh, ops/install/uninstall.sh, ops/install/purge.sh
+- Signing identity: Release owner placeholder; replace before shipping signed artifacts
 - Minimum runtime versions:
 - System dependencies:
 - Build entrypoints:
@@ -80,17 +80,17 @@ Fill this file in immediately after copying the operating system into a real rep
 - Install / launch verification:
 - Packaging verification:
 - Visual regression or design smoke:
-- Security or policy checks:
+- Security or policy checks: bootstrap/scan-security.sh /home/whyte/.MyAppZ/LuxeLogic/_AGENT_SYSTEM/TEMPLATE
 
 ## Mobile and AI
 
 - Mobile targets:
-- Android module path:
+- Android module path: mobile/flutter/
 - Mobile release artifacts:
 - Mobile build flavors:
-- LLM config path:
+- LLM config path: ai/llm_config.yaml
 - Default LLM provider:
-- Chatbot surfaces:
+- Chatbot surfaces: CLI REPL, REST endpoint, GUI side panel when a UI exists
 - Command bus or action registry:
 - Local documentation sources:
 
@@ -170,7 +170,7 @@ Fill this file in immediately after copying the operating system into a real rep
 ## Release model
 
 - Environments:
-- Branch strategy:
+- Branch strategy: main for runtime code, system for copied AIAST updates, optional short-lived feature branches
 - Rollout method:
 - Backout method:
 - Release signoff:

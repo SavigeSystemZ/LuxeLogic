@@ -376,13 +376,13 @@
       "category": "working-state",
       "kind": "file",
       "path": "PLAN.md",
-      "size_bytes": 1287
+      "size_bytes": 2573
     },
     {
       "category": "working-state",
       "kind": "file",
       "path": "PRODUCT_BRIEF.md",
-      "size_bytes": 1127
+      "size_bytes": 2611
     },
     {
       "category": "system-metadata",
@@ -406,7 +406,7 @@
       "category": "working-state",
       "kind": "file",
       "path": "RISK_REGISTER.md",
-      "size_bytes": 414
+      "size_bytes": 2731
     },
     {
       "category": "working-state",
@@ -418,19 +418,19 @@
       "category": "working-state",
       "kind": "file",
       "path": "TEST_STRATEGY.md",
-      "size_bytes": 785
+      "size_bytes": 1840
     },
     {
       "category": "working-state",
       "kind": "file",
       "path": "TODO.md",
-      "size_bytes": 2114
+      "size_bytes": 2275
     },
     {
       "category": "working-state",
       "kind": "file",
       "path": "WHERE_LEFT_OFF.md",
-      "size_bytes": 2603
+      "size_bytes": 2663
     },
     {
       "category": "entrypoint",
@@ -442,7 +442,7 @@
       "category": "system-core",
       "kind": "file",
       "path": "_system/.template-install.json",
-      "size_bytes": 280
+      "size_bytes": 313
     },
     {
       "category": "system-core",
@@ -604,13 +604,13 @@
       "category": "system-core",
       "kind": "file",
       "path": "_system/INTEGRITY_MANIFEST.sha256",
-      "size_bytes": 33825
+      "size_bytes": 96142
     },
     {
       "category": "system-core",
       "kind": "file",
       "path": "_system/KEY.md",
-      "size_bytes": 59815
+      "size_bytes": 62410
     },
     {
       "category": "system-core",
@@ -688,7 +688,7 @@
       "category": "system-core",
       "kind": "file",
       "path": "_system/PROJECT_PROFILE.md",
-      "size_bytes": 3580
+      "size_bytes": 4201
     },
     {
       "category": "system-core",
@@ -700,7 +700,19 @@
       "category": "system-core",
       "kind": "file",
       "path": "_system/PROMPTS_INDEX.md",
-      "size_bytes": 2515
+      "size_bytes": 2680
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/PROMPT_BACKEND_POLICY.md",
+      "size_bytes": 591
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/PROMPT_DOCKER_NETWORK_POLICY.md",
+      "size_bytes": 467
     },
     {
       "category": "system-core",
@@ -713,6 +725,18 @@
       "kind": "file",
       "path": "_system/PROMPT_EMISSION_CONTRACT.md",
       "size_bytes": 3596
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/PROMPT_SECURITY_BASELINE.md",
+      "size_bytes": 483
+    },
+    {
+      "category": "system-core",
+      "kind": "file",
+      "path": "_system/PROMPT_SYSTEM_BUILD_STANDARD.md",
+      "size_bytes": 667
     },
     {
       "category": "system-core",
@@ -748,7 +772,7 @@
       "category": "system-core",
       "kind": "file",
       "path": "_system/REPO_OPERATING_PROFILE.md",
-      "size_bytes": 3689
+      "size_bytes": 3714
     },
     {
       "category": "system-core",
@@ -790,7 +814,7 @@
       "category": "system-core",
       "kind": "file",
       "path": "_system/SYSTEM_REGISTRY.json",
-      "size_bytes": 50448
+      "size_bytes": 52353
     },
     {
       "category": "system-core",
@@ -898,7 +922,7 @@
       "category": "system-context",
       "kind": "file",
       "path": "_system/context/CURRENT_STATUS.md",
-      "size_bytes": 755
+      "size_bytes": 1156
     },
     {
       "category": "system-context",
@@ -1246,7 +1270,7 @@
       "category": "prompting",
       "kind": "file",
       "path": "_system/prompt-packs/M10_GREENFIELD_BOOTSTRAP.md",
-      "size_bytes": 1386
+      "size_bytes": 1893
     },
     {
       "category": "prompting",
@@ -1270,7 +1294,7 @@
       "category": "prompting",
       "kind": "file",
       "path": "_system/prompt-packs/M14_SECURITY_HARDENING.md",
-      "size_bytes": 2063
+      "size_bytes": 2480
     },
     {
       "category": "prompting",
@@ -1366,7 +1390,7 @@
       "category": "prompting",
       "kind": "file",
       "path": "_system/prompt-templates/system_prompt_template.md",
-      "size_bytes": 659
+      "size_bytes": 917
     },
     {
       "category": "prompting",
@@ -1378,7 +1402,7 @@
       "category": "system-core",
       "kind": "file",
       "path": "_system/repo-operating-profile.json",
-      "size_bytes": 4057
+      "size_bytes": 4124
     },
     {
       "category": "review-playbook",
@@ -1444,7 +1468,7 @@
       "category": "starter-blueprint",
       "kind": "file",
       "path": "_system/starter-blueprints/FASTAPI_API.md",
-      "size_bytes": 2560
+      "size_bytes": 2772
     },
     {
       "category": "starter-blueprint",
@@ -1504,7 +1528,7 @@
       "category": "starter-blueprint",
       "kind": "file",
       "path": "_system/starter-blueprints/STATIC_FRONTEND.md",
-      "size_bytes": 1926
+      "size_bytes": 1960
     },
     {
       "category": "starter-blueprint",
@@ -1552,7 +1576,7 @@
       "category": "bootstrap",
       "kind": "file",
       "path": "bootstrap/README.md",
-      "size_bytes": 9581
+      "size_bytes": 9670
     },
     {
       "category": "bootstrap",
@@ -1576,7 +1600,7 @@
       "category": "bootstrap",
       "kind": "file",
       "path": "bootstrap/check-environment.sh",
-      "size_bytes": 3871
+      "size_bytes": 4786
     },
     {
       "category": "bootstrap",
@@ -1618,7 +1642,7 @@
       "category": "bootstrap",
       "kind": "file",
       "path": "bootstrap/check-network-bindings.sh",
-      "size_bytes": 5294
+      "size_bytes": 5868
     },
     {
       "category": "bootstrap",
@@ -1636,7 +1660,7 @@
       "category": "bootstrap",
       "kind": "file",
       "path": "bootstrap/check-runtime-foundations.sh",
-      "size_bytes": 9461
+      "size_bytes": 11539
     },
     {
       "category": "bootstrap",
@@ -1834,13 +1858,13 @@
       "category": "bootstrap",
       "kind": "file",
       "path": "bootstrap/suggest-project-profile.sh",
-      "size_bytes": 32766
+      "size_bytes": 32851
     },
     {
       "category": "bootstrap",
       "kind": "file",
       "path": "bootstrap/system-doctor.sh",
-      "size_bytes": 6738
+      "size_bytes": 7034
     },
     {
       "category": "bootstrap",
@@ -1881,6 +1905,30 @@
     {
       "category": "bootstrap",
       "kind": "file",
+      "path": "bootstrap/templates/runtime/docs/security/architecture.md",
+      "size_bytes": 1235
+    },
+    {
+      "category": "bootstrap",
+      "kind": "file",
+      "path": "bootstrap/templates/runtime/docs/security/backend-inventory.md",
+      "size_bytes": 873
+    },
+    {
+      "category": "bootstrap",
+      "kind": "file",
+      "path": "bootstrap/templates/runtime/docs/security/rollback.md",
+      "size_bytes": 661
+    },
+    {
+      "category": "bootstrap",
+      "kind": "file",
+      "path": "bootstrap/templates/runtime/docs/security/validation.md",
+      "size_bytes": 602
+    },
+    {
+      "category": "bootstrap",
+      "kind": "file",
       "path": "bootstrap/templates/runtime/mobile/README.md",
       "size_bytes": 702
     },
@@ -1912,13 +1960,13 @@
       "category": "bootstrap",
       "kind": "file",
       "path": "bootstrap/templates/runtime/ops/compose/compose.yml",
-      "size_bytes": 547
+      "size_bytes": 1379
     },
     {
       "category": "bootstrap",
       "kind": "file",
       "path": "bootstrap/templates/runtime/ops/env/.env.example",
-      "size_bytes": 623
+      "size_bytes": 928
     },
     {
       "category": "bootstrap",
@@ -1936,13 +1984,13 @@
       "category": "bootstrap",
       "kind": "file",
       "path": "bootstrap/templates/runtime/ops/install/lib/port_allocator.py",
-      "size_bytes": 2962
+      "size_bytes": 4543
     },
     {
       "category": "bootstrap",
       "kind": "file",
       "path": "bootstrap/templates/runtime/ops/install/lib/runtime-foundation.sh",
-      "size_bytes": 7581
+      "size_bytes": 7619
     },
     {
       "category": "bootstrap",
@@ -2007,6 +2055,30 @@
     {
       "category": "bootstrap",
       "kind": "file",
+      "path": "bootstrap/templates/runtime/registry/backend-assignments.yaml",
+      "size_bytes": 348
+    },
+    {
+      "category": "bootstrap",
+      "kind": "file",
+      "path": "bootstrap/templates/runtime/registry/ports.yaml",
+      "size_bytes": 111
+    },
+    {
+      "category": "bootstrap",
+      "kind": "file",
+      "path": "bootstrap/templates/runtime/tools/check-port-collisions.py",
+      "size_bytes": 3279
+    },
+    {
+      "category": "bootstrap",
+      "kind": "file",
+      "path": "bootstrap/templates/runtime/tools/security-preflight.sh",
+      "size_bytes": 2932
+    },
+    {
+      "category": "bootstrap",
+      "kind": "file",
       "path": "bootstrap/track-semantic-changes.sh",
       "size_bytes": 6571
     },
@@ -2044,7 +2116,7 @@
       "category": "bootstrap",
       "kind": "file",
       "path": "bootstrap/validate-system.sh",
-      "size_bytes": 21454
+      "size_bytes": 22407
     },
     {
       "category": "bootstrap",
@@ -2059,7 +2131,7 @@
       "size_bytes": 7956
     }
   ],
-  "managed_file_count": 343,
+  "managed_file_count": 355,
   "system_readme_path": "README.md",
   "template_name": "AIAST",
   "template_version": "1.16.0"

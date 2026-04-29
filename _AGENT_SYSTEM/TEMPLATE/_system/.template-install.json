@@ -1,11 +1,11 @@
 {
-  "app_name": "",
-  "install_mode": "template-placeholder",
-  "installed_at": "UNSET",
-  "last_event": "template-source",
+  "app_name": "TEMPLATE",
+  "install_mode": "copied-template",
+  "installed_at": "2026-03-30T21:50:48Z",
+  "last_event": "update-template",
   "source_template": "TEMPLATE",
   "system_readme_path": "README.md",
   "template_name": "AIAST",
   "template_version": "1.16.0",
-  "updated_at": "UNSET"
+  "updated_at": "2026-03-30T21:50:48Z"
 }

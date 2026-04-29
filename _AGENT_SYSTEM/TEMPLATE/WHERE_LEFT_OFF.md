@@ -6,14 +6,14 @@ requirements that govern this file.
 
 ## Session Snapshot
 
-- Current phase: not set yet
+- Current phase: Onboarding
 - Working branch or lane: `main`
-- Completion status: not started — fill after first meaningful work session
-- Resume confidence: low — no prior session recorded
+- Completion status: System installed, repo-specific truth still being established
+- Resume confidence: medium
 
 ## Last Completed Work
 
-Record the most recent meaningful work here. Be concrete:
+Installed the local AI operating system for TEMPLATE and seeded the first working surfaces.
 - Bad: "Made progress on the API"
 - Good: "Implemented GET /users and POST /users with input validation. 4 pytest tests passing."
 
@@ -24,9 +24,9 @@ Handoff Packet below.
 
 ## Validation Run
 
-- Command: (exact command run, e.g., `pytest tests/ -v`)
-- Result: (pass/fail with count, e.g., "12 passed, 0 failed")
-- Scope: (what was covered and what remains unproven)
+- Command: bootstrap/update-template.sh /home/whyte/.MyAppZ/LuxeLogic/_AGENT_SYSTEM/TEMPLATE --source <template-root>
+- Result: pass
+- Scope: AIAST update integrity, required files, config syntax, and awareness validation
 
 If no validation was run, write "No validation run this session" and note why.
 

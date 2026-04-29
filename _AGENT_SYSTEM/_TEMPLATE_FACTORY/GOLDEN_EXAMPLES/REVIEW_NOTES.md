@@ -94,6 +94,32 @@ Apply `PROMOTION_CRITERIA.md` before promoting or rejecting a candidate and keep
   - no installed-pack promotion
   - monitor for stability and original pattern contribution after nested-template artifacts are cleaned up
 
+## Review: 2026-04-28
+
+### Candidate: ModPilot
+- Decision: no installed-pack promotion
+
+### Candidate: DeepWeave
+- Decision: no installed-pack promotion
+
+### Candidate: SteadyStack
+- Decision: no installed-pack promotion
+
+### Candidate: BudgetBeacon
+- Decision: no installed-pack promotion
+
+### Candidate: FlipHole
+- Decision: no installed-pack promotion
+
+### Candidate: Veritas
+- Decision: no installed-pack promotion
+
+### Candidate: ForgeCouncil
+- Decision: no installed-pack promotion
+
+### Candidate: WisdomWarp
+- Decision: no installed-pack promotion
+
 ## Result
 
 - Current primary donors remain unchanged.

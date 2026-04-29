@@ -55,13 +55,18 @@
       "packaging/snapcraft.yaml"
     ],
     "runtime_foundation_generator": "bootstrap/generate-runtime-foundations.sh",
-    "runtime_roots_present": []
+    "runtime_roots_present": [
+      "packaging",
+      "ops",
+      "mobile",
+      "ai"
+    ]
   },
   "precedence_contract": {
     "contract_path": "_system/INSTRUCTION_PRECEDENCE_CONTRACT.md",
     "manifest_path": "_system/instruction-precedence.json"
   },
-  "profile_state": "template-seeded",
+  "profile_state": "configured-project",
   "prompt_emission_contract": "_system/PROMPT_EMISSION_CONTRACT.md",
   "schema_version": "1.0.0",
   "system_readme_path": "README.md",

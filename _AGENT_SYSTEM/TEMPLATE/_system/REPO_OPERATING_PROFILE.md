@@ -2,7 +2,7 @@
 
 ## Summary
 - Template: `AIAST` `1.16.0`
-- Profile state: `template-seeded`
+- Profile state: `configured-project`
 - System README path: `README.md`
 - Ingestion start: `AGENTS.md` -> `_system/INSTRUCTION_PRECEDENCE_CONTRACT.md` -> `_system/REPO_OPERATING_PROFILE.md` -> `_system/LOAD_ORDER.md`
 
@@ -45,7 +45,7 @@
 
 ## Packaging / install expectations
 - Runtime foundation generator: `bootstrap/generate-runtime-foundations.sh`
-- Current runtime roots present: `none`
+- Current runtime roots present: `packaging, ops, mobile, ai`
 - Expected installer commands: `ops/install/install.sh, ops/install/repair.sh, ops/install/uninstall.sh, ops/install/purge.sh`
 - Expected packaging manifests: `packaging/appimage.yml, packaging/flatpak-manifest.json, packaging/snapcraft.yaml`
 - Expected mobile scaffold: `mobile/flutter`

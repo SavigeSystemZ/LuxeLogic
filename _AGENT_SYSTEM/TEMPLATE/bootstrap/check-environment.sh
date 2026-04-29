@@ -99,11 +99,30 @@ fi
 ENV_EXAMPLE="${TARGET}/ops/env/.env.example"
 if [[ -f "${ENV_EXAMPLE}" ]]; then
   add_result "env_example" "pass" "ops/env/.env.example exists"
+  if grep -q '^PUBLISH_REDIS_PORT=false$' "${ENV_EXAMPLE}" 2>/dev/null; then
+    add_result "redis_publish_default" "pass" "redis host publishing disabled by default"
+  else
+    add_result "redis_publish_default" "warn" "ops/env/.env.example missing PUBLISH_REDIS_PORT=false"
+  fi
+  if grep -q '^PUBLISH_POSTGRES_PORT=false$' "${ENV_EXAMPLE}" 2>/dev/null; then
+    add_result "postgres_publish_default" "pass" "postgres host publishing disabled by default"
+  else
+    add_result "postgres_publish_default" "warn" "ops/env/.env.example missing PUBLISH_POSTGRES_PORT=false"
+  fi
 else
   # Also check generated runtime foundations
   ENV_ALT="${TARGET}/bootstrap/templates/runtime/ops/env/.env.example"
   if [[ -f "${ENV_ALT}" ]]; then
     add_result "env_example" "pass" "template env example exists"
+  fi
+fi
+
+TOOLS_CHECK="${TARGET}/tools/check-port-collisions.py"
+if [[ -f "${TOOLS_CHECK}" ]]; then
+  if python3 "${TOOLS_CHECK}" "${TARGET}" >/dev/null 2>&1; then
+    add_result "port_registry" "pass" "port registry has no collisions"
+  else
+    add_result "port_registry" "warn" "port registry check reported collisions or invalid data"
   fi
 fi
 

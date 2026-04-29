@@ -2,7 +2,7 @@
 
 This file is the exhaustive agent-facing key for the installable AIAST surface.
 
-It covers 343 managed files and is generated from the canonical managed-file inventory.
+It covers 355 managed files and is generated from the canonical managed-file inventory.
 
 ## How To Use This File
 
@@ -116,6 +116,10 @@ These files install, update, repair, validate, and generate the AIAST operating 
 - `bootstrap/templates/runtime/ai/README.md` - Bootstrap template asset for Readme. Copied or rendered into repo-owned runtime or system surfaces during init, update, repair, or runtime-foundation generation.
 - `bootstrap/templates/runtime/ai/chatbot-intents.md` - Bootstrap template asset for Chatbot Intents. Copied or rendered into repo-owned runtime or system surfaces during init, update, repair, or runtime-foundation generation.
 - `bootstrap/templates/runtime/ai/llm_config.yaml` - Bootstrap template asset for LLM Config. Copied or rendered into repo-owned runtime or system surfaces during init, update, repair, or runtime-foundation generation.
+- `bootstrap/templates/runtime/docs/security/architecture.md` - Bootstrap template asset for Architecture. Copied or rendered into repo-owned runtime or system surfaces during init, update, repair, or runtime-foundation generation.
+- `bootstrap/templates/runtime/docs/security/backend-inventory.md` - Bootstrap template asset for Backend Inventory. Copied or rendered into repo-owned runtime or system surfaces during init, update, repair, or runtime-foundation generation.
+- `bootstrap/templates/runtime/docs/security/rollback.md` - Bootstrap template asset for Rollback. Copied or rendered into repo-owned runtime or system surfaces during init, update, repair, or runtime-foundation generation.
+- `bootstrap/templates/runtime/docs/security/validation.md` - Bootstrap template asset for Validation. Copied or rendered into repo-owned runtime or system surfaces during init, update, repair, or runtime-foundation generation.
 - `bootstrap/templates/runtime/mobile/README.md` - Bootstrap template asset for Readme. Copied or rendered into repo-owned runtime or system surfaces during init, update, repair, or runtime-foundation generation.
 - `bootstrap/templates/runtime/mobile/flutter/README.md` - Bootstrap template asset for Readme. Copied or rendered into repo-owned runtime or system surfaces during init, update, repair, or runtime-foundation generation.
 - `bootstrap/templates/runtime/mobile/flutter/android/app/src/main/AndroidManifest.xml` - Bootstrap template asset for Androidmanifest Xml. Copied or rendered into repo-owned runtime or system surfaces during init, update, repair, or runtime-foundation generation.
@@ -137,6 +141,10 @@ These files install, update, repair, validate, and generate the AIAST operating 
 - `bootstrap/templates/runtime/packaging/flatpak-manifest.json` - Bootstrap template asset for Flatpak Manifest. Copied or rendered into repo-owned runtime or system surfaces during init, update, repair, or runtime-foundation generation.
 - `bootstrap/templates/runtime/packaging/signing/README.md` - Bootstrap template asset for Readme. Copied or rendered into repo-owned runtime or system surfaces during init, update, repair, or runtime-foundation generation.
 - `bootstrap/templates/runtime/packaging/snapcraft.yaml` - Bootstrap template asset for Snapcraft. Copied or rendered into repo-owned runtime or system surfaces during init, update, repair, or runtime-foundation generation.
+- `bootstrap/templates/runtime/registry/backend-assignments.yaml` - Bootstrap template asset for Backend Assignments. Copied or rendered into repo-owned runtime or system surfaces during init, update, repair, or runtime-foundation generation.
+- `bootstrap/templates/runtime/registry/ports.yaml` - Bootstrap template asset for Ports. Copied or rendered into repo-owned runtime or system surfaces during init, update, repair, or runtime-foundation generation.
+- `bootstrap/templates/runtime/tools/check-port-collisions.py` - Bootstrap template asset for Check Port Collisions Py. Copied or rendered into repo-owned runtime or system surfaces during init, update, repair, or runtime-foundation generation.
+- `bootstrap/templates/runtime/tools/security-preflight.sh` - Bootstrap template asset for Security Preflight. Copied or rendered into repo-owned runtime or system surfaces during init, update, repair, or runtime-foundation generation.
 - `bootstrap/track-semantic-changes.sh` - Classifies git diff changes as structural, contractual, cosmetic, or behavioral. Run when assessing the impact of recent changes.
 - `bootstrap/uninstall-system.sh` - Removal flow for uninstalling the operating layer while leaving runtime code alone. Run only when intentionally removing AIAST from a repo.
 - `bootstrap/update-template.sh` - Additive upgrade flow for refreshing an installed repo from a newer source template. Run when a repo already has AIAST and should be updated to a newer release.
@@ -195,8 +203,12 @@ These files define the installable operating-system contracts, policies, guides,
 - `_system/PROJECT_PROFILE.md` - Repo-specific operational truth about languages, structure, packaging, and validation commands. Read early in every session and update when project reality becomes clearer.
 - `_system/PROJECT_RULES.md` - Repo-wide non-negotiable working rules. Read whenever the task could affect boundaries, truthfulness, or workflow rules.
 - `_system/PROMPTS_INDEX.md` - Index of prompt templates and prompt packs. Use when assembling or auditing prompt surfaces.
+- `_system/PROMPT_BACKEND_POLICY.md` - Core operating-system reference for Prompt Backend Policy. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/PROMPT_DOCKER_NETWORK_POLICY.md` - Core operating-system reference for Prompt Docker Network Policy. Load when the task touches that named contract, policy, guide, or manifest.
 - `_system/PROMPT_EFFECTIVENESS_TRACKING.md` - Protocol for measuring which prompt packs succeed or fail per model and task type. Read when recording or analyzing prompt effectiveness data.
 - `_system/PROMPT_EMISSION_CONTRACT.md` - Rules for emitting prompts for external tools or hosts. Read when prompt-generation or host-export behavior changes.
+- `_system/PROMPT_SECURITY_BASELINE.md` - Core operating-system reference for Prompt Security Baseline. Load when the task touches that named contract, policy, guide, or manifest.
+- `_system/PROMPT_SYSTEM_BUILD_STANDARD.md` - Core operating-system reference for Prompt System Build Standard. Load when the task touches that named contract, policy, guide, or manifest.
 - `_system/PROVENANCE_AND_EVIDENCE.md` - Core operating-system reference for Provenance And Evidence. Load when the task touches that named contract, policy, guide, or manifest.
 - `_system/QUICKSTART.md` - One-page onboarding guide for new AIAST users. Read when first encountering the system or directing someone to the fastest start path.
 - `_system/README.md` - Overview of what belongs inside the local operating-system directory. Read during first orientation to the `_system/` layer.

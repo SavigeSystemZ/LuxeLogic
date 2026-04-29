@@ -179,6 +179,10 @@ require_files \
   "_system/AGENT_PERFORMANCE_GUIDE.md" \
   "_system/agent-performance-profiles.json" \
   "_system/PROMPT_EFFECTIVENESS_TRACKING.md" \
+  "_system/PROMPT_SYSTEM_BUILD_STANDARD.md" \
+  "_system/PROMPT_SECURITY_BASELINE.md" \
+  "_system/PROMPT_BACKEND_POLICY.md" \
+  "_system/PROMPT_DOCKER_NETWORK_POLICY.md" \
   "_system/context/prompt-usage-log.json" \
   "_system/QUICKSTART.md" \
   "_system/ARCHITECTURE_DIAGRAM.md" \
@@ -340,6 +344,14 @@ require_files \
   "bootstrap/templates/runtime/ops/env/.env.example" \
   "bootstrap/templates/runtime/ops/compose/compose.yml" \
   "bootstrap/templates/runtime/ops/logging/README.md" \
+  "bootstrap/templates/runtime/docs/security/architecture.md" \
+  "bootstrap/templates/runtime/docs/security/backend-inventory.md" \
+  "bootstrap/templates/runtime/docs/security/validation.md" \
+  "bootstrap/templates/runtime/docs/security/rollback.md" \
+  "bootstrap/templates/runtime/registry/ports.yaml" \
+  "bootstrap/templates/runtime/registry/backend-assignments.yaml" \
+  "bootstrap/templates/runtime/tools/security-preflight.sh" \
+  "bootstrap/templates/runtime/tools/check-port-collisions.py" \
   "bootstrap/templates/runtime/mobile/README.md" \
   "bootstrap/templates/runtime/mobile/flutter/README.md" \
   "bootstrap/templates/runtime/mobile/flutter/pubspec.yaml" \
@@ -527,5 +539,8 @@ fi
 
 bash "${VALIDATOR_ROOT}/bootstrap/validate-instruction-layer.sh" "${TARGET}" --validator-root "${VALIDATOR_ROOT}" >/dev/null
 bash "${VALIDATOR_ROOT}/bootstrap/check-system-awareness.sh" "${TARGET}" >/dev/null
+bash "${VALIDATOR_ROOT}/bootstrap/check-runtime-foundations.sh" "${TARGET}" >/dev/null
+bash "${VALIDATOR_ROOT}/bootstrap/check-network-bindings.sh" "${TARGET}" --include-template-assets >/dev/null
+bash "${VALIDATOR_ROOT}/bootstrap/check-environment.sh" "${TARGET}" >/dev/null
 
 echo "system_ok"

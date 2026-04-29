@@ -7,30 +7,30 @@ Use priority signals: **CRITICAL**, **HIGH**, **MEDIUM**, **LOW** (see
 ## Bootstrap
 
 - [ ] HIGH: Fill in `_system/PROJECT_PROFILE.md`
-- [ ] HIGH: Turn `PRODUCT_BRIEF.md` into repo-specific truth
+- [ ] HIGH: Refine `PRODUCT_BRIEF.md` for TEMPLATE so the product frame and first build shape are explicit
 - [ ] HIGH: Review the recommended starter blueprint and explicitly apply it if the repo is still greenfield
 - [ ] MEDIUM: Confirm runtime roots, validation commands, packaging targets, and deployment surfaces
 - [ ] MEDIUM: Confirm MCP server set and scope
 - [ ] MEDIUM: Establish the first real milestone in `PLAN.md`
-- [ ] MEDIUM: Record initial risks in `RISK_REGISTER.md`
+- [ ] MEDIUM: Review and refine the seeded first-pass risks in `RISK_REGISTER.md`
 
 ## Current Priority
 
-- [ ] HIGH: Define the repo's next concrete outcome
+- [ ] HIGH: Establish the first validated baseline for TEMPLATE
 
 ## Immediate Queue
 
 Use short, reviewable tasks with priority signals.
 
-- [ ] MEDIUM: Replace remaining neutral prompts with repo-specific truth after install
+- [ ] MEDIUM: Finish onboarding and confirm the first working validation path for TEMPLATE
 
 ## Next Queue
 
-- [ ] LOW: Keep working files current as the repo evolves
+- [ ] MEDIUM: Begin the first product or platform milestone once onboarding is complete
 
 ## Validation Debt
 
-- [ ] MEDIUM: Record the repo's real validation lane in `TEST_STRATEGY.md`
+- [ ] MEDIUM: Record the repo's real validation lane in `TEST_STRATEGY.md` after the first successful repo-local check
 
 ## Documentation Debt
 

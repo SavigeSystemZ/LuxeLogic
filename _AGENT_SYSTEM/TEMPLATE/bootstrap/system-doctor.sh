@@ -117,6 +117,7 @@ run_check "check-host-ingestion" bash "${SCRIPT_DIR}/check-host-ingestion.sh" "$
 run_check "check-host-bundle" bash "${SCRIPT_DIR}/check-host-bundle.sh" "${TARGET_REPO}" || failed=1
 run_check "check-system-awareness" bash "${SCRIPT_DIR}/check-system-awareness.sh" "${TARGET_REPO}" || failed=1
 run_check "check-agent-orchestration" bash "${SCRIPT_DIR}/check-agent-orchestration.sh" "${TARGET_REPO}" || failed=1
+run_check "check-network-bindings" bash "${SCRIPT_DIR}/check-network-bindings.sh" "${TARGET_REPO}" --include-template-assets || failed=1
 
 if run_check "check-placeholders" bash "${SCRIPT_DIR}/check-placeholders.sh" "${TARGET_REPO}" --summary "${mode_flag[@]}"; then
   true
@@ -134,6 +135,13 @@ else
     warned=1
     warning_labels+=("runtime-foundations")
   fi
+fi
+
+if run_check "check-environment" bash "${SCRIPT_DIR}/check-environment.sh" "${TARGET_REPO}"; then
+  true
+else
+  warned=1
+  warning_labels+=("environment")
 fi
 
 if run_check "check-packaging-targets" bash "${SCRIPT_DIR}/check-packaging-targets.sh" "${TARGET_REPO}" "${strict_flag[@]}"; then

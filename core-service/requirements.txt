@@ -8,3 +8,6 @@ pydantic
 pydantic-settings
 python-multipart
 httpx
+google-generative-ai
+python-jose[cryptography]
+passlib[bcrypt]

@@ -10,14 +10,28 @@
 - [x] Run `docker-compose up` to verify initial build and networking
 - [x] Run an enhancement run on the meta-system (`system-doctor.sh`, etc.) to align it with current needs.
 - [x] Define shared volumes for makeup tutorial media storage between services
+- [x] Implement 3D/AR Beauty Frontend with "Deep Glass" aesthetic
+- [x] Integrate MediaPipe Face Mesh for real-time face tracking
+- [x] Build virtual jewelry try-on system (Earrings, Necklaces)
+- [x] Implement voice-activated Beauty AI with TTS/STT
+- [x] Add "Kehley Smith" dedication easter egg with special visual triggers
+- [x] Implement actual 3D face mesh triangulation with canonical UV mapping
+- [x] Develop GLSL shader for multi-layered makeup application (Foundation, Blush, Lipstick)
+- [x] Implement real-time skin tone and undertone analysis from video feed
+- [x] Integrate Google Gemini API into `core-service` with "Hollywood Makeup Artist" persona
+- [x] Connect frontend AI assistant to Gemini backend with action parsing
 
 ## Ready Queue
 
-- [x] Define initial REST API endpoints in `core-service` for makeup techniques and profiles
+- [x] Define initial REST API endpoints for beauty techniques and dedications
 - [x] Create initial video transcoding test cases for high-res makeup tutorials
 - [x] Configure `api-gateway` (Traefik) for dynamic service discovery
-- [ ] Test HLS streaming from `media-server`
-- [ ] Ensure end-to-end media upload and processing pipeline using a valid media payload
+- [x] Test HLS streaming from `media-server`
+- [x] Ensure end-to-end media upload and processing pipeline using a valid media payload
+- [ ] Implement advanced dynamic highlighting for tutorial steps on 3D mesh
+- [ ] Develop full product catalog integration for makeup and jewelry
+- [ ] Optimize 3D assets and shaders for mobile performance
+- [ ] Implement secure user authentication and authorization (JWT) for `beauty-frontend`
 
 ## Completed This Session
 

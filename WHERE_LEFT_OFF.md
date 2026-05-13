@@ -2,24 +2,29 @@
 
 ## Session Snapshot
 
-- Current phase: End-to-end Testing and HLS streaming validation.
+- Current phase: Production-ready backend and advanced frontend.
 - Working branch: `main`
-- Status: `api-gateway` correctly routing traffic; `core-service` dispatches tasks via Celery; `video-engine` consumes and processes tasks using FFmpeg.
+- Status: Full 3D makeup layering, skin tone analysis, and Gemini-powered AI consulting implemented. Backend secured with JWT authentication.
 
 ## Last Completed Work
 
-### Infrastructure and Core Logic (Current Session)
-- [x] Added dynamic Traefik labels to `docker-compose.yml` for routing `/api/*` to `core-service` and `/media/*` to `mock-media-server`.
-- [x] Replaced synchronous mock video-engine worker with a robust `celery` worker.
-- [x] Configured `core-service` to enqueue an asynchronous `process_media` Celery task onto DragonflyDB when a new makeup tutorial is created via REST API.
-- [x] Built and verified the new architecture by triggering the FastAPI `/tutorials/` endpoint and observing the Celery worker attempt to process the task with FFmpeg.
-- [x] Defined `media_storage` shared volume linking `mock-media-server` and `video-engine`.
-- [x] Pivoted `PRODUCT_BRIEF.md` and `PLAN.md` to focus on the new female-oriented makeup application vision.
+### Advanced Beauty Engine & AI Integration (Current Session)
+- [x] Implemented high-fidelity 3D face mesh triangulation and canonical UV mapping in `beauty-frontend`.
+- [x] Developed GLSL shaders for multi-layered makeup application (Foundation, Blush, Lipstick).
+- [x] Integrated real-time skin tone and undertone analysis from the video feed.
+- [x] Updated `core-service` with JWT authentication endpoints (`/token`, `/profiles/me`).
+- [x] Added `hashed_password` to `UserProfile` model.
+- [x] Integrated Google Gemini API into `core-service` with a "Hollywood Makeup Artist" persona.
+- [x] Connected frontend AI assistant to Gemini backend, including `[ACTION: ...]` parsing for UI control.
+- [x] Seeded `core-service` with professional makeup techniques and the "Kehley Smith" dedication.
 
 ## Next Best Step
 
-1. **End-to-End Testing**: Test HLS streaming from `media-server` via the API gateway using an actual generated `.m3u8` playlist. Provide a valid video payload to ensure FFmpeg processes it correctly instead of failing on the dummy text file.
-2. **Frontend Mock/Client Integration**: With the backend complete, consider standing up a lightweight UI or frontend skeleton to visualize the "Deep Glass" aesthetic for the makeup application, pulling profiles and technique videos from the `core-service`.
+1.  **AI Action Dispatcher**: Implement the frontend logic to react to `[ACTION: ...]` commands from the AI (e.g., changing makeup colors, loading new jewelry assets).
+2.  **Product Catalog Integration**: Connect the `MakeupTechnique` and `JewelryAsset` models in `core-service` to a real product database or API for detailed product information, pricing, and purchase links.
+3.  **Performance Optimization**: Profile and optimize the 3D rendering pipeline and MediaPipe processing for smoother performance on various mobile devices.
+4.  **Backend Scaling**: Evaluate and implement scaling strategies for `core-service` and `video-engine` to handle increased load.
+5.  **User Onboarding**: Create a smooth onboarding flow for new users, including profile creation and initial skin tone analysis.
 
 ## Security Hardening (2026-03-30)
 

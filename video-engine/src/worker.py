@@ -63,6 +63,29 @@ def process_media(task_id: str, filename: str, action: str):
             logger.error(f"FFmpeg failed (thumbnail): {e.stderr}")
             return {"status": "error", "task_id": task_id, "error": "FFmpeg failed"}
 
+    elif action == "generate_beauty_render":
+        # Simulate a high-fidelity 4K makeup render
+        # In a real system, this might use Blender or a specialized 3D engine.
+        # For now, we'll create a composite high-res image using FFmpeg/ImageMagick
+        output_render = os.path.join(media_dir, f"{task_id}_render_4k.jpg")
+        
+        # We'll use a high-res solid color or filter as a placeholder
+        # simulating a detailed closeup of a face with makeup layers
+        ffmpeg_cmd = [
+            "ffmpeg", "-f", "lavfi", "-i", "color=c=lavenderblush:s=3840x2160:d=1",
+            "-vf", "drawtext=text='High-Res Beauty Render Step':x=(w-text_w)/2:y=(h-text_h)/2:fontsize=120:fontcolor=white:shadowcolor=black:shadowx=5:shadowy=5",
+            "-vframes", "1",
+            output_render
+        ]
+        
+        try:
+            subprocess.run(ffmpeg_cmd, capture_output=True, text=True, check=True)
+            logger.info(f"Generated high-res beauty render: {output_render}")
+            return {"status": "success", "task_id": task_id, "render_url": output_render}
+        except subprocess.CalledProcessError as e:
+            logger.error(f"Render generation failed: {e.stderr}")
+            return {"status": "error", "task_id": task_id, "error": "Render generation failed"}
+
     else:
         logger.warning(f"Unknown action: {action}")
         return {"status": "error", "task_id": task_id, "error": "Unknown action"}

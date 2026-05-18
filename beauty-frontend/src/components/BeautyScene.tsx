@@ -2,7 +2,7 @@
 
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera, Environment, useTexture } from "@react-three/drei";
-import { Suspense, useRef, useMemo } from "react";
+import { Suspense, useRef, useMemo, useEffect } from "react";
 import * as THREE from "three";
 import { useFaceMesh } from "../hooks/useFaceMesh";
 import { JewelryAnchor, Earring } from "./JewelryComponents";
@@ -11,7 +11,7 @@ import { TRIANGULATION, UV_MAP } from "../lib/faceMeshConstants";
 import { BeautyVertexShader, BeautyFragmentShader } from "../lib/BeautyShader";
 import { SkinToneResult, sampleSkinTone } from "../lib/skinAnalysis";
 
-function FaceMeshGeometry({ results, videoRef, onAnalysis }: { results: any, videoRef: React.RefObject<HTMLVideoElement>, onAnalysis?: (res: SkinToneResult) => void }) {
+function FaceMeshGeometry({ results, videoRef, onAnalysis, activeAction }: { results: any, videoRef: React.RefObject<HTMLVideoElement>, onAnalysis?: (res: SkinToneResult) => void, activeAction?: any }) {
   const meshRef = useRef<THREE.Mesh>(null);
   
   const uniforms = useMemo(() => ({
@@ -20,8 +20,54 @@ function FaceMeshGeometry({ results, videoRef, onAnalysis }: { results: any, vid
     uBlushColor: { value: new THREE.Color("#ffb6c1") },
     uBlushOpacity: { value: 0.5 },
     uLipstickColor: { value: new THREE.Color("#e0115f") },
-    uLipstickOpacity: { value: 0.8 }
+    uLipstickOpacity: { value: 0.8 },
+    uHighlightCenter: { value: new THREE.Vector2(0.0, 0.0) },
+    uHighlightRadius: { value: 0.0 },
+    uHighlightIntensity: { value: 0.0 },
+    uSkinSmoothing: { value: 0.5 },
+    uHairColor: { value: new THREE.Color("#4b2c20") },
+    uHairIntensity: { value: 0.0 }
   }), []);
+
+  useEffect(() => {
+    if (activeAction) {
+      if (activeAction.type === 'apply_makeup' && activeAction.color) {
+        if (activeAction.makeup_type === 'lipstick' || activeAction.target === 'lips') {
+           uniforms.uLipstickColor.value.set(activeAction.color);
+        } else if (activeAction.makeup_type === 'blush' || activeAction.target === 'cheeks') {
+           uniforms.uBlushColor.value.set(activeAction.color);
+        } else if (activeAction.makeup_type === 'foundation') {
+           uniforms.uFoundationColor.value.set(activeAction.color);
+        } else if (activeAction.makeup_type === 'hair') {
+           uniforms.uHairColor.value.set(activeAction.color);
+           uniforms.uHairIntensity.value = 0.6;
+        }
+      } else if (activeAction.type === 'set_smoothing') {
+        uniforms.uSkinSmoothing.value = activeAction.value || 0.5;
+      } else if (activeAction.type === 'highlight_region' && activeAction.region) {
+        // Simple mapping from region to UV coordinates for tutorial steps
+        let center = new THREE.Vector2(0, 0);
+        let radius = 0.15;
+        if (activeAction.region === 'cheekbones') {
+          center.set(0.3, 0.4); // left cheek (approx UV)
+          radius = 0.2;
+        } else if (activeAction.region === 'brow_bones') {
+          center.set(0.3, 0.7);
+        } else if (activeAction.region === 'lips') {
+          center.set(0.5, 0.2);
+        }
+        
+        uniforms.uHighlightCenter.value.copy(center);
+        uniforms.uHighlightRadius.value = radius;
+        uniforms.uHighlightIntensity.value = 1.0;
+        
+        // Auto-fade highlight after 3 seconds
+        setTimeout(() => {
+          uniforms.uHighlightIntensity.value = 0.0;
+        }, 3000);
+      }
+    }
+  }, [activeAction, uniforms]);
 
   useFrame(() => {
     if (results && results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
@@ -79,7 +125,7 @@ function FaceMeshGeometry({ results, videoRef, onAnalysis }: { results: any, vid
   );
 }
 
-export default function BeautyScene({ onAnalysis }: { onAnalysis?: (res: SkinToneResult) => void }) {
+export default function BeautyScene({ onAnalysis, activeAction }: { onAnalysis?: (res: SkinToneResult) => void, activeAction?: any }) {
   const { results, videoRef } = useFaceMesh();
 
   return (
@@ -87,7 +133,7 @@ export default function BeautyScene({ onAnalysis }: { onAnalysis?: (res: SkinTon
       {/* Hidden video element for MediaPipe processing */}
       <video ref={videoRef} className="hidden" playsInline muted />
       
-      <Canvas shadows>
+      <Canvas shadows dpr={[1, 1.5]} gl={{ antialias: false, powerPreference: "high-performance" }}>
         <PerspectiveCamera makeDefault position={[0, 0, 5]} fov={50} />
         <OrbitControls 
           enableDamping 
@@ -100,7 +146,7 @@ export default function BeautyScene({ onAnalysis }: { onAnalysis?: (res: SkinTon
         <pointLight position={[10, 10, 10]} intensity={1} />
 
         <Suspense fallback={null}>
-          <FaceMeshGeometry results={results} videoRef={videoRef} onAnalysis={onAnalysis} />
+          <FaceMeshGeometry results={results} videoRef={videoRef} onAnalysis={onAnalysis} activeAction={activeAction} />
           
           {/* Virtual Jewelry Try-On */}
           {results && (
@@ -116,7 +162,7 @@ export default function BeautyScene({ onAnalysis }: { onAnalysis?: (res: SkinTon
             </>
           )}
 
-          <Environment preset="soft" />
+          <Environment preset="city" />
         </Suspense>
       </Canvas>
 

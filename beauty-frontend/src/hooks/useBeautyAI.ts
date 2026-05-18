@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from 'react';
 import { SkinToneResult } from '../lib/skinAnalysis';
+import { fetchWithAuth } from '../lib/apiClient';
 
 export function useBeautyAI(onAction?: (action: { type: string; [key: string]: any }) => void) {
   const [isListening, setIsListening] = useState(false);
@@ -57,29 +58,20 @@ export function useBeautyAI(onAction?: (action: { type: string; [key: string]: a
           undertone: skinAnalysis?.undertone || ""
         });
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/ai/consult?${queryParams}`, {
+        const response = await fetchWithAuth(`${process.env.NEXT_PUBLIC_API_URL || '/api'}/ai/consult?${queryParams}`, {
           method: 'POST'
         });
         const data = await response.json();
         
         // Action Parsing Logic
         let cleanAnswer = data.answer;
-        const actionMatch = data.answer.match(/\[ACTION:\s*([^\]]+)\]/);
+        const actionMatch = data.answer.match(/\[ACTION:\s*(\{.*?\})\s*\]/);
         if (actionMatch && onAction) {
           try {
-            const parts = actionMatch[1].split(',').map((p: string) => p.trim());
-            const actionObj: { type: string; [key: string]: any } = { type: '' }; // Initialize with type
-            parts.forEach((p: string) => {
-              const [k, v] = p.split(':').map((s: string) => s.trim());
-              if (k === 'type') {
-                actionObj.type = v;
-              } else {
-                actionObj[k] = v;
-              }
-            });
+            const actionObj = JSON.parse(actionMatch[1]);
             onAction(actionObj);
             // Clean the response text for TTS
-            cleanAnswer = data.answer.replace(/\[ACTION:[^\]]+\]/g, '').trim();
+            cleanAnswer = data.answer.replace(/\[ACTION:\s*(\{.*?\})\s*\]/g, '').trim();
           } catch (e) {
             console.error("Action parsing failed", e);
           }

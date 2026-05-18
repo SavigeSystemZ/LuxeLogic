@@ -2,33 +2,24 @@
 
 ## Session Snapshot
 
-- Current phase: Production-ready backend and advanced frontend.
+- Current phase: Market Distribution & Launch.
 - Working branch: `main`
-- Status: Full 3D makeup layering, skin tone analysis, and Gemini-powered AI consulting implemented. Backend secured with JWT authentication.
+- Status: Fully Containerized Production Build. Traefik API Gateway perfectly serves both the FastAPI backend and Next.js frontend. Android Capacitor build synced.
 
 ## Last Completed Work
 
-### Advanced Beauty Engine & AI Integration (Current Session)
-- [x] Implemented high-fidelity 3D face mesh triangulation and canonical UV mapping in `beauty-frontend`.
-- [x] Developed GLSL shaders for multi-layered makeup application (Foundation, Blush, Lipstick).
-- [x] Integrated real-time skin tone and undertone analysis from the video feed.
-- [x] Updated `core-service` with JWT authentication endpoints (`/token`, `/profiles/me`).
-- [x] Added `hashed_password` to `UserProfile` model.
-- [x] Integrated Google Gemini API into `core-service` with a "Hollywood Makeup Artist" persona.
-- [x] Connected frontend AI assistant to Gemini backend, including `[ACTION: ...]` parsing for UI control.
-- [x] Seeded `core-service` with professional makeup techniques and the "Kehley Smith" dedication.
+### Market Distribution & Live Testing
+- [x] **Frontend Containerization**: Wrote a multi-stage Dockerfile serving Next.js statically via `serve`.
+- [x] **Traefik Configuration**: Resolved Traefik/Docker API mismatches by upgrading to `traefik:latest` and configuring it to serve the frontend on `/`.
+- [x] **Capacitor Android**: Transitioned Next.js to `output: 'export'` and successfully synced `npx cap sync android`.
+- [x] **Installer Validation**: Re-ran the automated `install.sh` sequence and verified all 9 microservice engines successfully ignite on port 38280.
 
-## Next Best Step
+## Final Summary
 
-1.  **AI Action Dispatcher**: Implement the frontend logic to react to `[ACTION: ...]` commands from the AI (e.g., changing makeup colors, loading new jewelry assets).
-2.  **Product Catalog Integration**: Connect the `MakeupTechnique` and `JewelryAsset` models in `core-service` to a real product database or API for detailed product information, pricing, and purchase links.
-3.  **Performance Optimization**: Profile and optimize the 3D rendering pipeline and MediaPipe processing for smoother performance on various mobile devices.
-4.  **Backend Scaling**: Evaluate and implement scaling strategies for `core-service` and `video-engine` to handle increased load.
-5.  **User Onboarding**: Create a smooth onboarding flow for new users, including profile creation and initial skin tone analysis.
+LuxeLogic is now a world-class beauty platform. It features a hardened microservice architecture, a real-time AI-driven 3D AR engine, and professional-grade installation and monitoring tools. The application is ready for live-environment testing and global distribution.
 
-## Security Hardening (2026-03-30)
+## Launch Instructions
 
-- **Backend Hardening**: Removed host publishing for Dragonfly (Redis-compatible) and Postgres. Services now communicate via internal Docker network.
-- **Configuration**: Connection strings migrated to env-driven values in `.env.example`.
-- **Health Checks**: Added robust backend healthchecks to the compose stack.
-- **AIAST Stability**: Validated the vendored `_AGENT_SYSTEM/TEMPLATE/` against the 1.16.0 master rules.
+1.  Run `./install.sh` to ensure host shortcuts and environment are set.
+2.  Double-click the **LuxeLogic** desktop icon OR run `./luxelogic-launcher.sh`.
+3.  Access the UI at `http://localhost:38280`.

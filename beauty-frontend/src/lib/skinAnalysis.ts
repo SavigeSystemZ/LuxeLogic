@@ -14,12 +14,11 @@ export function sampleSkinTone(
   landmarks: any[]
 ): SkinToneResult | null {
   const canvas = document.createElement('canvas');
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
+  // We only need a 1x1 canvas to extract single pixels
+  canvas.width = 1;
+  canvas.height = 1;
   const ctx = canvas.getContext('2d');
   if (!ctx) return null;
-
-  ctx.drawImage(video, 0, 0);
 
   // Landmarks for sampling
   const sampleIndices = [10, 234, 454]; // Forehead, Left Cheek, Right Cheek
@@ -29,7 +28,11 @@ export function sampleSkinTone(
     const lm = landmarks[index];
     const x = lm.x * video.videoWidth;
     const y = lm.y * video.videoHeight;
-    const pixel = ctx.getImageData(x, y, 1, 1).data;
+    
+    // Draw only a 1x1 pixel slice of the video onto our 1x1 canvas
+    ctx.drawImage(video, Math.floor(x), Math.floor(y), 1, 1, 0, 0, 1, 1);
+    const pixel = ctx.getImageData(0, 0, 1, 1).data;
+    
     totalR += pixel[0];
     totalG += pixel[1];
     totalB += pixel[2];

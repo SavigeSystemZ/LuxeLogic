@@ -8,6 +8,11 @@ pydantic
 pydantic-settings
 python-multipart
 httpx
-google-generative-ai
+google-genai
 python-jose[cryptography]
 passlib[bcrypt]
+alembic
+prometheus-fastapi-instrumentator
+websockets
+asyncio
+pillow

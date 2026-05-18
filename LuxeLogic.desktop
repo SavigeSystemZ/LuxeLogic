@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=LuxeLogic
+Comment=Advanced AI Makeup & Beauty Consulting
+Exec=/home/whyte/.MyAppZ/LuxeLogic/luxelogic-launcher.sh
+Icon=sparkles
+Terminal=true
+Categories=Graphics;Science;Education;
+StartupNotify=true

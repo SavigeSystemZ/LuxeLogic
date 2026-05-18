@@ -27,3 +27,7 @@ npm-debug.log
 .plandex/
 .openhands_state/
 !.ai/
+
+# Environment files
+.env
+.env.*

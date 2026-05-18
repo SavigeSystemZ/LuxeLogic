@@ -1,15 +1,17 @@
 import os
 import logging
-from fastapi import FastAPI, Depends, HTTPException, status
+import json
+from fastapi import FastAPI, Depends, HTTPException, status, Request, WebSocket, WebSocketDisconnect, File, UploadFile
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from sqlalchemy import text
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import List, Optional
 from celery import Celery
-import google.generativeai as genai
+from google import genai
+from prometheus_fastapi_instrumentator import Instrumentator
 
-from src.models import Base, UserProfile, Tutorial, FavoriteTutorial, MakeupTechnique, TechniqueStep, JewelryAsset, SpecialDedication
+from src.models import Base, UserProfile, Tutorial, FavoriteTutorial, MakeupTechnique, TechniqueStep, JewelryAsset, SpecialDedication, UserInteraction
 from src.database import engine, get_db, get_cache
 from src.auth import get_password_hash, verify_password, create_access_token, get_current_user
 
@@ -23,10 +25,12 @@ celery_app = Celery('video_tasks', broker=CACHE_URL, backend=CACHE_URL)
 # Create tables
 Base.metadata.create_all(bind=engine)
 
-genai.configure(api_key=os.getenv("GEMINI_API_KEY", "YOUR_API_KEY"))
-model = genai.GenerativeModel('gemini-pro')
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY", "YOUR_API_KEY"))
 
 app = FastAPI(title="LuxeLogic Core Service", description="Backend for the LuxeLogic Makeup & Beauty App")
+
+# Instrument metrics
+Instrumentator().instrument(app).expose(app)
 
 @app.on_event("startup")
 def seed_data():
@@ -60,6 +64,16 @@ def seed_data():
             TechniqueStep(technique_id=tech.id, step_number=3, title="Liquid Highlight", description="Tap liquid highlighter onto cheekbones and brow bones.")
         ]
         db.add_all(steps)
+
+    # Seed Jewelry Data
+    if not db.query(JewelryAsset).first():
+        jewelry = [
+            JewelryAsset(name="Diamond Drop Earrings", asset_url="/assets/diamond_drop.glb", category="Earrings", anchor_point="earlobe", scaling_factor=1),
+            JewelryAsset(name="Gold Hoop Earrings", asset_url="/assets/gold_hoop.glb", category="Earrings", anchor_point="earlobe", scaling_factor=1),
+            JewelryAsset(name="Pearl Necklace", asset_url="/assets/pearl_necklace.glb", category="Necklace", anchor_point="neck", scaling_factor=1),
+            JewelryAsset(name="Sapphire Choker", asset_url="/assets/sapphire_choker.glb", category="Necklace", anchor_point="neck", scaling_factor=1)
+        ]
+        db.add_all(jewelry)
     
     db.commit()
 
@@ -68,9 +82,9 @@ class Token(BaseModel):
     token_type: str
 
 class ProfileCreate(BaseModel):
-    username: str
+    username: str = Field(..., min_length=3, max_length=50)
     email: str
-    password: str
+    password: str = Field(..., min_length=8)
     skin_tone: Optional[str] = None
     face_shape: Optional[str] = None
 
@@ -269,9 +283,32 @@ def get_dedication(trigger_key: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Dedication not found")
     return dedication
 
+# WebSocket for real-time task updates
+@app.websocket("/ws/tasks/{task_id}")
+async def websocket_task_updates(websocket: WebSocket, task_id: str):
+    await websocket.accept()
+    cache = get_cache()
+    pubsub = cache.pubsub()
+    await pubsub.subscribe(f"task_updates:{task_id}")
+    
+    try:
+        async for message in pubsub.listen():
+            if message['type'] == 'message':
+                data = message['data'].decode('utf-8')
+                await websocket.send_text(data)
+                # If task is done, close the connection
+                parsed = json.loads(data)
+                if parsed.get('status') in ['success', 'error']:
+                    break
+    except WebSocketDisconnect:
+        logger.info(f"WebSocket disconnected for task {task_id}")
+    finally:
+        await pubsub.unsubscribe(f"task_updates:{task_id}")
+        await websocket.close()
+
 # AI Assistant Mock Endpoint
 @app.post("/ai/ask")
-async def ask_ai(question: str):
+async def ask_ai(question: str, current_user: UserProfile = Depends(get_current_user), db: Session = Depends(get_db)):
     responses = {
         "makeup": "To apply makeup like a star, start with a high-quality primer and follow our 'Red Carpet' tutorial.",
         "kehley": "Kehley Smith is the heart of this application. Her message is one of beauty and empowerment.",
@@ -282,25 +319,85 @@ async def ask_ai(question: str):
         if key in question.lower():
             answer = responses[key]
             break
+    
+    # Save interaction
+    db.add(UserInteraction(user_id=current_user.id, role="user", content=question))
+    db.add(UserInteraction(user_id=current_user.id, role="assistant", content=answer))
+    db.commit()
+    
     return {"answer": answer}
 
 # Professional AI Consultation Endpoint
 @app.post("/ai/consult")
-async def consult_ai(question: str, tone: Optional[str] = None, undertone: Optional[str] = None):
+async def consult_ai(question: str, tone: Optional[str] = None, undertone: Optional[str] = None, current_user: UserProfile = Depends(get_current_user), db: Session = Depends(get_db)):
+    cache = get_cache()
+    key = f"rate_limit:consult:{current_user.id}"
+    # Use standard redis client for now if get_cache is not async
+    reqs = cache.incr(key)
+    if reqs == 1:
+        cache.expire(key, 60)
+    if reqs > 10:
+        raise HTTPException(status_code=429, detail="Too many AI consultations. Please wait a minute.")
+
+    # Retrieve memory
+    history = db.query(UserInteraction).filter(UserInteraction.user_id == current_user.id).order_by(UserInteraction.created_at.desc()).limit(10).all()
+    memory_context = "\n".join([f"{h.role}: {h.content}" for h in reversed(history)])
+
     system_prompt = f"""
     You are a world-class Hollywood Makeup Artist and Beauty Consultant. 
     Your goal is to provide expert, personalized advice to women using the LuxeLogic app.
     The user's analyzed skin tone is {tone or 'unknown'} and undertone is {undertone or 'unknown'}.
     Always be professional, encouraging, and specific with product types and application techniques.
-    If asked to apply makeup (lipstick, blush, etc.), return a JSON action in your response like [ACTION: apply_makeup, type: lipstick, color: #HEX].
+    If asked to apply makeup (lipstick, blush, etc.), return a JSON action in your response exactly like: [ACTION: {{"type": "apply_makeup", "makeup_type": "lipstick", "color": "#HEX"}}]
+    
+    Recent conversation history:
+    {memory_context}
     """
-    full_prompt = f"{system_prompt}\n\nUser Question: {question}"
+    
     try:
-        response = model.generate_content(full_prompt)
-        return {"answer": response.text}
+        response = client.models.generate_content(model="gemini-1.5-flash", contents=f"{system_prompt}\n\nUser Question: {question}")
+        answer = response.text
+        
+        # Save interaction
+        db.add(UserInteraction(user_id=current_user.id, role="user", content=question))
+        db.add(UserInteraction(user_id=current_user.id, role="assistant", content=answer))
+        db.commit()
+        
+        return {"answer": answer}
     except Exception as e:
         logger.error(f"Gemini API error: {e}")
         return {"answer": "I'm currently perfecting my next look. Please try again in a moment, darling."}
+
+@app.post("/ai/recreate-look")
+async def recreate_look(file: UploadFile = File(...), current_user: UserProfile = Depends(get_current_user)):
+    from PIL import Image, UnidentifiedImageError
+    import io
+
+    # Read image and check size
+    contents = await file.read()
+    if len(contents) > 10 * 1024 * 1024:  # 10MB limit
+        raise HTTPException(status_code=400, detail="Image file too large. Maximum size is 10MB.")
+
+    try:
+        image = Image.open(io.BytesIO(contents))
+        image.verify()  # Verify it's a valid image
+        image = Image.open(io.BytesIO(contents)) # Re-open after verify
+    except (UnidentifiedImageError, IOError):
+        raise HTTPException(status_code=400, detail="Invalid image file uploaded.")
+
+    prompt = """
+    Analyze the makeup in this image. 
+    Return a list of JSON actions to recreate this look.
+    Focus on Lipstick and Blush.
+    Format exactly like: [ACTION: {"type": "apply_makeup", "makeup_type": "lipstick", "color": "#HEX"}]
+    """
+    
+    try:
+        response = client.models.generate_content(model="gemini-1.5-flash", contents=[prompt, image])
+        return {"answer": response.text}
+    except Exception as e:
+        logger.error(f"Gemini Vision API error: {e}")
+        return {"answer": "I couldn't quite see the details of that beautiful look. Could you try another photo?"}
 
 if __name__ == "__main__":
     import uvicorn

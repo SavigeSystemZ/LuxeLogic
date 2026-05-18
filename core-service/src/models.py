@@ -45,6 +45,16 @@ class FavoriteTutorial(Base):
     tutorial = relationship("Tutorial", back_populates="favorited_by")
 
 
+class UserInteraction(Base):
+    __tablename__ = "user_interactions"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("user_profiles.id"), nullable=False)
+    role = Column(String, nullable=False) # 'user' or 'assistant'
+    content = Column(Text, nullable=False)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
+
 class MakeupTechnique(Base):
     __tablename__ = "makeup_techniques"
 

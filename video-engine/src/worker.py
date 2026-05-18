@@ -1,6 +1,8 @@
 import logging
 import subprocess
 import os
+import json
+import redis
 from celery import Celery
 
 logging.basicConfig(level=logging.INFO)
@@ -9,10 +11,16 @@ logger = logging.getLogger("video-engine")
 CACHE_URL = os.getenv("CACHE_URL", "redis://dragonfly-cache:6379/0")
 
 celery_app = Celery('video_tasks', broker=CACHE_URL, backend=CACHE_URL)
+redis_client = redis.from_url(CACHE_URL)
+
+def publish_status(task_id: str, status: str, progress: int, message: str):
+    data = json.dumps({"task_id": task_id, "status": status, "progress": progress, "message": message})
+    redis_client.publish(f"task_updates:{task_id}", data)
 
 @celery_app.task(name="process_media")
 def process_media(task_id: str, filename: str, action: str):
     logger.info(f"Starting process: {action} for {filename}")
+    publish_status(task_id, "started", 0, f"Initializing {action} for {filename}")
     
     media_dir = "/app/media"
     input_path = os.path.join(media_dir, filename)
@@ -41,7 +49,7 @@ def process_media(task_id: str, filename: str, action: str):
 
         logger.info(f"Running FFmpeg: {' '.join(ffmpeg_cmd)}")
         try:
-            subprocess.run(ffmpeg_cmd, capture_output=True, text=True, check=True)
+            subprocess.run(ffmpeg_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True, check=True)
             logger.info(f"Completed transcoding: {action} for {filename}")
             return {"status": "success", "task_id": task_id, "playlist": output_m3u8}
         except subprocess.CalledProcessError as e:
@@ -57,7 +65,7 @@ def process_media(task_id: str, filename: str, action: str):
             output_thumbnail
         ]
         try:
-            subprocess.run(ffmpeg_cmd, capture_output=True, text=True, check=True)
+            subprocess.run(ffmpeg_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True, check=True)
             return {"status": "success", "task_id": task_id, "thumbnail": output_thumbnail}
         except subprocess.CalledProcessError as e:
             logger.error(f"FFmpeg failed (thumbnail): {e.stderr}")
@@ -79,7 +87,7 @@ def process_media(task_id: str, filename: str, action: str):
         ]
         
         try:
-            subprocess.run(ffmpeg_cmd, capture_output=True, text=True, check=True)
+            subprocess.run(ffmpeg_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, text=True, check=True)
             logger.info(f"Generated high-res beauty render: {output_render}")
             return {"status": "success", "task_id": task_id, "render_url": output_render}
         except subprocess.CalledProcessError as e:

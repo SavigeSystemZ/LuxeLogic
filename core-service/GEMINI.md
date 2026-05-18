@@ -2,6 +2,10 @@
 
 Use `AGENTS.md` as the repo contract.
 
+## Component Context
+- Core Python/FastAPI backend handling JWT authentication, AI consultation logic, skin tone analysis, and high-fidelity 3D makeup layering.
+- Ensure all business logic aligns with professional beauty techniques.
+
 ## Minimum startup
 1. `AGENTS.md`
 2. `_system/INSTRUCTION_PRECEDENCE_CONTRACT.md`

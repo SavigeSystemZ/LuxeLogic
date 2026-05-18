@@ -39,6 +39,19 @@ export function Earring() {
   );
 }
 
+export function Necklace() {
+  return (
+    <mesh position={[0, -0.1, 0]} rotation={[Math.PI / 2, 0, 0]}>
+      <torusGeometry args={[0.3, 0.015, 16, 100]} />
+      <meshStandardMaterial color="silver" metalness={1} roughness={0.2} />
+      <mesh position={[0, -0.3, 0]}>
+        <octahedronGeometry args={[0.05, 0]} />
+        <meshStandardMaterial color="#00f" metalness={0.8} roughness={0.1} />
+      </mesh>
+    </mesh>
+  );
+}
+
 export function NecklaceAnchor({ results, children }: { results: any, children: React.ReactNode }) {
   const groupRef = useRef<THREE.Group>(null);
 

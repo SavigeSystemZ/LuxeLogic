@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">LuxeLogic</string>
+    <string name="title_activity_main">LuxeLogic</string>
+    <string name="package_name">com.luxelogic.app</string>
+    <string name="custom_url_scheme">com.luxelogic.app</string>
+</resources>

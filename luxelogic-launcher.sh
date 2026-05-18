@@ -1,7 +1,29 @@
 #!/bin/bash
 
 # LuxeLogic Launcher
-# World-class launcher for the LuxeLogic Beauty App
+# Bulletproof world-class launcher for the LuxeLogic Beauty App
+
+# --- Robust Environment ---
+cd "$(dirname "$0")"
+LOG_FILE="launcher.log"
+export PATH="/usr/bin:/usr/local/bin:$HOME/.local/bin:$PATH"
+
+# Redirect all output to log file and stdout
+exec > >(tee -a "$LOG_FILE") 2>&1
+
+echo "--- LuxeLogic Launch $(date) ---"
+
+# --- Error Handling ---
+cleanup() {
+    local exit_code=$?
+    if [ $exit_code -ne 0 ]; then
+        echo -e "\n\033[0;31m❌ Error: Launch failed with exit code $exit_code.\033[0m"
+        echo "Check $LOG_FILE for details."
+        echo "Press Enter to close this window..."
+        read
+    fi
+}
+trap cleanup EXIT
 
 set -e
 
@@ -13,12 +35,9 @@ NC='\033[0m' # No Color
 
 echo -e "${BLUE}✨ LuxeLogic is preparing for beauty... ✨${NC}"
 
-# Ensure we are in the script's directory so docker compose finds the yml file
-cd "$(dirname "$0")"
-
 # 1. Check if Docker is running
 if ! docker info > /dev/null 2>&1; then
-    echo -e "${RED}❌ Error: Docker is not running. Please start Docker and try again.${NC}"
+    echo -e "${RED}❌ Error: Docker is not running or accessible. Please start Docker and try again.${NC}"
     exit 1
 fi
 
@@ -43,7 +62,6 @@ echo -e "${GREEN}✅ System is ready!${NC}"
 
 # 4. Open browser
 echo -e "${BLUE}🎨 Opening LuxeLogic Beauty Interface...${NC}"
-# Detect OS and open browser
 if which xdg-open > /dev/null; then
   xdg-open "http://localhost:38280"
 elif which open > /dev/null; then

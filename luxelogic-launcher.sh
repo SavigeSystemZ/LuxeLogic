@@ -13,6 +13,9 @@ NC='\033[0m' # No Color
 
 echo -e "${BLUE}✨ LuxeLogic is preparing for beauty... ✨${NC}"
 
+# Ensure we are in the script's directory so docker compose finds the yml file
+cd "$(dirname "$0")"
+
 # 1. Check if Docker is running
 if ! docker info > /dev/null 2>&1; then
     echo -e "${RED}❌ Error: Docker is not running. Please start Docker and try again.${NC}"

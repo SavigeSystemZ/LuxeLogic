@@ -87,6 +87,7 @@ LOCAL_APP_FILE="/home/$USER/.local/share/applications/LuxeLogic.desktop"
 # Fix paths in .desktop file based on current directory
 ROOT_DIR=$(pwd)
 sed -i "s|Exec=.*|Exec=$ROOT_DIR/luxelogic-launcher.sh|g" LuxeLogic.desktop
+sed -i "s|Icon=.*|Icon=$ROOT_DIR/beauty-frontend/public/logo.png|g" LuxeLogic.desktop
 
 cp LuxeLogic.desktop "$DESKTOP_FILE"
 cp LuxeLogic.desktop "$LOCAL_APP_FILE"

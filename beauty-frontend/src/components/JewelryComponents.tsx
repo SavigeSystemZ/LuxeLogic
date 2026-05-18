@@ -32,23 +32,38 @@ export function JewelryAnchor({ results, landmarkIndex, children }: JewelryAncho
 
 export function Earring() {
   return (
-    <mesh position={[0, -0.2, 0]}>
-      <torusGeometry args={[0.05, 0.01, 16, 100]} />
-      <meshStandardMaterial color="gold" metalness={1} roughness={0.1} />
-    </mesh>
+    <group position={[0, -0.2, 0]}>
+      {/* Gold Hook */}
+      <mesh>
+        <torusGeometry args={[0.03, 0.005, 8, 50, Math.PI]} />
+        <meshStandardMaterial color="#ffd700" metalness={1} roughness={0.1} />
+      </mesh>
+      {/* Diamond Drop */}
+      <mesh position={[0, -0.05, 0]}>
+        <octahedronGeometry args={[0.04, 0]} />
+        <meshStandardMaterial color="#fff" metalness={1} roughness={0} transparent opacity={0.8} />
+        {/* Diamond Sparkle/Glow */}
+        <pointLight intensity={0.5} distance={0.5} color="#fff" />
+      </mesh>
+    </group>
   );
 }
 
 export function Necklace() {
   return (
-    <mesh position={[0, -0.1, 0]} rotation={[Math.PI / 2, 0, 0]}>
-      <torusGeometry args={[0.3, 0.015, 16, 100]} />
-      <meshStandardMaterial color="silver" metalness={1} roughness={0.2} />
-      <mesh position={[0, -0.3, 0]}>
-        <octahedronGeometry args={[0.05, 0]} />
-        <meshStandardMaterial color="#00f" metalness={0.8} roughness={0.1} />
+    <group position={[0, -0.1, 0]} rotation={[Math.PI / 2, 0, 0]}>
+      {/* Chain */}
+      <mesh>
+        <torusGeometry args={[0.3, 0.008, 16, 100]} />
+        <meshStandardMaterial color="#e5e4e2" metalness={1} roughness={0.2} />
       </mesh>
-    </mesh>
+      {/* Main Pendant */}
+      <mesh position={[0, -0.3, 0.02]} rotation={[-Math.PI / 2, 0, 0]}>
+        <sphereGeometry args={[0.05, 16, 16]} />
+        <meshStandardMaterial color="#4169e1" metalness={0.9} roughness={0.1} />
+        <pointLight intensity={0.8} distance={1} color="#4169e1" />
+      </mesh>
+    </group>
   );
 }
 

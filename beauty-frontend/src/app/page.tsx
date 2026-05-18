@@ -175,9 +175,24 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="glass-card p-6 flex-1">
-            <h2 className="text-xl font-semibold mb-4">Jewelry Try-On</h2>
-            <div className="grid grid-cols-2 gap-3">
+          <div className="glass-card p-6 flex-1 flex flex-col gap-4">
+            <h2 className="text-xl font-semibold flex items-center gap-2">
+              <UserCircle className="text-blue-400 w-5 h-5" />
+              Skin Analysis
+            </h2>
+            {activeAction?.type === 'apply_makeup' ? (
+              <div className="bg-blue-50/50 p-4 rounded-2xl border border-blue-100">
+                <p className="text-sm font-medium text-blue-800">Tone: {activeAction.color}</p>
+                <p className="text-xs text-blue-600 mt-1">Applying matching shade...</p>
+              </div>
+            ) : (
+              <div className="bg-white/40 p-4 rounded-2xl border border-white/20">
+                <p className="text-sm text-gray-500 italic">Position face in center for real-time analysis...</p>
+              </div>
+            )}
+
+            <h2 className="text-xl font-semibold mt-4">Jewelry Try-On</h2>
+            <div className="grid grid-cols-2 gap-3 overflow-y-auto max-h-[200px] pr-2">
               {jewelry.length > 0 ? jewelry.map((item) => (
                 <div key={item.id} className="aspect-square rounded-2xl bg-white/30 border border-white/20 hover:border-rose-300 transition-colors cursor-pointer p-2 flex flex-col items-center justify-center text-center">
                   <div className="w-12 h-12 bg-blue-100/50 rounded-full mb-2 flex items-center justify-center">

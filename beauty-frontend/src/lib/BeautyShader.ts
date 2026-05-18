@@ -35,13 +35,18 @@ export const BeautyFragmentShader = `
     float baseOpacity = uFoundationOpacity + (uSkinSmoothing * 0.1);
     finalColor = mix(finalColor, vec4(uFoundationColor, 1.0), baseOpacity);
 
-    // Procedural Blush Mask
-    float blushMask = smoothstep(0.4, 0.2, distance(vUv, vec2(0.3, 0.4))) + 
-                      smoothstep(0.4, 0.2, distance(vUv, vec2(0.7, 0.4)));
-    finalColor.rgb = mix(finalColor.rgb, uBlushColor, blushMask * uBlushOpacity);
+    // Anatomically improved Procedural Blush Mask (using UVs more specifically)
+    // Cheeks are roughly around (0.3, 0.45) and (0.7, 0.45) in canonical face UVs
+    float blushLeft = smoothstep(0.15, 0.0, distance(vUv, vec2(0.28, 0.42)));
+    float blushRight = smoothstep(0.15, 0.0, distance(vUv, vec2(0.72, 0.42)));
+    float blushMask = blushLeft + blushRight;
+    finalColor.rgb = mix(finalColor.rgb, uBlushColor, blushMask * uBlushOpacity * 0.4); // Subtle mix
 
-    // Procedural Lipstick Mask
-    float lipstickMask = smoothstep(0.1, 0.05, distance(vUv, vec2(0.5, 0.2)));
+    // Anatomically improved Procedural Lipstick Mask
+    // Lips are centered around (0.5, 0.25) in canonical face UVs
+    // Using an ellipse-like distance for better shape
+    vec2 lipUv = (vUv - vec2(0.5, 0.23)) * vec2(1.0, 2.0); 
+    float lipstickMask = smoothstep(0.08, 0.04, length(lipUv));
     finalColor.rgb = mix(finalColor.rgb, uLipstickColor, lipstickMask * uLipstickOpacity);
 
     // Hair Coloring (Simulated via upper UV boundary)

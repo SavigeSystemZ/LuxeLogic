@@ -67,3 +67,5 @@
 - [x] Scaffold Capacitor for Android distribution (`com.luxelogic.app`).
 - [x] Hardened infrastructure permissions and resolved all container runtime crashes.
 - [x] Established automated CI pipeline with GitHub Actions.
+- [x] **Extreme Quality Uplift**: Refined 3D shaders, added manual color controls, and implemented a high-res application icon.
+- [x] **Full Feature Build-out**: Created dedicated Gallery, Tutorials, and Techniques routes with buttery-smooth Framer Motion transitions.

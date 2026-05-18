@@ -348,15 +348,44 @@ async def consult_ai(question: str, tone: Optional[str] = None, undertone: Optio
     Your goal is to provide expert, personalized advice to women using the LuxeLogic app.
     The user's analyzed skin tone is {tone or 'unknown'} and undertone is {undertone or 'unknown'}.
     Always be professional, encouraging, and specific with product types and application techniques.
-    If asked to apply makeup (lipstick, blush, etc.), return a JSON action in your response exactly like: [ACTION: {{"type": "apply_makeup", "makeup_type": "lipstick", "color": "#HEX"}}]
+    You must return a JSON response containing an 'answer' (your spoken advice) and optionally a list of 'actions' if you are applying makeup.
     
     Recent conversation history:
     {memory_context}
     """
     
+    class AIAction(BaseModel):
+        type: str = Field(description="The action type, usually 'apply_makeup'")
+        makeup_type: str = Field(description="The type of makeup, e.g. 'lipstick' or 'blush'")
+        color: str = Field(description="The hex color code, e.g. '#ff0000'")
+
+    class ConsultantResponse(BaseModel):
+        answer: str = Field(description="The spoken advice or response to the user.")
+        actions: list[AIAction] = Field(description="A list of makeup actions to apply to the 3D face mesh.", default_factory=list)
+
     try:
-        response = client.models.generate_content(model="gemini-1.5-flash", contents=f"{system_prompt}\n\nUser Question: {question}")
-        answer = response.text
+        from google.genai import types
+        response = client.models.generate_content(
+            model="gemini-2.5-flash", 
+            contents=f"{system_prompt}\n\nUser Question: {question}",
+            config=types.GenerateContentConfig(
+                response_mime_type="application/json",
+                response_schema=ConsultantResponse,
+                temperature=0.7
+            )
+        )
+        
+        # Parse the JSON response
+        import json
+        structured_data = json.loads(response.text)
+        
+        base_answer = structured_data.get("answer", "")
+        # Format actions for legacy frontend
+        formatted_answer = base_answer + "\n"
+        for action in structured_data.get("actions", []):
+            formatted_answer += f"\n[ACTION: {json.dumps(action)}]"
+            
+        answer = formatted_answer.strip()
         
         # Save interaction
         db.add(UserInteraction(user_id=current_user.id, role="user", content=question))
@@ -389,12 +418,39 @@ async def recreate_look(file: UploadFile = File(...), current_user: UserProfile 
     Analyze the makeup in this image. 
     Return a list of JSON actions to recreate this look.
     Focus on Lipstick and Blush.
-    Format exactly like: [ACTION: {"type": "apply_makeup", "makeup_type": "lipstick", "color": "#HEX"}]
     """
     
+    class AIAction(BaseModel):
+        type: str = Field(description="The action type, usually 'apply_makeup'")
+        makeup_type: str = Field(description="The type of makeup, e.g. 'lipstick' or 'blush'")
+        color: str = Field(description="The hex color code, e.g. '#ff0000'")
+
+    class LookRecreation(BaseModel):
+        actions: list[AIAction]
+
     try:
-        response = client.models.generate_content(model="gemini-1.5-flash", contents=[prompt, image])
-        return {"answer": response.text}
+        from google.genai import types
+        response = client.models.generate_content(
+            model="gemini-2.5-flash", 
+            contents=[prompt, image],
+            config=types.GenerateContentConfig(
+                response_mime_type="application/json",
+                response_schema=LookRecreation,
+                temperature=0.4
+            )
+        )
+        # Parse the JSON response
+        import json
+        structured_data = json.loads(response.text)
+        
+        # Convert to the legacy string format the frontend expects for now, or just return the parsed actions
+        # Frontend currently looks for: [ACTION: {"type": "apply_makeup", "makeup_type": "lipstick", "color": "#HEX"}]
+        # But wait, frontend parses strings right now. Let's format it.
+        formatted_answer = "Here is how to recreate this stunning look:\n\n"
+        for action in structured_data.get("actions", []):
+            formatted_answer += f"[ACTION: {json.dumps(action)}]\n"
+
+        return {"answer": formatted_answer}
     except Exception as e:
         logger.error(f"Gemini Vision API error: {e}")
         return {"answer": "I couldn't quite see the details of that beautiful look. Could you try another photo?"}

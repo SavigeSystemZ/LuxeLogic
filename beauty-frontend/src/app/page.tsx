@@ -73,9 +73,9 @@ export default function Home() {
       {/* Main Content Layout */}
       <div className="w-full grid grid-cols-1 lg:grid-cols-12 gap-8 flex-1">
         
-        {/* Left Sidebar - Techniques */}
+        {/* Left Sidebar - Techniques & Controls */}
         <div className="lg:col-span-3 flex flex-col gap-6">
-          <div className="glass-card p-6 flex-1">
+          <div className="glass-card p-6">
             <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
               <Star className="text-rose-400 w-5 h-5" />
               Techniques
@@ -91,6 +91,41 @@ export default function Home() {
                   <p className="font-medium">{tech}</p>
                 </div>
               ))}
+            </div>
+          </div>
+
+          <div className="glass-card p-6 flex-1">
+            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+              <Sparkles className="text-rose-400 w-5 h-5" />
+              Manual Controls
+            </h2>
+            <div className="flex flex-col gap-4">
+              <div>
+                <label className="text-sm font-medium text-gray-700 block mb-2">Lipstick Color</label>
+                <div className="flex gap-2">
+                  {['#e0115f', '#8b0000', '#ffc0cb', '#c04000'].map(color => (
+                    <button 
+                      key={color}
+                      onClick={() => setActiveAction({ type: 'apply_makeup', makeup_type: 'lipstick', color })}
+                      className="w-8 h-8 rounded-full border-2 border-white shadow-sm hover:scale-110 transition-transform"
+                      style={{ backgroundColor: color }}
+                    />
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label className="text-sm font-medium text-gray-700 block mb-2">Blush Color</label>
+                <div className="flex gap-2">
+                  {['#ffb6c1', '#ff69b4', '#db7093', '#e6e6fa'].map(color => (
+                    <button 
+                      key={color}
+                      onClick={() => setActiveAction({ type: 'apply_makeup', makeup_type: 'blush', color })}
+                      className="w-8 h-8 rounded-full border-2 border-white shadow-sm hover:scale-110 transition-transform"
+                      style={{ backgroundColor: color }}
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -102,6 +102,36 @@ echo -e "${GREEN}${CHECK} Desktop icon installed. Your master look is one click 
 
 echo -e ""
 
+# 4.5 Systemd Auto-Start
+echo -e "${BLUE}⚙️  Step 5: Configuring System Auto-Start...${NC}"
+mkdir -p "$HOME/.config/systemd/user"
+SERVICE_FILE="$HOME/.config/systemd/user/luxelogic.service"
+
+cat <<EOF > "$SERVICE_FILE"
+[Unit]
+Description=LuxeLogic Beauty Engines
+After=network.target docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=$ROOT_DIR
+ExecStart=/usr/bin/docker compose up -d
+ExecStop=/usr/bin/docker compose down
+
+[Install]
+WantedBy=default.target
+EOF
+
+systemctl --user daemon-reload
+systemctl --user enable luxelogic.service || echo -e "${YELLOW}Note: systemd user sessions not fully active, enable manually later if needed.${NC}"
+systemctl --user start luxelogic.service || true
+
+echo -e "${GREEN}${CHECK} Systemd auto-start configured.${NC}"
+
+echo -e ""
+
 # 5. Finale
 echo -e "${PURPLE}------------------------------------------------------------${NC}"
 echo -e "${GREEN}          ${SPARKLE} INSTALLATION COMPLETE ${SPARKLE}             ${NC}"

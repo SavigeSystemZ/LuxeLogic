@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useState, useRef } from 'react';
@@ -83,7 +84,9 @@ export default function VisionPage() {
           className="w-full h-64 border-2 border-dashed border-rose-300 rounded-[30px] flex flex-col items-center justify-center bg-white/30 hover:bg-white/50 transition-colors cursor-pointer mb-6 relative overflow-hidden"
         >
           {preview ? (
-            <img src={preview} alt="Preview" className="absolute inset-0 w-full h-full object-contain p-2" />
+            <div className="absolute inset-0 w-full h-full p-2">
+              <img src={preview} alt="Preview" className="w-full h-full object-contain rounded-[20px]" />
+            </div>
           ) : (
             <>
               <Upload className="w-10 h-10 text-rose-300 mb-2" />

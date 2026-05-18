@@ -4,6 +4,16 @@ import { useState, useCallback } from 'react';
 import { SkinToneResult } from '../lib/skinAnalysis';
 import { fetchWithAuth } from '../lib/apiClient';
 
+interface SpeechRecognitionEvent {
+  results: {
+    [index: number]: {
+      [index: number]: {
+        transcript: string;
+      }
+    }
+  }
+}
+
 export function useBeautyAI(onAction?: (action: { type: string; [key: string]: any }) => void) {
   const [isListening, setIsListening] = useState(false);
   const [lastResponse, setLastResponse] = useState<string>("");

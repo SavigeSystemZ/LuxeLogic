@@ -28,6 +28,7 @@ export function Header() {
         <Link href="/techniques" className="hover:text-rose-400 transition-colors">Techniques</Link>
         <Link href="/" className="hover:text-rose-400 transition-colors">Try-On</Link>
         <Link href="/vision" className="hover:text-rose-400 transition-colors">Vision AI</Link>
+        {user && <Link href="/profile" className="hover:text-rose-400 transition-colors">My Gallery</Link>}
       </nav>
 
       <div className="flex items-center gap-4">

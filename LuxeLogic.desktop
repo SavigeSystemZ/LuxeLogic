@@ -2,10 +2,11 @@
 Version=1.0
 Type=Application
 Name=LuxeLogic
-Comment=Advanced AI Makeup & Beauty Consulting
-Exec=bash -c "/home/whyte/.MyAppZ/LuxeLogic/luxelogic-launcher.sh"
+Comment=World-Class AI Makeup & Beauty
+Exec=/home/whyte/.MyAppZ/LuxeLogic/luxelogic-launcher.sh
 Path=/home/whyte/.MyAppZ/LuxeLogic
-Icon=/home/whyte/.MyAppZ/LuxeLogic/beauty-frontend/public/logo.png
+Icon=/home/whyte/.local/share/icons/luxelogic.png
 Terminal=true
-Categories=Graphics;Science;Education;
+Categories=Graphics;
 StartupNotify=true
+X-GNOME-Autostart-enabled=true

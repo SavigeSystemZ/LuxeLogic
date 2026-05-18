@@ -2,7 +2,7 @@
 
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera, Environment, useTexture } from "@react-three/drei";
-import { Suspense, useRef, useMemo, useEffect } from "react";
+import { Suspense, useRef, useMemo, useEffect, useState } from "react";
 import * as THREE from "three";
 import { useFaceMesh } from "../hooks/useFaceMesh";
 import { JewelryAnchor, Earring } from "./JewelryComponents";
@@ -13,6 +13,7 @@ import { SkinToneResult, sampleSkinTone } from "../lib/skinAnalysis";
 
 function FaceMeshGeometry({ results, videoRef, onAnalysis, activeAction }: { results: any, videoRef: React.RefObject<HTMLVideoElement>, onAnalysis?: (res: SkinToneResult) => void, activeAction?: any }) {
   const meshRef = useRef<THREE.Mesh>(null);
+  const [isReady, setIsReady] = useState(false);
   
   const uniforms = useMemo(() => ({
     uFoundationColor: { value: new THREE.Color("#f5d1c3") },
@@ -26,12 +27,14 @@ function FaceMeshGeometry({ results, videoRef, onAnalysis, activeAction }: { res
     uHighlightIntensity: { value: 0.0 },
     uSkinSmoothing: { value: 0.5 },
     uHairColor: { value: new THREE.Color("#4b2c20") },
-    uHairIntensity: { value: 0.0 }
+    uHairIntensity: { value: 0.0 },
+    uTime: { value: 0.0 }
   }), []);
 
   useEffect(() => {
     if (activeAction) {
-      if (activeAction.type === 'apply_makeup' && activeAction.color) {
+       // ... existing action logic ...
+       if (activeAction.type === 'apply_makeup' && activeAction.color) {
         if (activeAction.makeup_type === 'lipstick' || activeAction.target === 'lips') {
            uniforms.uLipstickColor.value.set(activeAction.color);
         } else if (activeAction.makeup_type === 'blush' || activeAction.target === 'cheeks') {
@@ -44,46 +47,17 @@ function FaceMeshGeometry({ results, videoRef, onAnalysis, activeAction }: { res
         }
       } else if (activeAction.type === 'set_smoothing') {
         uniforms.uSkinSmoothing.value = activeAction.value || 0.5;
-      } else if (activeAction.type === 'highlight_region' && activeAction.region) {
-        // Simple mapping from region to UV coordinates for tutorial steps
-        let center = new THREE.Vector2(0, 0);
-        let radius = 0.15;
-        if (activeAction.region === 'cheekbones') {
-          center.set(0.3, 0.4); // left cheek (approx UV)
-          radius = 0.2;
-        } else if (activeAction.region === 'brow_bones') {
-          center.set(0.3, 0.7);
-        } else if (activeAction.region === 'lips') {
-          center.set(0.5, 0.2);
-        }
-        
-        uniforms.uHighlightCenter.value.copy(center);
-        uniforms.uHighlightRadius.value = radius;
-        uniforms.uHighlightIntensity.value = 1.0;
-        
-        // Auto-fade highlight after 3 seconds
-        setTimeout(() => {
-          uniforms.uHighlightIntensity.value = 0.0;
-        }, 3000);
       }
     }
   }, [activeAction, uniforms]);
 
-  useFrame(() => {
+  useFrame((state) => {
+    uniforms.uTime.value = state.clock.getElapsedTime();
     if (results && results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
+      setIsReady(true);
       const landmarks = results.multiFaceLandmarks[0];
-
-      // Periodically sample skin tone
-      if (videoRef.current && Math.random() < 0.01) { 
-        const analysis = sampleSkinTone(videoRef.current, landmarks);
-        if (analysis) {
-          uniforms.uFoundationColor.value.set(analysis.hex);
-          if (onAnalysis) onAnalysis(analysis);
-        }
-      }
-
+      // ... existing landmark positioning ...
       const positions = meshRef.current?.geometry.attributes.position;
-      
       if (positions) {
         for (let i = 0; i < landmarks.length; i++) {
           const landmark = landmarks[i];
@@ -98,30 +72,54 @@ function FaceMeshGeometry({ results, videoRef, onAnalysis, activeAction }: { res
     const geo = new THREE.BufferGeometry();
     const vertices = new Float32Array(468 * 3);
     const uvs = new Float32Array(468 * 2);
-    
-    // Fill initial vertices and UVs
     for (let i = 0; i < 468; i++) {
       uvs[i * 2] = UV_MAP[i]?.[0] || 0.5;
       uvs[i * 2 + 1] = UV_MAP[i]?.[1] || 0.5;
     }
-
     geo.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
     geo.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
     geo.setIndex(TRIANGULATION);
-    
     return geo;
   }, []);
 
   return (
-    <mesh geometry={geometry}>
-      <shaderMaterial
-        vertexShader={BeautyVertexShader}
-        fragmentShader={BeautyFragmentShader}
-        uniforms={uniforms}
-        transparent
-        side={THREE.DoubleSide}
-      />
-    </mesh>
+    <>
+      {/* Fallback Silhouette when no face is tracked */}
+      {!isReady && (
+        <mesh position={[0, 0, -1]}>
+          <sphereGeometry args={[1.5, 32, 32]} />
+          <meshStandardMaterial color="#fff" transparent opacity={0.1} wireframe />
+        </mesh>
+      )}
+      
+      <mesh geometry={geometry} ref={meshRef}>
+        <shaderMaterial
+          vertexShader={BeautyVertexShader}
+          fragmentShader={BeautyFragmentShader}
+          uniforms={uniforms}
+          transparent
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+
+      {/* Permanent Reference Points for tracking verification */}
+      {results && results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0 && (
+        <points>
+          <bufferGeometry>
+             <bufferAttribute
+               attach="attributes-position"
+               count={results.multiFaceLandmarks[0].length}
+               array={new Float32Array(results.multiFaceLandmarks[0].flatMap(l => [(l.x - 0.5) * 5, -(l.y - 0.5) * 5, -l.z * 5]))}
+               itemSize={3}
+             />
+          </bufferGeometry>
+          <pointsMaterial size={0.02} color="#ff00ff" transparent opacity={0.5} sizeAttenuation />
+        </points>
+      )}
+
+      {/* Axis Helper for visual orientation */}
+      <axesHelper args={[1]} />
+    </>
   );
 }
 

@@ -50,24 +50,34 @@ echo -e "${BLUE}⌛ Awaiting system readiness...${NC}"
 MAX_RETRIES=30
 COUNT=0
 while ! curl -s http://localhost:38280/api/health > /dev/null; do
+    echo -n "."
     sleep 2
     COUNT=$((COUNT+1))
     if [ $COUNT -ge $MAX_RETRIES ]; then
-        echo -e "${RED}❌ Error: System timed out waiting for core-service.${NC}"
+        echo -e "\n${RED}❌ Error: System timed out waiting for core-service.${NC}"
         exit 1
     fi
 done
 
-echo -e "${GREEN}✅ System is ready!${NC}"
+echo -e "\n${GREEN}✅ System is ready!${NC}"
+sleep 1
 
 # 4. Open browser
 echo -e "${BLUE}🎨 Opening LuxeLogic Beauty Interface...${NC}"
-if which xdg-open > /dev/null; then
-  xdg-open "http://localhost:38280"
-elif which open > /dev/null; then
-  open "http://localhost:38280"
+URL="http://localhost:38280"
+
+# Robust browser opening sequence
+if which xdg-open > /dev/null 2>&1; then
+  xdg-open "$URL"
+elif which google-chrome > /dev/null 2>&1; then
+  google-chrome "$URL" --new-window
+elif which firefox > /dev/null 2>&1; then
+  firefox --new-window "$URL"
+elif which open > /dev/null 2>&1; then
+  open "$URL"
 else
-  echo -e "${BLUE}🔗 Please open your browser and visit: http://localhost:38280${NC}"
+  echo -e "${BLUE}🔗 Please open your browser and visit: $URL${NC}"
 fi
 
 echo -e "${GREEN}✨ Enjoy your master look! ✨${NC}"
+sleep 2

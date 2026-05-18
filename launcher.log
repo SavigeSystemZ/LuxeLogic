@@ -1,0 +1,48 @@
+--- LuxeLogic Launch Mon May 18 02:40:36 EDT 2026 ---
+[0;34m✨ LuxeLogic is preparing for beauty... ✨[0m
+[0;34m🚀 Starting beauty engines...[0m
+time="2026-05-18T02:40:36-04:00" level=warning msg="/home/whyte/.MyAppZ/LuxeLogic/docker-compose.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+ Container luxelogic-postgres-db-1 Running 
+ Container luxelogic-api-gateway-1 Running 
+ Container luxelogic-mock-media-server-1 Running 
+ Container luxelogic-prometheus-1 Running 
+ Container luxelogic-beauty-frontend-1 Running 
+ Container luxelogic-dragonfly-cache-1 Running 
+ Container luxelogic-video-engine-1 Running 
+ Container luxelogic-grafana-1 Running 
+ Container luxelogic-core-service-1 Running 
+ Container luxelogic-postgres-db-1 Waiting 
+ Container luxelogic-dragonfly-cache-1 Waiting 
+ Container luxelogic-dragonfly-cache-1 Healthy 
+ Container luxelogic-postgres-db-1 Healthy 
+[0;34m⌛ Awaiting system readiness...[0m
+[0;32m✅ System is ready![0m
+[0;34m🎨 Opening LuxeLogic Beauty Interface...[0m
+LuxeLogic
+
+TutorialsTechniquesTry-OnVision AI
+Sign InVIP Access
+
+Techniques
+
+Red Carpet Glow
+
+Movie Star Contouring
+
+Ethereal Eyes
+
+Professional Blending
+
+Loading 3D Engine...
+
+Beauty AI
+
+How can I help you beautify today? Try saying 'Show me star contouring' or
+'Apply Kehley's favorite glow'.
+[                    ]
+
+Jewelry Try-On
+
+? 2026 LuxeLogic ? Advanced Beauty Systems ? Kehley Edition
+
+[0;32m✨ Enjoy your master look! ✨[0m
